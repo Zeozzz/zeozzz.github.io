@@ -1,0 +1,566 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="澈崽子"><meta name="copyright" content="澈崽子"><meta name="generator" content="Hexo 5.0.0"><meta name="theme" content="hexo-theme-yun"><title>有线802.1X认证在企业用户接入中的应用（加入AD域场景） | 澈崽子 | 家有网工初长成</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="none" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.19/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_stqaphw3j4.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true}
+    ]
+  });
+});</script><link class="aplayer-style-marker" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script class="aplayer-script-marker" src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" defer></script><script class="meting-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js" defer></script><link rel="shortcut icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"root":"/","title":"澈崽子的小窝","version":"0.9.5","anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><meta name="description" content="1.1 方案简介计算机在企业的应用越来越广泛。企业在享受高效便捷办公服务的同时，也遇到了不小的烦恼。 在接入网络的终端越来越多的情况下，如果不推行终端规范化接入制度，则来访客人可借助一台便携机和一根网线轻易接入网络并拷走机要信息。这对任何企业都属于不可承受之痛。推行终端接入控制方案的重要性不言而喻，并且迫在眉睫。 要在接入层把非授权的终端拒之门外，推荐部署基于接入层的802.X认证接入方案。 80">
+<meta property="og:type" content="article">
+<meta property="og:title" content="有线802.1X认证在企业用户接入中的应用（加入AD域场景）">
+<meta property="og:url" content="https://zeozzz.github.com/2019/04/18/3/index.html">
+<meta property="og:site_name" content="澈崽子 | 家有网工初长成">
+<meta property="og:description" content="1.1 方案简介计算机在企业的应用越来越广泛。企业在享受高效便捷办公服务的同时，也遇到了不小的烦恼。 在接入网络的终端越来越多的情况下，如果不推行终端规范化接入制度，则来访客人可借助一台便携机和一根网线轻易接入网络并拷走机要信息。这对任何企业都属于不可承受之痛。推行终端接入控制方案的重要性不言而喻，并且迫在眉睫。 要在接入层把非授权的终端拒之门外，推荐部署基于接入层的802.X认证接入方案。 80">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed38464923.jpg">
+<meta property="og:image" content="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed3847228d.jpg">
+<meta property="og:image" content="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed38485a1a.jpg">
+<meta property="og:image" content="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed38498dd0.jpg">
+<meta property="og:image" content="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed384a7267.jpg">
+<meta property="og:image" content="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed384b379a.jpg">
+<meta property="og:image" content="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed384c2438.jpg">
+<meta property="og:image" content="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed384d10c9.jpg">
+<meta property="article:published_time" content="2019-04-18T06:28:10.000Z">
+<meta property="article:modified_time" content="2019-05-09T09:51:09.679Z">
+<meta property="article:author" content="澈崽子">
+<meta property="article:tag" content="华为 802.1x">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed38464923.jpg"></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script defer src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="澈崽子"><img width="96" loading="lazy" src="/avatar.jfif" alt="澈崽子"></a><div class="site-author-name"><a href="/about/">澈崽子</a></div><a class="site-name" href="/about/site.html">澈崽子 | 家有网工初长成</a><sub class="site-subtitle"></sub><div class="site-desciption">念念不忘 必有回响</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">74</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">29</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">36</span></a></div><a class="site-state-item hty-icon-button" href="/null" title="常用文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 群" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Zeozzz" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/linche521chn" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/zeozzz/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=46666755" title="网易云音乐" target="_blank" style="color:#C20C0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/janz1995chn/activities" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/15054940" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/zeozzz" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/zeozzz" title="Telegram Channel" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:zhangzhe@live.in" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.now.sh/" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-send-plane-2-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://huawei.com" title="华为文档" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-huawei-line"></use></svg></a></div></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E6%96%B9%E6%A1%88%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">1.1 方案简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">1.3 部署方案</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-%E5%9C%BA%E6%99%AF%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">1.4 场景分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-1-%E5%9C%BA%E6%99%AF%E4%B8%80%EF%BC%9A%E5%91%98%E5%B7%A5%E6%8E%A5%E5%85%A5%E5%9C%BA%E6%99%AF"><span class="toc-number">4.</span> <span class="toc-text">1.4.1 场景一：员工接入场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-2-%E5%9C%BA%E6%99%AF%E4%BA%8C%EF%BC%9A%E5%93%91%E7%BB%88%E7%AB%AF%E6%8E%A5%E5%85%A5%E5%9C%BA%E6%99%AF"><span class="toc-number">5.</span> <span class="toc-text">1.4.2 场景二：哑终端接入场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-3-%E5%9C%BA%E6%99%AF%E4%B8%89%EF%BC%9A%E5%A4%96%E6%9D%A5%E9%9D%9E%E6%B3%95%E7%BB%88%E7%AB%AF%E6%8E%A5%E5%85%A5%E5%9C%BA%E6%99%AF"><span class="toc-number">6.</span> <span class="toc-text">1.4.3 场景三：外来非法终端接入场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-5-%E4%B8%9A%E5%8A%A1%E8%A7%84%E5%88%92"><span class="toc-number">7.</span> <span class="toc-text">1.5 业务规划</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-5-1-%E8%A7%84%E5%88%92VLAN"><span class="toc-number">8.</span> <span class="toc-text">1.5.1 规划VLAN</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-5-2-%E6%8C%87%E5%AE%9AAD%E5%9F%9F%E6%8E%A7%E5%88%B6%E5%99%A8%E5%92%8C%E8%AE%A4%E8%AF%81%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">9.</span> <span class="toc-text">1.5.2 指定AD域控制器和认证服务器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-5-3-%E9%85%8D%E7%BD%AE802-1x%E8%AE%A4%E8%AF%81"><span class="toc-number">10.</span> <span class="toc-text">1.5.3 配置802.1x认证</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-6-%E9%85%8D%E7%BD%AE%E8%BF%87%E7%A8%8B"><span class="toc-number">11.</span> <span class="toc-text">1.6 配置过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-6-1-%E9%85%8D%E7%BD%AE%E6%8E%A5%E5%85%A5%E4%BA%A4%E6%8D%A2%E6%9C%BA%EF%BC%88%E7%BB%88%E7%AB%AF%E6%8E%A5%E5%85%A5%E4%BE%A7%EF%BC%89"><span class="toc-number">12.</span> <span class="toc-text">1.6.1 配置接入交换机（终端接入侧）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AERADIUS%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%A8%A1%E6%9D%BF%E3%80%82"><span class="toc-number">13.</span> <span class="toc-text">配置RADIUS服务器模板。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AERADIUS%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1%E5%99%A8%E3%80%82"><span class="toc-number">14.</span> <span class="toc-text">配置RADIUS授权服务器。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-6-2-%E9%85%8D%E7%BD%AE%E7%AD%96%E7%95%A5%E7%AE%A1%E7%90%86%E4%B8%AD%E5%BF%83"><span class="toc-number">15.</span> <span class="toc-text">1.6.2 配置策略管理中心</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-7-%E6%80%BB%E7%BB%93%E4%B8%8E%E5%BB%BA%E8%AE%AE"><span class="toc-number">16.</span> <span class="toc-text">1.7 总结与建议</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/04/18/3/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">有线802.1X认证在企业用户接入中的应用（加入AD域场景）</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-04-18 14:28:10" itemprop="dateCreated datePublished" datetime="2019-04-18T14:28:10+08:00">2019-04-18</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2019-05-09 17:51:09" itemprop="dateModified" datetime="2019-05-09T17:51:09+08:00">2019-05-09</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/%E5%8D%8E%E4%B8%BA/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">华为</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag" href="/tags/%E5%8D%8E%E4%B8%BA-802-1x/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">华为 802.1x</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h4 id="1-1-方案简介"><a href="#1-1-方案简介" class="headerlink" title="1.1 方案简介"></a>1.1 方案简介</h4><p>计算机在企业的应用越来越广泛。企业在享受高效便捷办公服务的同时，也遇到了不小的烦恼。</p>
+<p>在接入网络的终端越来越多的情况下，如果不推行终端规范化接入制度，则来访客人可借助一台便携机和一根网线轻易接入网络并拷走机要信息。这对任何企业都属于不可承受之痛。推行终端接入控制方案的重要性不言而喻，并且迫在眉睫。</p>
+<p>要在接入层把非授权的终端拒之门外，推荐部署基于接入层的802.X认证接入方案。</p>
+<p>802.1X认证接入方案组成图如下。</p>
+<p><img src="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed38464923.jpg" alt="img" loading="lazy"></p>
+<p>802.1X认证接入方案由终端、交换机和RADIUS服务器组成。</p>
+<p>l   终端：在802.1X认证接入方案中充当客户端角色。根据是否支持主动触发802.1X认证，终端可分为普通终端和哑终端。</p>
+<pre><code>   普通终端最显著的特点是能够安装802.1X认证客户端。例如办公PC。终端用户输入帐号和密码后主动触发认证，认证通过后接入网络。
+
+   哑终端最显著的特点是无法安装802.1X认证客户端。例如IP电话、网络打印机。哑终端无法通过主动触发认证方式接入网络，而是通过交换机主动向RADIUS服务器触发MAC旁路认证，认证通过后接入网络。</code></pre>
+<p>l   交换机：在802.1X认证接入控制方案充当接入控制设备角色。</p>
+<p>l   RADIUS服务器：在802.1X认证接入方案中充当服务器角色。RADIUS服务器负责对交换机发来终端用户的帐号和密码进行校验，并且根据身份认证结果给交换机下发网络访问权限。在下面的配置举例中，以华为Policy Center作为RADIUS服务器为例介绍有线802.1X认证在企业用户接入中的应用。</p>
+<p>方案的核心思想可简单概括为身份认证和网络授权：</p>
+<p>l  在终端未进行身份认证或身份认证失败时，接入层交换机只给终端开放有限的网络访问权限。</p>
+<p>例如，在新员工入职领取新电脑，尚未从管理员处获取帐号和密码，只能访问文件服务器下载必要的软件，而无法接入办公网。</p>
+<p>或者在员工遗忘密码无法接入办公网，只能访问密码重新初始化应用。</p>
+<p>l  终端认证成功后，RADIUS服务器会给交换机下发正常的网络访问权限，确保终端用户能够接入网络。</p>
+<p>下面以某金融企业为例，介绍基于接入层802.1X认证接入方案。</p>
+<p>1.2 组网需求</p>
+<p>图1-1 公司原有网络组网</p>
+<p><img src="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed3847228d.jpg" alt="img" loading="lazy"></p>
+<p>某公司原有网络如上图所示，所有终端用户通过AD域控制器进行身份认证。接入网络的设备包括终端主机（台式机、笔记本电脑）和打印机，台式机和笔记本电脑使用的操作系统有Windows 7和Windows XP。网络中接入的所有设备通过DHCP方式获取IP地址。</p>
+<p>虽有AD域控制器对终端用户进行身份认证，但AD域控制器不是网络设备，本身对网络授权无能为力。在遇到终端身份认证失败时也无法向接入层交换机发送隔离消息，无法阻止非授权终端接入网络。</p>
+<p>对于已经加入AD域的终端而言，加入AD域并不能阻止来自未加入域终端（例如未授权终端）的访问。AD域控制器在网络访问控制方面形同虚设。</p>
+<p>现存的网络环境无法提供一套完备的网络授权方案，一旦恶意用户携带便携机接入公司网络，可能会把公司核心信息拷贝带走，给公司带来无法估量的损失。</p>
+<p>现在出于保护竞争力的需要，需要部署一套身份认证系统，对所有接入企业网络的员工和外来人员在接入层进行准入控制。</p>
+<p>l   当终端用户使用合法的AD域帐号和密码登录时，身份认证系统允许终端用户接入办公网络正常办公。</p>
+<p>l   当外来终端接入到交换机的接口时，无法访问网络中的其他合法终端，也无法访问数据中心的服务器资源，以达到隔离外来终端的效果。</p>
+<h4 id="1-3-部署方案"><a href="#1-3-部署方案" class="headerlink" title="1.3 部署方案"></a>1.3 部署方案</h4><p>根据现有的网络环境，在网络中部署一套Policy Center系统作为RADIUS服务器，然后采用接入层802.1X交换机作为准入控制设备，解决各种用户的网络接入需求。如<a target="_blank" rel="noopener" href="https://forum.huawei.com/enterprise/zh/#tsm_cfg_con_0001_fig_02">图1-2</a>所示。</p>
+<p>图1-2 公司现有网络组网</p>
+<p><img src="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed38485a1a.jpg" alt="img" loading="lazy"></p>
+<p>Microsoft AD域控制器负责对终端用户的身份作校验，Policy Center负责根据终端用户的身份认证结果进行网络授权。</p>
+<p>采用接入层802.1X接入控制方案的目的在于把接入控制点延伸至网络最底层。当发现外来终端尝试接入网络时，通过网络最底层的交换机实现隔离。如果终端用户身份认证成功，RADIUS服务器给交换机端口下发办公VLAN ID，终端用户能够正常接入网络办公。否则，交换机端口进入Guest VLAN，终端用户只允许访问有限的网络资源。</p>
+<p>出于终端稳定性考虑，建议通过Windows 7和Windows XP自带的802.1X认证客户端进行身份认证，避免再安装其他的认证客户端，减轻管理员故障维护压力。</p>
+<h4 id="1-4-场景分析"><a href="#1-4-场景分析" class="headerlink" title="1.4 场景分析"></a>1.4 场景分析</h4><h4 id="1-4-1-场景一：员工接入场景"><a href="#1-4-1-场景一：员工接入场景" class="headerlink" title="1.4.1 场景一：员工接入场景"></a>1.4.1 场景一：员工接入场景</h4><p>员工使用已经加入域的终端接入网络</p>
+<ol>
+<li><p>在终端主机的Windows操作系统启用后，网卡主动向交换机发起以主机名为帐号的802.1X认证。因该终端已经加入域，计算机身份认证成功，终端从Guest VLAN进入主机名认证VLAN。</p>
+</li>
+<li><p>终端用户使用域账号登录操作系统，终端主动发起802.1X认证请求，操作系统自动完成域账号的用户身份认证。认证成功(不需要提示用户输入用户名/口令)后终端进入员工工作VLAN。</p>
+</li>
+<li><p>终端获取员工工作VLAN的IP地址，能够访问其他正常认证的员工的终端，以及网络打印机和数据中心的服务器。</p>
+</li>
+</ol>
+<p>员工忘记域账号密码</p>
+<ol>
+<li><p>员工忘记域账号的密码，无法使用域账号登录Windows操作系统，于是向管理员申请重新初始化密码。</p>
+</li>
+<li><p>管理员在AD域控制器上重新初始化该账号的密码，并且告知员工新密码。</p>
+</li>
+<li><p>员工使用已经加入域的终端接入网络。</p>
+</li>
+</ol>
+<p>员工使用新密码接入网络的过程，与“员工使用已经加入域的终端接入网络”过程相同，剩下的流程请参见“员工忘记域账号密码”，此处不再赘述。</p>
+<h4 id="1-4-2-场景二：哑终端接入场景"><a href="#1-4-2-场景二：哑终端接入场景" class="headerlink" title="1.4.2 场景二：哑终端接入场景"></a>1.4.2 场景二：哑终端接入场景</h4><p>哑终端是指不能通过802.1X客户端完成认证的终端，802.1X客户端包括Policy Center的客户端和Windows自带的802.1X客户端。本案例中，哑终端是指网络打印机。</p>
+<ol>
+<li><p>网络打印机接入网络后，接入交换机发起802.1X认证。网络打印机无法应答该802.1X认证请求。</p>
+</li>
+<li><p>接入交换机在等待响应超时（默认是30s）后直接使用该网络打印机的MAC地址作为帐号和密码，向Policy Center服务器发起身份认证。</p>
+</li>
+<li><p>Policy Center服务器验证允许该哑终端接入，给交换机发送认证成功。</p>
+</li>
+<li><p>网络打印机根据交换机的配置，进入哑终端VLAN，获取哑终端VLAN的IP地址。</p>
+</li>
+</ol>
+<h4 id="1-4-3-场景三：外来非法终端接入场景"><a href="#1-4-3-场景三：外来非法终端接入场景" class="headerlink" title="1.4.3 场景三：外来非法终端接入场景"></a>1.4.3 场景三：外来非法终端接入场景</h4><p>外来非法终端是指没有加入公司AD域的终端。</p>
+<p>外来非法终端尝试接入被接入层交换机隔离的过程：</p>
+<ol>
+<li><p>外来非法终端连接网线尝试接入网络。</p>
+</li>
+<li><p>由于该终端未加入公司AD域，主机名认证失败。该终端只能在未认证终端VLAN，获取未认证终端VLAN的IP地址。</p>
+</li>
+<li><p>外来非法终端的网络访问权限，取决于未认证终端VLAN的权限，通常情况下只允许访问AD域控制器、DNS服务器和DHCP服务器。如果是公司员工新领的电脑，可通过AD域控制器和DSN服务器加入AD域。</p>
+</li>
+</ol>
+<h4 id="1-5-业务规划"><a href="#1-5-业务规划" class="headerlink" title="1.5 业务规划"></a>1.5 业务规划</h4><h4 id="1-5-1-规划VLAN"><a href="#1-5-1-规划VLAN" class="headerlink" title="1.5.1 规划VLAN"></a>1.5.1 规划VLAN</h4><p>对于交换机而言，按下面表格划分VLAN。</p>
+<ol>
+<li><p>根据所划分的VLAN，调整DHCP的地址分配策略，确保不同的VLAN使用不同的IP地址段。</p>
+</li>
+<li><p>在汇聚交换机（网关）上配置各个VLAN允许访问的网络资源。</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>VLAN ID</th>
+<th>说明</th>
+<th>权限</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>102</td>
+<td>办公VLAN，有独立的IP地址段。员工通过802.1X接入网络后，进入该VLAN，获得正常的网络访问权限。哑终端认证通过后也接入办公VLAN。</td>
+<td>可以访问数据中心的所有资源。</td>
+</tr>
+<tr>
+<td>109</td>
+<td>Guest VLAN。新接入网络的计算机一开始尚未加入AD域，不能使用域的相关信息自动完成802.1X认证。为此需要提供一个网络环境，在终端在没有通过身份认证时，具备受限的网络访问权限，只能访问AD域控制器/DNS服务器/DHCP服务器，以便终端用户使用该VLAN能够把PC加入域。</td>
+<td>可以访问数据中心的AD域控制器/DNS服务器/DHCP服务器，不可以访问数据中心的其他资源、办公VLAN和主机名认证VLAN。</td>
+</tr>
+<tr>
+<td>130</td>
+<td>主机名认证VLAN。确保终端用户在遗忘密码时具有基本的网络访问权限，例如填写密码重置申请单。</td>
+<td>可以访问数据中心的AD域控制器/DNS服务器/DHCP服务器/密码重新初始化应用，不可以访问数据中心的其他资源和办公VLAN。</td>
+</tr>
+</tbody></table>
+<h4 id="1-5-2-指定AD域控制器和认证服务器"><a href="#1-5-2-指定AD域控制器和认证服务器" class="headerlink" title="1.5.2 指定AD域控制器和认证服务器"></a>1.5.2 指定AD域控制器和认证服务器</h4><p>AD服务器作为Policy Center服务器的外部认证源。</p>
+<p>l   终端在员工登录前进行主机名认证。</p>
+<p><img src="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed38498dd0.jpg" alt="img" loading="lazy"></p>
+<p>主机名保存在AD域控制器。终端发来的主机名，RADIUS服务器会送往AD域控制器进行验证。</p>
+<p>l   终端用户使用Microsoft AD域帐号进行身份认证。</p>
+<p><img src="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed384a7267.jpg" alt="img" loading="lazy"></p>
+<p>帐号和密码本身不是保存在RADIUS服务器，而是保存在AD域控制器。AD域控制器用来校验终端用户的身份是否合法。员工的身份信息最终由RADIUS服务器送往AD域控制器进行校验。</p>
+<p>Policy Center服务器必须加入AD域，否则，RADIUS认证和授权业务配置完后，终端用户认证不通过。</p>
+<p>Policy Center服务器、AD域控制器、终端各自的时区设置必须保持一致，各自的时间误差必须小于5分钟，否则终端用户认证不通过。</p>
+<p>RADIUS服务器除了把AD域帐号、密码、主机名转发给AD域控制器校验之外，还会亲自校验哑终端的MAC地址。哑终端的MAC地址需要添加到RADIUS服务器，方便RADIUS服务器对哑终端进行放行。</p>
+<p><img src="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed384b379a.jpg" alt="img" loading="lazy"></p>
+<p>表1-1 指定AD域控制器和认证服务器</p>
+<table>
+<thead>
+<tr>
+<th>服务器</th>
+<th>参数</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AD域控制器</td>
+<td>域名</td>
+<td>example.com</td>
+</tr>
+<tr>
+<td>IP地址</td>
+<td>10.1.1.3</td>
+<td></td>
+</tr>
+<tr>
+<td>认证端口</td>
+<td>389</td>
+<td></td>
+</tr>
+<tr>
+<td>同步账号/密码</td>
+<td>tony/ Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>员工帐号/密码</td>
+<td><a href="mailto:&#106;&#x61;&#x63;&#x6b;&#64;&#x65;&#120;&#x61;&#109;&#112;&#108;&#x65;&#46;&#x63;&#111;&#x6d;">&#106;&#x61;&#x63;&#x6b;&#64;&#x65;&#120;&#x61;&#109;&#112;&#108;&#x65;&#46;&#x63;&#111;&#x6d;</a>/Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>SM+SC（RADIUS服务器，对应于交换机上配置的认证服务器、计费服务器和授权服务器）</td>
+<td>版本</td>
+<td>Policy Center V100R003C10</td>
+</tr>
+<tr>
+<td>主用服务器IP地址</td>
+<td>172.18.12.4</td>
+<td></td>
+</tr>
+<tr>
+<td>备用服务器IP地址</td>
+<td>172.18.12.3</td>
+<td></td>
+</tr>
+<tr>
+<td>认证端口</td>
+<td>1812</td>
+<td></td>
+</tr>
+<tr>
+<td>计费端口</td>
+<td>1813</td>
+<td></td>
+</tr>
+<tr>
+<td>网络打印机MAC旁路认证帐号（MAC地址）</td>
+<td>00-E0-4C-83-C9-EB</td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="1-5-3-配置802-1x认证"><a href="#1-5-3-配置802-1x认证" class="headerlink" title="1.5.3 配置802.1x认证"></a>1.5.3 配置802.1x认证</h4><p>普通终端安装的是Microsoft Windows操作系统，可通过操作系统自带802.1X认证客户端进行认证，无须再安装其他第三方认证客户端。</p>
+<p>员工自行输入AD域帐号和密码进行认证。管理员需要在连接终端的交换机接口配置802.1X认证。</p>
+<p>由于无法在哑终端安装802.1X认证客户端，管理员必须在连接哑终端的交换机接口配置MAC旁路认证，方便交换机以哑终端的MAC地址作为帐号和密码自动向RADIUS服务器发起认证，确保哑终端在无人值守的情况下自动接入网络。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>设备型号</td>
+<td>HUAWEI S5700</td>
+</tr>
+<tr>
+<td>软件版本</td>
+<td>V200R001C00SPC300</td>
+</tr>
+<tr>
+<td>IP地址</td>
+<td>172.18.10.7</td>
+</tr>
+<tr>
+<td>预共享秘钥</td>
+<td>Admin@123</td>
+</tr>
+<tr>
+<td>认证方式</td>
+<td>RADIUS</td>
+</tr>
+<tr>
+<td>认证方法</td>
+<td>EAP</td>
+</tr>
+<tr>
+<td>计费方式</td>
+<td>RADIUS</td>
+</tr>
+<tr>
+<td>实时计费周期</td>
+<td>15min</td>
+</tr>
+<tr>
+<td>接口</td>
+<td>Gigabit Ethernet 0/0/9连接打印机，未认证时加入VLAN 109（认证后加入的VLAN由RADIUS服务器下发），配置MAC旁路认证。</td>
+</tr>
+<tr>
+<td>Gigabit Ethernet 0/0/10连接PC，未认证时加入VLAN 109（认证后加入的VLAN由RADIUS服务器下发），配置802.1X认证。</td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="1-6-配置过程"><a href="#1-6-配置过程" class="headerlink" title="1.6 配置过程"></a>1.6 配置过程</h4><h4 id="1-6-1-配置接入交换机（终端接入侧）"><a href="#1-6-1-配置接入交换机（终端接入侧）" class="headerlink" title="1.6.1 配置接入交换机（终端接入侧）"></a>1.6.1 配置接入交换机（终端接入侧）</h4><ol>
+<li><h4 id="配置RADIUS服务器模板。"><a href="#配置RADIUS服务器模板。" class="headerlink" title="配置RADIUS服务器模板。"></a>配置RADIUS服务器模板。</h4></li>
+</ol>
+<p>配置RADIUS服务器模板policy。把Policy Center的服务器配置为RADIUS服务器，为终端用户提供认证和计费服务。</p>
+<p><Quidway> <strong>system-view</strong><br>[Quidway] <strong>radius-server template policy</strong></p>
+<p>配置RADIUS主用认证服务器的IP地址和认证端口。</p>
+<p>[Quidway-radius-policy] <strong>radius-server authentication 172.18.12.4 1812</strong></p>
+<p>配置主用计费服务器的IP地址和计费端口。</p>
+<p>[Quidway-radius-policy] <strong>radius-server accounting 172.18.12.4 1813</strong></p>
+<p>[Quidway-radius-policy] <strong>radius-server authentication 172.18.12.3 1812 secondary</strong></p>
+<p>[Quidway-radius-policy] <strong>radius-server accounting 172.18.12.3 1813 secondary</strong></p>
+<p>RADIUS服务器要与交换机联动对终端进行接入控制，管理员必须为交换机配置预共享密钥，以便交换机验证RADIUS服务器是否合法。</p>
+<p>配置认证密钥和计费密钥。</p>
+<p>[Quidway-radius-policy] <strong>radius-server shared-key cipher Admin@123</strong><br>[Quidway-radius-policy] <strong>quit</strong></p>
+<ol start="2">
+<li><h4 id="配置RADIUS授权服务器。"><a href="#配置RADIUS授权服务器。" class="headerlink" title="配置RADIUS授权服务器。"></a>配置RADIUS授权服务器。</h4></li>
+</ol>
+<p>#配置RADIUS授权服务器的地址和共享密钥。授权密钥必须与认证密钥、计费密钥保持一致，否则802.1X认证会失败。</p>
+<p>[Quidway] <strong>radius-server authorization 172.18.12.4 shared-key cipher Admin@123</strong><br>[Quidway] <strong>radius-server authorization 172.18.12.3 shared-key cipher Admin@123</strong></p>
+<ol start="3">
+<li>配置认证方案和计费方案。</li>
+</ol>
+<p>基于接入层的802.1X接入控制方案使用Policy Center作为RADIUS服务器给终端进行认证和授权，交换机的认证模式和计费模式必须配置为RADIUS。</p>
+<p>[Quidway] <strong>aaa</strong><br>[Quidway-aaa] <strong>authentication-scheme auth</strong><br>[Quidway-aaa-authen-auth] <strong>authentication-mode radius</strong><br>[Quidway-aaa-authen-auth] <strong>quit</strong></p>
+<p>RADIUS服务器的计费业务并非真实意义上的计费。配置计费的目的在于通过配置计费从RADIUS服务器与接入控制设备交互的计费报文获取终端用户的上线时间和下线时间，在需要时通过发送计费报文强制终端用户下线。最终目的是通过RADIUS计费来实现RADIUS在线用户管理功能，控制终端用户的在线时长。</p>
+<p>如果不配置计费功能，管理员在RADIUS在线用户列表中将无法查到在线用户，终端无法正常下线，License计算也会不准确。</p>
+<p>配置计费方案，计费模式设为radius，启用实时计费并设置计费间隔为15min。</p>
+<p>[Quidway-aaa] <strong>accounting-scheme acco</strong><br>[Quidway-aaa-accounting-acco] <strong>accounting-mode radius</strong><br>[Quidway-aaa-accounting-acco] <strong>accounting realtime 15</strong><br>[Quidway-aaa-accounting-acco] <strong>quit</strong></p>
+<p>在Policy Center作为RADIUS服务器提供认证和授权服务时，认证模式和计费模式必须配置成radius。</p>
+<p><strong>accounting realtime</strong>命令用来配置实时计费周期。实时计费间隔的取值对设备和RADIUS服务器的性能有要求，实时计费间隔的取值越小，对设备和RADIUS服务器的性能就越高。请根据用户数设置计费间隔。</p>
+<table>
+<thead>
+<tr>
+<th>用户数</th>
+<th>实时计费间隔</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1～99</td>
+<td>3min</td>
+</tr>
+<tr>
+<td>100～499</td>
+<td>6min</td>
+</tr>
+<tr>
+<td>500～999</td>
+<td>12min</td>
+</tr>
+<tr>
+<td>≥1000</td>
+<td>≥15min</td>
+</tr>
+</tbody></table>
+<ol start="4">
+<li>配置域。</li>
+</ol>
+<p>配置域default。</p>
+<p>[Quidway-aaa] <strong>domain default</strong></p>
+<p>绑定域default和已配置的RADIUS服务器模板、认证方案及计费方案。</p>
+<p>[Quidway-aaa-domain-default] radius-server policy <br>[Quidway-aaa-domain-default] authentication-scheme auth <br>[Quidway-aaa-domain-default] accounting-scheme acco <br>[Quidway-aaa-domain-default] quit <br>[Quidway-aaa] quit</p>
+<ol start="5">
+<li>配置802.1X认证。</li>
+</ol>
+<p>启用全局的802.1X认证。</p>
+<p>[Quidway] <strong>dot1x enable</strong></p>
+<p>配置认证方法。</p>
+<p>[Quidway] <strong>dot1x authentication-method eap</strong></p>
+<p>在Policy Center作为RADIUS服务器时，认证方法必须是EAP。如果设成其他选项（例如CHAP）会导致认证不通过。</p>
+<ol start="6">
+<li>配置接口。</li>
+</ol>
+<p>配置接口的链路类型。</p>
+<p>[Quidway] <strong>interface GigabitEthernet 0/0/9</strong><br>[Quidway-GigabitEthernet 0/0/9] <strong>port link-type access</strong></p>
+<p>在接入层交换机应用802.1X接入方案，交换机连接的属于需要认证的终端，接入控制点已经下探到网络末梢，故接口类型设为Acess。</p>
+<p>配置接口的VLAN。</p>
+<p>[Quidway-GigabitEthernet 0/0/9] <strong>port default vlan 109</strong></p>
+<p>启用接口的802.1X认证。</p>
+<p>[Quidway-GigabitEthernet 0/0/9] <strong>dot1x enable</strong></p>
+<p>启用MAC旁路认证和MAC旁路认证过程中优先进行MAC认证。</p>
+<p>[Quidway-GigabitEthernet 0/0/9] <strong>dot1x mac-bypass mac-auth-first</strong><br>[Quidway-GigabitEthernet 0/0/9] <strong>dot1x mac-bypass</strong></p>
+<p>MAC旁路认证是指交换机对终端先尝试802.1X认证。如果802.1X认证失败，则以终端的MAC地址作为账号和密码向RADIUS服务器发起身份认证，这个阶段又称为MAC认证。</p>
+<p>考虑到哑终端无法安装802.1X认证客户端，802.1X认证必然会失败。如此一来，诸如打印机之类的哑终端必然会经历一次802.1X认证失败，再经过一次MAC认证才能接入网络，认证时间较长。</p>
+<p><strong>dot1x mac-bypass mac-auth-first</strong>命令的作用是颠倒MAC旁路认证的两个认证阶段的顺序，先尝试MAC认证，认证失败后再尝试802.1X认证。这样能缩短哑终端进行认证的时间，确保哑终端能够快速接入网络提供服务。</p>
+<p>配置该接口允许认证的最大用户数。</p>
+<p>[Quidway-GigabitEthernet 0/0/9] <strong>dot1x mac-user 1</strong></p>
+<p>在接入层交换机应用802.1X接入方案，交换机连接的属于需要认证的终端，接入控制点已经下探到网络末梢，单个接口最大接入用户数为1。</p>
+<p>配置接口的Guest VLAN。</p>
+<p>[Quidway-GigabitEthernet 0/0/9] <strong>authentication guest-vlan 109</strong></p>
+<p>Guest VLAN是终端处于未认证状态或者认证失败时允许访问的网络资源。通常Guest VLAN会部署必要的网络资源，如DHCP服务器、DNS服务器、RADIUS服务器，允许终端在未能正常接入网络的情况下，依然有权限获取必要的、有限的网络服务。</p>
+<p>配置接口的接入方式为基于port方式。</p>
+<p>[Quidway-GigabitEthernet 0/0/9] <strong>dot1x port-method port</strong></p>
+<p>交换机接入控制方式设为port，是表示一台终端通过认证，所有终端均能接入网络。在接入层交换机应用802.1X接入方案，交换机连接的属于需要认证的终端，接入控制点已经下探到网络末梢，终端认证基于交换机端口即可满足要求。</p>
+<p>重复以上步骤，配置接口GigabitEthernet 0/0/10。</p>
+<p>[Quidway] interface GigabitEthernet 0/0/10 <br>[Quidway-GigabitEthernet 0/0/10] port link-type access <br>[Quidway-GigabitEthernet 0/0/10] port default vlan 109 <br>[Quidway-GigabitEthernet 0/0/10] dot1x enable <br>[Quidway-GigabitEthernet 0/0/10] dot1x mac-bypass mac-auth-first <br>[Quidway-GigabitEthernet 0/0/10] dot1x mac-bypass <br>[Quidway-GigabitEthernet 0/0/10] dot1x mac-user 1 <br>[Quidway-GigabitEthernet 0/0/10] authentication guest-vlan 109 <br>[Quidway-GigabitEthernet 0/0/10] dot1x port-method port</p>
+<h4 id="1-6-2-配置策略管理中心"><a href="#1-6-2-配置策略管理中心" class="headerlink" title="1.6.2 配置策略管理中心"></a>1.6.2 配置策略管理中心</h4><ol>
+<li>进入“接入控制策略 &gt; 接入设备 &gt; 接入设备 &gt; 设备”增加设备。方便Policy Center向接入层控制设备下发VLAN ID。认证密钥、计费密钥、实时计费周期必须与交换机侧的配置保持一致，否则终端认证会失败。</li>
+</ol>
+<p>l   RADIUS认证密钥：Admin@123</p>
+<p>l   RADIUS计费密钥：Admin@123</p>
+<p><img src="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed384c2438.jpg" alt="img" loading="lazy"></p>
+<ol start="2">
+<li>增加网络打印机接入、终端主机接入和主机名认证接入的授权结果。</li>
+</ol>
+<p>选择“接入控制策略 &gt; 认证授权 &gt; 授权结果”增加授权结果。</p>
+<p>l   网络打印机在MAC旁路认证通过后，RADIUS服务器向交换机下发VLAN ID 102，确保哑终端能够接入办公VLAN，为员工办公时访问。</p>
+<p>l   员工在802.1X认证通过后，RADIUS服务器向交换机下发VLAN ID 102，确保员工能够接入办公VLAN，有权限访问数据中心的网络资源。</p>
+<p>l   普通终端在通过主机名认证通过后，RADIUS服务器向交换机下发VLAN ID 130，确保终端能够接入主机名认证VLAN。确保终端用户在遗忘密码时具有基本的网络访问权限，例如填写密码重置申请单。</p>
+<table>
+<thead>
+<tr>
+<th>授权结果</th>
+<th>打印机的授权结果</th>
+<th>员工的授权结果</th>
+<th>主机名认证的授权结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>名称</td>
+<td>打印机</td>
+<td>员工</td>
+<td>主机名认证</td>
+</tr>
+<tr>
+<td>业务类型</td>
+<td>MAC旁路认证业务</td>
+<td>接入业务</td>
+<td>接入业务</td>
+</tr>
+<tr>
+<td>VLAN</td>
+<td>102</td>
+<td>102</td>
+<td>130</td>
+</tr>
+</tbody></table>
+<p>终端身份认证失败或未进行身份认证接入Guest VLAN已经在交换机上进行配置，在Policy Center服务器不需要配置。</p>
+<ol start="3">
+<li>增加网络打印机接入、终端主机接入和主机名认证接入授权规则，分别对应上面步骤创建的授权结果。</li>
+</ol>
+<p>选择“接入控制策略 &gt; 认证授权 &gt; 授权规则”。</p>
+<p>l   网络打印机接入的授权规则，确保网络打印机通过MAC旁路认证后能够获得办公VLAN的访问权限。</p>
+<p>l   普通终端在输入帐号和密码后接入的授权规则，确保员工在通过AD认证后能够获得办公VLAN的访问权限。</p>
+<p>l   主机名认证接入的授权规则，确保终端能够接入主机名认证VLAN。</p>
+<table>
+<thead>
+<tr>
+<th>授权规则</th>
+<th>打印机的授权规则</th>
+<th>员工的授权规则</th>
+<th>主机名认证的授权规则</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>业务类型</td>
+<td>MAC旁路认证业务</td>
+<td>接入业务</td>
+<td>接入业务</td>
+</tr>
+<tr>
+<td>定制条件</td>
+<td>-</td>
+<td>-</td>
+<td>Windows主机名认证</td>
+</tr>
+<tr>
+<td>授权结果</td>
+<td>打印机</td>
+<td>员工</td>
+<td>主机名认证</td>
+</tr>
+</tbody></table>
+<p>将默认授权规则的“授权结果”修改为“禁止接入”，表示其他的终端属于非授权终端，接入时将会被禁止接入。</p>
+<ol start="4">
+<li>收集所有哑终端的MAC地址，把这些哑终端添加到哑终端设备组。在MAC旁路认证列表中添加网络打印机的MAC地址，只有MAC地址在MAC地址列表中的哑终端能允许接入办公VLAN。</li>
+</ol>
+<p>选择“用户与终端 &gt; 设备管理 &gt;设备管理”增加设备组。</p>
+<pre><code>   设备组名称：网络打印机</code></pre>
+<p>选择“网络打印机” 组，选择“设备列表”增加打印机的MAC地址。</p>
+<pre><code>   MAC地址：00-E0-4C-83-C9-EB</code></pre>
+<ol start="5">
+<li>配置AD控制器，终端主机名认证和员工认证能够到AD控制器上进行验证。</li>
+</ol>
+<p>选择“用户与终端 &gt; 外部数据源 &gt; AD/LDAP同步”。</p>
+<p><img src="https://forum.huawei.com/enterprise/zh/data/attachment/forum/dm/ecommunity/uploads/2015/0803/10/55bed384d10c9.jpg" alt="img" loading="lazy"></p>
+<p>同步方式选择“不同步帐号/组织结构”。</p>
+<ol start="6">
+<li>增加AD域帐号和MAC旁路认证的认证规则。</li>
+</ol>
+<p>如果不增加AD域帐号的认证规则，则员工无法到AD域控制器进行认证。</p>
+<p>如果不增加MAC旁路认证的认证规则，则哑终端无法通过认证。</p>
+<p>选择“接入控制策略 &gt; 认证授权 &gt; 认证规则”增加认证规则。</p>
+<table>
+<thead>
+<tr>
+<th>认证规则</th>
+<th>AD的认证规则</th>
+<th>哑终端的认证规则</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>业务类型</td>
+<td>接入业务</td>
+<td>MAC旁路认证业务</td>
+</tr>
+<tr>
+<td>数据源</td>
+<td>AD</td>
+<td>本地数据源</td>
+</tr>
+<tr>
+<td>终端设备组</td>
+<td>-</td>
+<td>网络打印机</td>
+</tr>
+<tr>
+<td>认证协议</td>
+<td>所有协议</td>
+<td>所有协议</td>
+</tr>
+</tbody></table>
+<ol start="7">
+<li>配置终端主机。</li>
+</ol>
+<p>l   配置Microsoft Windows XP</p>
+<p>(1)选择“开始 &gt; 设置 &gt; 控制面板”。</p>
+<p>(2)依次单击“管理工具”和“服务”。</p>
+<p>(3)右键单击“Wired AutoConfig”服务，选择“启动”。</p>
+<p>(4)在“控制面板”单击“网络连接”，并右键单击终端主机使用的网络连接，选择“属性”。</p>
+<p>(5)在“身份验证”页签选中“启用 IEEE 802.1X 身份验证”，在“选择网络身份验证方法”区域框选择“受保护的 EAP (PEAP)”，并单击“设置”。</p>
+<p>(6)取消“验证服务器证书”，在“选择身份验证方法”区域框选择“安全密码 (EAP-MSCHAP v2)”，并在右侧单击“配置”。</p>
+<p>(7)选中“自动使用 Windows 登录名和密码”。</p>
+<p>l   配置Microsoft Windows 7</p>
+<p>(1)选择“开始 &gt; 控制面板”。</p>
+<p>(2)依次单击“管理工具”和“服务”。</p>
+<p>(3)右键单击“Wired AutoConfig”服务，选择“启动”。</p>
+<p>(4)在“控制面板”单击“网络和共享中心”，并单击终端主机使用的网络连接，单击“属性”。</p>
+<p>(5)在“身份验证”页签选中“启用 IEEE 802.1X 身份验证”，在“选择网络身份验证方法”区域框选择“受保护的 EAP (PEAP)”，并单击“设置”。</p>
+<p>(6)取消“验证服务器证书”，在“选择身份验证方法”区域框选择“安全密码 (EAP-MSCHAP v2)”，并在右侧单击“配置”。</p>
+<p>(7)选中“自动使用 Windows 登录名和密码”。</p>
+<p>—-结束</p>
+<h4 id="1-7-总结与建议"><a href="#1-7-总结与建议" class="headerlink" title="1.7 总结与建议"></a>1.7 总结与建议</h4><p>基于接入层的802.1X接入方案，其关键步骤是：</p>
+<ol>
+<li><p>把不同访问级别的网络资源规划到不同的VLAN。</p>
+</li>
+<li><p>在接入层交换机对终端用户启用802.1X认证，对哑终端实施MAC旁路认证，以便阻击未授权终端浑水摸鱼接入网络。</p>
+</li>
+<li><p>根据身份认证结果给交换机接口下发不同的VLAN ID，以便普通终端和哑终端接入办公网络。</p>
+</li>
+</ol>
+<p>举例中把终端认证后的访问权限（办公VLAN 102）设置成完全一样，对接入控制模型作了一定程度的简化，方便读者理解。</p>
+<p>如果管理员想进行精细化的网络权限控制，例如研发、财务、市场员工在认证后拥有独立访问的网络资源，可把每个部门认证后允许访问的网络资源划分到不同的VLAN，在认证后Policy Center服务器下发不同的VLAN ID即可达成。</p>
+<p>以Policy Center服务器为核心，基于接入层的接入控制方案中的二次身份认证设计非常巧妙：</p>
+<p>l   在开机时通过Microsoft Windows自带的802.1X认证客户端自动尝试使用主机名进行认证。为已加入域的终端开放了比认证前域更大的权限，解决域密码遗忘无法正常接入办公网络的问题。</p>
+<p>l   终端用户使用AD帐号登录操作系统，自动完成身份认证。认证通过后接入办公网络。</p>
+<p>同时，未加入域未通过身份认证的终端留有加入域所依赖的网络资源，为新购入的终端接入网络作好铺垫，所谓一石三鸟。</p>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://forum.huawei.com/enterprise/zh/thread-234187.html">https://forum.huawei.com/enterprise/zh/thread-234187.html</a></p>
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"></div><div style="display:inline-block"></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>澈崽子</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://zeozzz.github.com/2019/04/18/3/" title="有线802.1X认证在企业用户接入中的应用（加入AD域场景）">https://zeozzz.github.com/2019/04/18/3/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2019/04/18/10/" rel="prev" title="IPv6原理、应用与实践"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">IPv6原理、应用与实践</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2019/04/18/2/" rel="next" title="H3C AC/AP 调试命令"><span class="post-nav-text">H3C AC/AP 调试命令</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="http://www.beian.miit.gov.cn" target="_blank"></a></div><div class="copyright"><span>&copy; 2015 – 2020 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 澈崽子</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.0.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v0.9.5</span></div><div class="live_time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  window.setTimeout(blog_live_time, 1000);
+  const start = new Date('2015-09-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div></div><script defer src="/js/utils.js"></script><script defer src="/js/hexo-theme-yun.js"></script></body></html>

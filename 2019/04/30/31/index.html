@@ -1,0 +1,403 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="澈崽子"><meta name="copyright" content="澈崽子"><meta name="generator" content="Hexo 5.0.0"><meta name="theme" content="hexo-theme-yun"><title>校招面试知识点复习之计算机网络 | 澈崽子 | 家有网工初长成</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="none" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.19/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_stqaphw3j4.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true}
+    ]
+  });
+});</script><link class="aplayer-style-marker" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script class="aplayer-script-marker" src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" defer></script><script class="meting-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js" defer></script><link rel="shortcut icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"root":"/","title":"澈崽子的小窝","version":"0.9.5","anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><meta name="description" content="原文链接：https:&#x2F;&#x2F;juejin.im&#x2F;post&#x2F;593de67261ff4b006c97452e 1、电路交换与分组交换 电路交换特点：资源会被预留 电路交换分为：频分多路复用以及时分多路复用 优点：可以为一个通话保证特定数量的端到端带宽 缺点：效率低   分组交换特点：资源不会被预留 优点：效率高  今天的因特网就是分组交换的典范！ 分组交换中的时延 处理时延、排队时延、传输时延、传播时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="校招面试知识点复习之计算机网络">
+<meta property="og:url" content="https://zeozzz.github.com/2019/04/30/31/index.html">
+<meta property="og:site_name" content="澈崽子 | 家有网工初长成">
+<meta property="og:description" content="原文链接：https:&#x2F;&#x2F;juejin.im&#x2F;post&#x2F;593de67261ff4b006c97452e 1、电路交换与分组交换 电路交换特点：资源会被预留 电路交换分为：频分多路复用以及时分多路复用 优点：可以为一个通话保证特定数量的端到端带宽 缺点：效率低   分组交换特点：资源不会被预留 优点：效率高  今天的因特网就是分组交换的典范！ 分组交换中的时延 处理时延、排队时延、传输时延、传播时">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image01.zhang-zhe.cn/20190430110613.png">
+<meta property="og:image" content="https://image01.zhang-zhe.cn/20190430110915.png">
+<meta property="og:image" content="https://image01.zhang-zhe.cn/20190430110938.png">
+<meta property="og:image" content="https://image01.zhang-zhe.cn/20190430111010.png">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/7/20/a871001c14f23a4f1046ab687528f690?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/7/20/7f34ab4373e42f75f9ff935bda594907?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/7/20/482a3e73b0142e8186430822a76591b4?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/7/20/b3941dd130a8cf6ffa9bec6a9acc0be0?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/7/20/894968a735c1b1112460f17ce0d246b6?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/7/20/b077e1f482555fd5f187cafebf1d9dbe?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/7/20/20f4c9dfaef6010576d8903e865ff7ed?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="article:published_time" content="2019-04-30T02:48:41.000Z">
+<meta property="article:modified_time" content="2019-05-05T05:12:38.805Z">
+<meta property="article:author" content="澈崽子">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image01.zhang-zhe.cn/20190430110613.png"></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script defer src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="澈崽子"><img width="96" loading="lazy" src="/avatar.jfif" alt="澈崽子"></a><div class="site-author-name"><a href="/about/">澈崽子</a></div><a class="site-name" href="/about/site.html">澈崽子 | 家有网工初长成</a><sub class="site-subtitle"></sub><div class="site-desciption">念念不忘 必有回响</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">74</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">29</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">36</span></a></div><a class="site-state-item hty-icon-button" href="/null" title="常用文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 群" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Zeozzz" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/linche521chn" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/zeozzz/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=46666755" title="网易云音乐" target="_blank" style="color:#C20C0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/janz1995chn/activities" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/15054940" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/zeozzz" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/zeozzz" title="Telegram Channel" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:zhangzhe@live.in" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.now.sh/" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-send-plane-2-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://huawei.com" title="华为文档" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-huawei-line"></use></svg></a></div></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2%E4%B8%8E%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2"><span class="toc-number">1.</span> <span class="toc-text">1、电路交换与分组交换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E5%9B%A0%E7%89%B9%E7%BD%91%E7%9A%84%E5%88%86%E5%B1%82%E6%A8%A1%E5%9E%8B%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">2、因特网的分层模型：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81UDP%E5%92%8CTCP%E8%AF%A6%E8%A7%A3"><span class="toc-number">3.</span> <span class="toc-text">3、UDP和TCP详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E9%80%89%E8%B7%AF%E5%92%8C%E8%BD%AC%E5%8F%91"><span class="toc-number">4.</span> <span class="toc-text">4、选路和转发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5%E3%80%81IP"><span class="toc-number">5.</span> <span class="toc-text">5、IP</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%96%E3%80%81%E9%80%89%E8%B7%AF%E7%AE%97%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">６、选路算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7%E3%80%81%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE%E5%8D%8F%E8%AE%AE"><span class="toc-number">7.</span> <span class="toc-text">7、多路访问协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8%E3%80%81%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90%E5%8D%8F%E8%AE%AE%E2%80%94%E2%80%94ARP"><span class="toc-number">8.</span> <span class="toc-text">8、地址解析协议——ARP</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9%E3%80%81%E4%BA%A4%E6%8D%A2%E6%9C%BA%E4%B8%8E%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">9.</span> <span class="toc-text">9、交换机与路由器的比较</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10%E3%80%81%E7%AE%80%E7%AD%94%E9%A2%98%E9%83%A8%E5%88%86%EF%BC%9A"><span class="toc-number">10.</span> <span class="toc-text">10、简答题部分：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#RIP%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="toc-number">10.1.</span> <span class="toc-text">RIP工作原理：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E%E5%B1%80%E5%9F%9F%E7%BD%91%E7%9A%84%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%BB%E8%A6%81%E7%9B%AE%E7%9A%84%EF%BC%8C%E5%B9%B6%E6%A6%82%E8%BF%B0CSMA-CD%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B%E3%80%82"><span class="toc-number">10.2.</span> <span class="toc-text">说明局域网的介质访问控制协议的主要目的，并概述CSMA&#x2F;CD协议的工作过程。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MAC%E5%9C%B0%E5%9D%80%E5%92%8CIP%E5%9C%B0%E5%9D%80%E6%9C%89%E4%BB%80%E4%B9%88%E6%9C%AC%E8%B4%A8%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">10.3.</span> <span class="toc-text">MAC地址和IP地址有什么本质区别？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA%E4%B8%AD%E9%97%B4%E7%B3%BB%E7%BB%9F%E3%80%82%E8%BD%AC%E5%8F%91%E5%99%A8%E3%80%81%E7%BD%91%E6%A1%A5%E3%80%81%E8%B7%AF%E7%94%B1%E5%99%A8%E5%92%8C%E7%BD%91%E5%85%B3%E6%9C%89%E4%BD%95%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">10.4.</span> <span class="toc-text">作为中间系统。转发器、网桥、路由器和网关有何区别？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%95%E7%AE%80%E5%8D%95%E8%AF%B4%E6%98%8E%E4%B8%8B%E5%88%97%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9AIP%E3%80%81ARP%E3%80%81RARP%E5%92%8CICMP%E3%80%82"><span class="toc-number">10.5.</span> <span class="toc-text">试简单说明下列协议的作用：IP、ARP、RARP和ICMP。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#C-S%E6%A8%A1%E5%BC%8F%E5%92%8CP2P%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">10.6.</span> <span class="toc-text">C&#x2F;S模式和P2P模式的区别</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9C%A8%E4%B8%80%E4%B8%AA%E4%BA%92%E8%81%94%E7%BD%91%E4%B8%AD%EF%BC%8C%E8%83%BD%E5%90%A6%E4%BD%BF%E7%94%A8%E4%B8%80%E4%B8%AA%E5%BE%88%E5%A4%A7%E7%9A%84%E4%BA%A4%E6%8D%A2%E6%9C%BA-switch-%E6%9D%A5%E4%BB%A3%E6%9B%BF%E4%BA%92%E8%81%94%E7%BD%91%E4%B8%AD%E5%BE%88%E5%A4%9A%E7%9A%84%E8%B7%AF%E7%94%B1%E5%99%A8%EF%BC%9F"><span class="toc-number">10.7.</span> <span class="toc-text">在一个互联网中，能否使用一个很大的交换机(switch)来代替互联网中很多的路由器？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E8%A1%A8%E4%B8%AD%E5%8F%AA%E7%BB%99%E5%87%BA%E5%88%B0%E7%9B%AE%E7%9A%84%E7%BD%91%E7%BB%9C%E7%9A%84%E4%B8%8B%E4%B8%80%E8%B7%B3%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84IP%E5%9C%B0%E5%9D%80%EF%BC%8C%E7%84%B6%E5%90%8E%E5%9C%A8%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84%E8%B7%AF%E7%94%B1%E8%A1%A8%E4%B8%AD%E5%86%8D%E7%BB%99%E5%87%BA%E5%86%8D%E4%B8%8B%E4%B8%80%E8%B7%B3%E7%9A%84%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84IP%E5%9C%B0%E5%9D%80%EF%BC%8C%E6%9C%80%E5%90%8E%E6%89%8D%E8%83%BD%E5%88%B0%E8%BE%BE%E7%9B%AE%E7%9A%84%E7%BD%91%E7%BB%9C%E8%BF%9B%E8%A1%8C%E7%9B%B4%E6%8E%A5%E4%BA%A4%E4%BB%98%E3%80%82%E9%87%87%E7%94%A8%E8%BF%99%E6%A0%B7%E7%9A%84%E6%96%B9%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E5%A5%BD%E5%A4%84%EF%BC%9F"><span class="toc-number">10.8.</span> <span class="toc-text">路由表中只给出到目的网络的下一跳路由器的IP地址，然后在下一个路由器的路由表中再给出再下一跳的路由器的IP地址，最后才能到达目的网络进行直接交付。采用这样的方法有什么好处？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#IP%E5%8D%8F%E8%AE%AE%E6%9C%89%E5%88%86%E7%89%87%E7%9A%84%E5%8A%9F%E8%83%BD%EF%BC%8C%E4%BD%86%E5%B9%BF%E5%9F%9F%E7%BD%91%E4%B8%AD%E7%9A%84%E5%88%86%E7%BB%84%E5%88%99%E4%B8%8D%E5%BF%85%E5%88%86%E7%89%87%E3%80%82%E8%BF%99%E6%98%AF%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">10.9.</span> <span class="toc-text">IP协议有分片的功能，但广域网中的分组则不必分片。这是为什么？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="toc-number">10.10.</span> <span class="toc-text">TCP三次握手</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E8%BF%B0IPv4%E5%88%B0IPv6%E7%9A%84%E8%BF%87%E6%B8%A1%E6%8A%80%E6%9C%AF"><span class="toc-number">10.11.</span> <span class="toc-text">简述IPv4到IPv6的过渡技术</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/04/30/31/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">校招面试知识点复习之计算机网络</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-04-30 10:48:41" itemprop="dateCreated datePublished" datetime="2019-04-30T10:48:41+08:00">2019-04-30</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2019-05-05 13:12:38" itemprop="dateModified" datetime="2019-05-05T13:12:38+08:00">2019-05-05</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-tag"><a class="tag" href="/tags/%E9%9D%A2%E8%AF%95/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">面试</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>原文链接：<a target="_blank" rel="noopener" href="https://juejin.im/post/593de67261ff4b006c97452e">https://juejin.im/post/593de67261ff4b006c97452e</a></p>
+<h4 id="1、电路交换与分组交换"><a href="#1、电路交换与分组交换" class="headerlink" title="1、电路交换与分组交换"></a><strong>1、电路交换与分组交换</strong></h4><ul>
+<li>电路交换特点：资源会被预留</li>
+<li>电路交换分为：频分多路复用以及时分多路复用</li>
+<li>优点：可以为一个通话保证特定数量的端到端带宽</li>
+<li>缺点：效率低</li>
+</ul>
+<ul>
+<li>分组交换特点：资源不会被预留</li>
+<li>优点：效率高</li>
+</ul>
+<p>今天的因特网就是分组交换的典范！</p>
+<p><strong>分组交换中的时延</strong></p>
+<p>处理时延、排队时延、传输时延、传播时延、传输时延</p>
+<p><strong>这其中要特别注意传输时延与传播时延的区别!!!</strong></p>
+<p>传输时延:</p>
+<p>R= 链路带宽 (bps)<br>L= 分组长度 (比特)<br>发送比特进入链路的时间= L/R</p>
+<p>传播时延:</p>
+<p>d = 物理链路的长度<br>s = 在媒体中传播的速度 (~2x108 m/sec)<br>传播时延 = d/s</p>
+<p><strong>分组交换对比电路交换</strong></p>
+<p>电路交换</p>
+<ul>
+<li>在数据传输前，必须建立端到端的连接</li>
+<li>一旦某个节点故障，必须重新建立连接</li>
+<li>连接建立后，数据的传输没有额外的延时</li>
+<li>数据中不必包含地址域，仅需较短的虚电路号</li>
+<li>数据按序传输，但信道的使用率较低</li>
+<li>适合长时间传输大批量的数据，如流数据</li>
+</ul>
+<p>分组交换</p>
+<ul>
+<li>在数据传输前，不必建立端到端的连接</li>
+<li>只要下一个节点空闲，即可传输</li>
+<li>信道的使用率较高</li>
+<li>数据的传输采用存储转发，延时不可估计</li>
+<li>数据中必须包含地址域</li>
+<li>接收到的分组不一定按序，可能还需重组</li>
+<li>适合传输文本型数据</li>
+</ul>
+<h4 id="2、因特网的分层模型："><a href="#2、因特网的分层模型：" class="headerlink" title="2、因特网的分层模型："></a><strong>2、因特网的分层模型：</strong></h4><ul>
+<li>应用层: 支持网络应用<br>FTP、HTTP、DNS、SMTP、DHCP、 RIP 等</li>
+<li>运输层: 主机到主机数据传输<br>TCP, UDP</li>
+<li>网络层: 从源到目的地数据报的选路<br>ARP、IP、ICMP、OSPF、BGP等</li>
+<li>数据链路层: 在邻近网元之间传输数据<br>ALOHA、CSMA或CSMA/CD、TDMA、FDMA、CDMA</li>
+<li>物理层: “在线上”的比特<br>任何一种调制解调体制</li>
+</ul>
+<p>应用层报文：　应用层协议分布在多个端系统上。一个端系统中的应用程序使用协议交换信息分组。我们将这种位于应用层的信息分组称为报文。</p>
+<p>运输层报文段：运输层的分组</p>
+<p>网络层数据报：因特网中的网络层分组</p>
+<p>数据链路层帧：链路层分组</p>
+<p>物理层比特：　物理层分组</p>
+<h4 id="3、UDP和TCP详解"><a href="#3、UDP和TCP详解" class="headerlink" title="3、UDP和TCP详解"></a><strong>3、UDP和TCP详解</strong></h4><p>UDP特点：是无连接的运输层协议</p>
+<p><img src="https://image01.zhang-zhe.cn/20190430110613.png" loading="lazy"></p>
+<p>优点：</p>
+<ul>
+<li>应用层能够更好地控制要发送的数据和发送时间</li>
+<li>无需建立连接</li>
+<li>无连接状态</li>
+<li>分组首部开销小</li>
+</ul>
+<p>应用：</p>
+<ul>
+<li>常用于流式多媒体应用<ul>
+<li>丢包容忍</li>
+<li>速率敏感</li>
+</ul>
+</li>
+<li>其他<ul>
+<li>DNS</li>
+<li>SNMP</li>
+</ul>
+</li>
+</ul>
+<p>TCP特点：</p>
+<ul>
+<li>点到点</li>
+<li>可靠、有序</li>
+<li>全双工</li>
+<li>面向连接</li>
+<li>流量控制</li>
+<li>拥塞控制</li>
+</ul>
+<p><img src="https://image01.zhang-zhe.cn/20190430110915.png" loading="lazy"></p>
+<p><img src="https://image01.zhang-zhe.cn/20190430110938.png" loading="lazy"></p>
+<p><img src="https://image01.zhang-zhe.cn/20190430111010.png" loading="lazy"></p>
+<p><strong>问题：TCP协议采用了哪些机制保证数据的可靠传输？</strong></p>
+<ul>
+<li>连接时的 三次握手以及断开时的四次握手</li>
+<li>确认机制（超时、稍带确认）</li>
+<li>拥塞控制、流量控制</li>
+</ul>
+<p><strong>TCP中拥塞控制的方法：</strong></p>
+<ul>
+<li>加性增，乘性减</li>
+<li>慢启动</li>
+<li>对超时事件做出反应</li>
+</ul>
+<p>加性增：没有检测到拥塞的情况下，收到一个确认后就把拥塞窗口值增大一点（线性）</p>
+<p>乘性减：每发生一次丢包事件就将当前的拥塞窗口值减半</p>
+<p><strong>这里要特别注意拥塞控制、流量控制的区别</strong></p>
+<ul>
+<li>拥塞控制：防止过多的数据注入到网络中，这样可以使网络中的路由器不至于过载。拥塞控制的前提是：网络能够承受现有的网络负荷。</li>
+<li>流量控制：点对点通信量的控制。控制发送端的发送数据的速率。 </li>
+</ul>
+<p><strong>这里要特别注意选择重传、回退N步的区别</strong></p>
+<ul>
+<li>选择重传：只重传出现差错的数据帧。但这时必须加大接收窗口，以便先收下发送序列号不连续但仍在接收窗口中的数据帧。等到所缺序号的数据帧收到后再一并交给主机。</li>
+<li>回退N步：当接收方检测出失序的数据帧后，要求发送方重发最后一个正确接收的信息之后所有未确认的帧；或者当发送方发了N个帧以后，发现N帧的前一帧在计时器超时后仍未返回其确认信息，则该帧被判超时或者出错，此时发送方不得不重新发送出错帧以及其后的帧。</li>
+</ul>
+<hr>
+<h4 id="4、选路和转发"><a href="#4、选路和转发" class="headerlink" title="4、选路和转发"></a><strong>4、选路和转发</strong></h4><ul>
+<li>转发：当一个分组到达某路由器的一条输入链路时，该路由器必须将该分组移动到适当的输出链路。</li>
+<li>选路：当分组从发送方流向接收方时，网络层必须决定这些分组所采用的路由或路径。</li>
+</ul>
+<blockquote>
+<p><strong>选路</strong>是指分组从源到目的地时，决定端到端路径的网络范围的进程。</p>
+<p><strong>转发</strong>是指将分组从一个输入链路接口转移到适当的输出链路接口的路由器本地动作。</p>
+</blockquote>
+<h4 id="5、IP"><a href="#5、IP" class="headerlink" title="5、IP"></a><strong>5、IP</strong></h4><p>IP的报文格式如下图所示：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/7/20/a871001c14f23a4f1046ab687528f690?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="这里写图片描述" loading="lazy">这里写图片描述</p>
+<p>因特网的地址分配策略被称为无类别域间选路（CIRD）。在采用CIRD之前，IP地址被分为A,B,C,D,E五类，分别为：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/7/20/7f34ab4373e42f75f9ff935bda594907?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="这里写图片描述" loading="lazy">这里写图片描述</p>
+<p>不过在这之间，有几个私有地址，是不能够被使用的，包括：</p>
+<ul>
+<li>A类 　　10.0.0.0 –10.255.255.255</li>
+<li>B类 　　172.16.0.0–172.31.255.255</li>
+<li>C类 　　192.168.0.0–192.168.255.255 </li>
+</ul>
+<hr>
+<h4 id="６、选路算法"><a href="#６、选路算法" class="headerlink" title="６、选路算法"></a><strong>６、选路算法</strong></h4><ul>
+<li>链路状态选路算法（LS算法）<ul>
+<li>使用迪杰斯特拉算法来计算</li>
+</ul>
+</li>
+<li>距离向量算法（DV算法）<ul>
+<li>分布式的，是因为每个节点都要从一个或多个直接相连的邻居接收某些信息，执行计算，然后将计算结果发回给邻居；</li>
+<li>迭代的，是因为此过程一直要持续到邻居之间没有更多的信息要交换为止；</li>
+<li>异步的，是因为它不要求所有节点相互之间步伐一致地操作；</li>
+</ul>
+</li>
+</ul>
+<p>每个节点x以Dx(y)开始，对N中的所有节点估计从它自己到节点y的最低费用路径的费用；当节点x从它的任何一个邻居v接收到一个新距离向量时，它保存v的距离向量，然后使用Bellman-Ford方程更新它自己的距离向量<br>$$D_x(y) ← min_v(c(x,v) + D_v(y))$$</p>
+<p>只要所有的节点继续以异步方式交换它们的距离向量，每个费用估计Dx(y)就收敛到dx(y)，dx(y)是从节点x到节点y的实际最低费用路径的费用。</p>
+<p>两者之间的比较：</p>
+<ul>
+<li>LS：<ul>
+<li>向网络上所有其它节点广播消息</li>
+<li>消息仅包括到邻居节点的距离</li>
+<li>收敛速度比较快</li>
+<li>能够广播不正确的链路信息</li>
+<li>没有无穷计数的问题</li>
+</ul>
+</li>
+<li>DV：<ul>
+<li>仅与邻居节点交换消息</li>
+<li>消息包括到所有节点的最短距离</li>
+<li>收敛速度比较慢</li>
+<li>能够广播不正确的路径信息</li>
+<li>有无穷计数的问题</li>
+</ul>
+</li>
+</ul>
+<p>其他选路算法还包括层次选路。</p>
+<hr>
+<h4 id="7、多路访问协议"><a href="#7、多路访问协议" class="headerlink" title="7、多路访问协议"></a><strong>7、多路访问协议</strong></h4><p><strong>1、信道划分协议</strong></p>
+<p>信道划分协议主要分为时分多路复用 (TDM)、频分多路复用 (FDM)、码分多址（CDMA ）。</p>
+<p>设信道支持N个节点，传输速率是R b/s。</p>
+<ul>
+<li>时分多路复用 (TDM)：<br>将时间划分为时间帧，每个时间帧再划分为N个时隙（长度保证发送一个分组），分别分配给N个节点。每个节点只在固定分配的时隙中传输。<br>例：6个站点的LAN, 时隙1、3、4 有分组, 时隙2、5、6 空闲 </li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2017/7/20/482a3e73b0142e8186430822a76591b4?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="这里写图片描述" loading="lazy">这里写图片描述</p>
+<p>特点：</p>
+<p>1、避免冲突、公平：每个节点专用速率R/N b/s<br>2、节点速率有限：R/N b/s<br>3、效率不高：节点必须等待它的传输时隙</p>
+<ul>
+<li><p>频分多路复用 (FDM)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">将总信道带宽R b&#x2F;s划分为N个较小信道（频段，带宽为R&#x2F;N），分别分配给N个节点。复制代码</span><br></pre></td></tr></table></figure>
+
+<p>例： 6个站点的LAN, 频带1、3、4 有分组, 频带2、5、6 空闲</p>
+</li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2017/7/20/b3941dd130a8cf6ffa9bec6a9acc0be0?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="这里写图片描述" loading="lazy">这里写图片描述</p>
+<p>特点：</p>
+<p>1、避免冲突、公平：N个节点公平划分带宽；<br>2、节点带宽有限、效率不高<br>3、节点带宽为R/N</p>
+<ul>
+<li><p>码分多址（CDMA ）</p>
+<ul>
+<li><p>给每个节点分配一个不同的代码（CDMA代码，码片序列）；</p>
+</li>
+<li><p>每个节点用惟一的代码对要发送的数据进行编码；</p>
+</li>
+<li><p>不同节点可以同时发送，并正确到达接收方（不会互相干扰）。</p>
+<p>最初：用于军事通信，抗干扰能力强；<br>目前：用于移动通信、无线多路访问信道等。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>2、随机接入协议</strong></p>
+<p>基本思想：</p>
+<ul>
+<li>发送节点以信道全部速率（R b/s）发送；</li>
+<li>发生冲突时，冲突的每个节点分别等待一个随机时间，再重发，直到帧(分组)发送成功。</li>
+</ul>
+<p>典型的随机接入协议：<br>1.ALOHA协议（要求所有的节点同步它们的传输）<br>2.载波监听多路访问CSMA协议<br>3.带冲突检测载波监听多路访问CSMA/CD</p>
+<p><strong>载波监听：</strong>一个节点在传输前先听信道。如果来自另一个节点的帧正在向信道上发送，节点则等待一段随机时间。再监听信道。如果监听到该信道是空闲的，则该节点进行帧传输。否则，该节点等待另一段随机时间，继续重复这个过程。</p>
+<p><strong>碰撞检测：</strong>一个传输节点在传输时一直在监听信道，如果它检测到另一个节点正在传输干扰帧，它就停止传输，用某个协议来确定它应该在什么时候再尝试下一次传输。</p>
+<p><strong>CSMA</strong></p>
+<p>特点：<br>1、发前监听，可减少冲突。<br>2、由于传播时延的存在，仍有可能出现冲突，并造成信道浪费。</p>
+<p>例子：一个广播总线连接4个节点(A、B、C、D)传输的时空图。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/7/20/894968a735c1b1112460f17ce0d246b6?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="这里写图片描述" loading="lazy">这里写图片描述</p>
+<p>时间t0：节点B侦听到信道空，开始传输帧，沿着媒体传播比特。</p>
+<p>时间t1（t1&gt;t0）：节点D有帧要发送。B的传输信号未到D，D检测到信道空，开始传输。很快，B的传输开始在D节点干扰D的传输（冲突）。</p>
+<p>端到端信道传播时延：信号从一个节点到另一个节点所花费的传播时间。</p>
+<p>传播时延越长，节点不能侦听到另一个节点已经开始传输的可能性越大。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/7/20/b077e1f482555fd5f187cafebf1d9dbe?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="这里写图片描述" loading="lazy">这里写图片描述</p>
+<p>很显然，这就带来了一些问题：</p>
+<p>节点没有进行冲突检测，既使发生了冲突，节点仍继续传输它们的帧。但该帧已经被破坏、是无用的帧，信道传输时间被浪费。</p>
+<p><strong>CSMA/CD（以太网即采用CSMA/CD协议）</strong></p>
+<p>两个节点B、D在检测到冲突之后很短的时间内都放弃传输。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/7/20/20f4c9dfaef6010576d8903e865ff7ed?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="这里写图片描述" loading="lazy">这里写图片描述</p>
+<p><strong>3、轮流协议</strong></p>
+<ul>
+<li>轮询协议</li>
+</ul>
+<p>指定一个主节点，以循环的方式轮询每个节点。并告诉节点能够传输的最大帧数。轮询顺序：   1-&gt;2-&gt; …… -&gt;n 。<br>主节点通过观察信道上是否有信号来判断节点何时完成了帧的发送，再询问下一节点。</p>
+<p>特点<br>1、消除冲突和空时隙，效率高。<br>2、有轮询时延：活动节点不能立即传输帧，等待被轮询。<br>3、如果主节点失效，整个信道都不能用。</p>
+<ul>
+<li>令牌传递协议</li>
+</ul>
+<p>没有主节点。设置一个令牌(token，小的专用帧)；令牌以固定顺序循环传递，给节点传输机会。如：1-&gt;2-&gt; …… -&gt;n<br>节点收到令牌：<br>1.有帧要发送，传输，传完后将令牌转发到下一节点；<br>2.否则，直接将令牌转发到下一节点。</p>
+<p>特点：<br>1、令牌传递是分散的，效率高。<br>2、一个节点的失效会使整个信道崩溃。<br>3、一个节点忘记释放令牌，必须恢复令牌到环中。</p>
+<hr>
+<h4 id="8、地址解析协议——ARP"><a href="#8、地址解析协议——ARP" class="headerlink" title="8、地址解析协议——ARP"></a><strong>8、地址解析协议——ARP</strong></h4><p>ARP协议的主要功能是将32位IP地址转换为48位物理地址。</p>
+<p>工作过程：首先每台主机都会在缓冲区建立一个ARP列表，以表示IP与MAC的对应关系。当有数据包发送时，会先检查ARP列表中是否存在该IP对应的MAC地址，如果有，则直接将包发送到这个MAC地址，如果没有，就向本地网段发起一个ARP请求的广播包，网络中所有主机收到这个ARP包后，会先检查自己的IP是否与包中的IP地址一致，如果不一致则忽略，如果一致，则将发送端的MAC地址和IP地址添加到自己的ARP列表中（已存在的则覆盖），然后向发送端发送一个响应包，当发送方收到该响应包后,将接收方的IP与MAC添加到自己的ARP列表中。然后开始数据的传输。</p>
+<hr>
+<h4 id="9、交换机与路由器的比较"><a href="#9、交换机与路由器的比较" class="headerlink" title="9、交换机与路由器的比较"></a><strong>9、交换机与路由器的比较</strong></h4><table>
+<thead>
+<tr>
+<th align="center">交换机</th>
+<th align="center">路由器</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">即插即用</td>
+<td align="center">不是即插即用</td>
+</tr>
+<tr>
+<td align="center">较高的分组过滤和转发率</td>
+<td align="center">网络寻址是层次的</td>
+</tr>
+<tr>
+<td align="center">可能产生“广播风暴”</td>
+<td align="center">冗余路径分组不会在路由器中循环</td>
+</tr>
+</tbody></table>
+<p>总结：小网络采用交换机，大网络采用路由器</p>
+<hr>
+<h4 id="10、简答题部分："><a href="#10、简答题部分：" class="headerlink" title="10、简答题部分："></a><strong>10、简答题部分：</strong></h4><h5 id="RIP工作原理："><a href="#RIP工作原理：" class="headerlink" title="RIP工作原理："></a><strong>RIP工作原理：</strong></h5><p>　　RIP协议是基于距离向量算法的一种动态路由协议，路由实现时，RIP作为一个系统长驻进程（daemon）而存在于路由器中，负责从网络系统的其它路由器接收路由信息，从而对本地IP层路由表作动态的维护，保证IP层发送报文时选择正确的路由。同时负责广播本路由器的路由信息，通知相邻路由器作相应的修改。RIP协议处于UDP协议的上层，RIP所接收的路由信息都封装在UDP协议的数据报中，所以它是种应用层协议。</p>
+<hr>
+<h5 id="说明局域网的介质访问控制协议的主要目的，并概述CSMA-CD协议的工作过程。"><a href="#说明局域网的介质访问控制协议的主要目的，并概述CSMA-CD协议的工作过程。" class="headerlink" title="说明局域网的介质访问控制协议的主要目的，并概述CSMA/CD协议的工作过程。"></a><strong>说明局域网的介质访问控制协议的主要目的，并概述CSMA/CD协议的工作过程。</strong></h5><p>　　主要目的是：提供寻址及媒体存取的控制方式，使得不同设备或网络上的节点可以在多点的网络上通讯而不互相冲突<br>工作过程：CSMA/CD（载波侦听多路访问/冲突检测）在发送帧的同时对信道进行侦听，以确定是否发生冲突，若在发送数据过程中检测到了冲突，则发送阻塞信息并立即停止发送数据，然后等待随机时间再次发送。</p>
+<hr>
+<h5 id="MAC地址和IP地址有什么本质区别？"><a href="#MAC地址和IP地址有什么本质区别？" class="headerlink" title="MAC地址和IP地址有什么本质区别？"></a><strong>MAC地址和IP地址有什么本质区别？</strong></h5><p>　　MAC地址是数据链路层地址，IP地址是网络层地址；<br>　　MAC地址没有结构性涵义，IP地址有结构性涵义，表示计算机与网络之间的连接关系。<br>　　IP地址就是给每个连接在因特网上的主机（或路由器）分配一个在全世界范围内是唯一的32位的标识符，从而把整个因特网看成是一个单一的，抽象的网络；在实际网络的链路上传输数据帧时，最终还是要用到物理地址；<br>　　MAC地址在一定程度属于硬件一致，基于物理层。能标识具体的链路通信对象，IP地址给予逻辑域的划分，不受硬件控制；</p>
+<hr>
+<h5 id="作为中间系统。转发器、网桥、路由器和网关有何区别？"><a href="#作为中间系统。转发器、网桥、路由器和网关有何区别？" class="headerlink" title="作为中间系统。转发器、网桥、路由器和网关有何区别？"></a><strong>作为中间系统。转发器、网桥、路由器和网关有何区别？</strong></h5><p>转发器：是物理层中间设备。主要作用是在物理层中实现透明的二进制比特复制，以补偿信号衰减。</p>
+<p>网桥：是数据链路层的中间设备。主要作用是根据MAC帧的目的地址对收到的帧进行转发。网桥具有过滤帧的功能。</p>
+<p>路由器：网络层的中间设备。作用是在互连网中完成路由选择的功能。</p>
+<p>网关：网络层以上的中间系统。作用是在高层进行协议的转换以连接两个不兼容的系统。</p>
+<hr>
+<h5 id="试简单说明下列协议的作用：IP、ARP、RARP和ICMP。"><a href="#试简单说明下列协议的作用：IP、ARP、RARP和ICMP。" class="headerlink" title="试简单说明下列协议的作用：IP、ARP、RARP和ICMP。"></a><strong>试简单说明下列协议的作用：IP、ARP、RARP和ICMP。</strong></h5><p>IP协议：实现网络互连。使参与互连的性能各异的网络从用户看起来好像是一个统一的网络。</p>
+<p>ARP协议：完成IP地址到MAC地址的映射。</p>
+<p>RARP：使只知道自己硬件地址的主机能够知道其IP地址。</p>
+<p>ICMP：允许主机或路由器报告差错情况和提供有关异常情况的报告。从而提高IP数据报交付成功的机会。</p>
+<hr>
+<h5 id="C-S模式和P2P模式的区别"><a href="#C-S模式和P2P模式的区别" class="headerlink" title="C/S模式和P2P模式的区别"></a><strong>C/S模式和P2P模式的区别</strong></h5><p>①：C/S结构是一种客户端/服务器结构，客户端与服务器之间是主从关系，是一种一对多的模式。它的信息和数据需要保存在服务器上，若用户要浏览和下载信息，必须先访问服务器，才能浏览和下载信息，而且客户机之间没有交互的能力。相反，P2P模式不分提供信息服务器和索取信息的客户端，每一台电脑都是信息的发布者和索取者，对等点之间能交互，无需使用服务器。<br>②：C/S模式中信息的存储和管理比较集中、稳定，服务器只公布用户想公布的信息，并且会在服务器中稳定地保存一段时间，该服务器通常也不间断的运行在网络间。而P2P缺乏安全机制，P2P是能给用户带来方便，但也会带来大量垃圾信息，而且各个对等点可以随便进入或者退出网络，会造成网络的不稳定。<br>③：从安全的角度来说，因为系统会出现漏洞，而C/S模式采用集中管理模式，客户端只能被动地从服务器获取信息，所以一旦客户端出了差错，并不会影响整个系统。<br>④：C/S模式的管理软件更新的较快，要跟上技术，必须花费大量精力和金钱在软件的更新换代上，而且工作人员要维护服务器和数据库，也要耗费大量资金。相反的P2P不需要服务器，也就不必耗费大量资金，而且每个对等点都可以在网络上发布和分享信息，这使得闲散资源得以充分的利用。 </p>
+<hr>
+<h5 id="在一个互联网中，能否使用一个很大的交换机-switch-来代替互联网中很多的路由器？"><a href="#在一个互联网中，能否使用一个很大的交换机-switch-来代替互联网中很多的路由器？" class="headerlink" title="在一个互联网中，能否使用一个很大的交换机(switch)来代替互联网中很多的路由器？"></a><strong>在一个互联网中，能否使用一个很大的交换机(switch)来代替互联网中很多的路由器？</strong></h5><p>　　不行。交换机和路由器的功能是很不一样的。<br>    　　交换机可在一个单个的网络中和若干个计算机相连，并且可以将一个计算机发送过来的帧转发给另一个计算机。从这一点上看，交换机具有集线器的转发帧的功能。<br>但交换机比集线器的功能强很多。集线器在同一时间只允许一个计算机和其他计算机进行通信，但交换机允许多个计算机同时进行通信。<br>　　路由器连接两个或好几个网络。路由器可在网络之间转发分组（即IP数据报）。特别是，这些互连的网络可以是异构的。<br>因此，如果是许多相同类型的网络互连在一起，那么用一个很大的交换机（如果能够找得到）代替原来的一些路由器是可以的。但若这些互连的网络是异构的网络，那么就必须使用路由器来进行互连。</p>
+<hr>
+<h5 id="路由表中只给出到目的网络的下一跳路由器的IP地址，然后在下一个路由器的路由表中再给出再下一跳的路由器的IP地址，最后才能到达目的网络进行直接交付。采用这样的方法有什么好处？"><a href="#路由表中只给出到目的网络的下一跳路由器的IP地址，然后在下一个路由器的路由表中再给出再下一跳的路由器的IP地址，最后才能到达目的网络进行直接交付。采用这样的方法有什么好处？" class="headerlink" title="路由表中只给出到目的网络的下一跳路由器的IP地址，然后在下一个路由器的路由表中再给出再下一跳的路由器的IP地址，最后才能到达目的网络进行直接交付。采用这样的方法有什么好处？"></a><strong>路由表中只给出到目的网络的下一跳路由器的IP地址，然后在下一个路由器的路由表中再给出再下一跳的路由器的IP地址，最后才能到达目的网络进行直接交付。采用这样的方法有什么好处？</strong></h5><p>　　这样做的最大好处就是使得路由选择成为动态的，十分灵活。当IP数据报传送到半途时，若网络的情况发生了变化（如网络拓扑变化或出现了拥塞），那么中途的路由器就可以改变其下一跳路由，从而实现了动态路由选择。 　　</p>
+<hr>
+<h5 id="IP协议有分片的功能，但广域网中的分组则不必分片。这是为什么？"><a href="#IP协议有分片的功能，但广域网中的分组则不必分片。这是为什么？" class="headerlink" title="IP协议有分片的功能，但广域网中的分组则不必分片。这是为什么？"></a><strong>IP协议有分片的功能，但广域网中的分组则不必分片。这是为什么？</strong></h5><p>　　IP数据报可能要经过许多个网络，而源主机事先并不知道数据报后面要经过的这些网络所能通过的分组的最大长度是多少。等到IP数据报转发到某个网络时可能才发现数据报太长了，因此在这时就必须进行分片。<br>　　<strong>重点内容</strong>但广域网能够通过的分组的最大长度是该广域网中所有主机都事先知道的。源主机不可能发送网络不支持的过长分组。因此广域网就没有必要将已经发送出的分组再进行分片。</p>
+<hr>
+<h5 id="TCP三次握手"><a href="#TCP三次握手" class="headerlink" title="TCP三次握手"></a><strong>TCP三次握手</strong></h5><p>　　在TCP/IP协议中，TCP协议提供可靠的连接服务，采用三次握手建立一个连接。<br>　　第一次握手：建立连接时，客户端发送SYN包(SYN=j)到服务器，并进入SYN_SEND状态，等待服务器确认；<br>　　第二次握手：服务器收到SYN包，必须确认客户的SYN（ACK=j+1），同时自己也发送一个SYN包（SYN=k），即SYN+ACK包，此时服务器进入SYN_RECV状态；<br>　　三次握手协议第三次握手：客户端收到服务器的SYN＋ACK包，向服务器发送确认包ACK(ACK=k+1)，此包发送完毕，客户端和服务器进入ESTABLISHED状态，完成三次握手。</p>
+<p>通过这样的三次握手，客户端与服务端建立起可靠的双工的连接，开始传送数据。 </p>
+<p>三次握手的最主要目的是保证连接是双工的，可靠更多的是通过重传机制来保证的。 </p>
+<p>但是为什么一定要进行三次握手来保证连接是双工的呢，一次不行么？两次不行么？ </p>
+<p>“三次握手”的目的是“为了防止已失效的连接请求报文段突然又传送到了服务端，因而产生错误”。</p>
+<hr>
+<h5 id="简述IPv4到IPv6的过渡技术"><a href="#简述IPv4到IPv6的过渡技术" class="headerlink" title="简述IPv4到IPv6的过渡技术"></a><strong>简述IPv4到IPv6的过渡技术</strong></h5><p>1、双协议栈技术<br>2、隧道技术<br>3、网络地址转换技术</p>
+<hr>
+<p>LAN：是局部地区网络的简称，是一种通用普及的局域网络，其主要特点是：<br>（1）地理范围小；<br>（2）具有较高的通频带宽；<br>（3）数据传输可靠，误码率低；<br>（4）结构简单，容易实现；<br>（5）网络的控制趋向于分布式；<br>（6）通常归单一组织所有，更容易进行设备的更新和新技术的引用。</p>
+<hr>
+<p>TCP优缺点：</p>
+<p>优点：<br>        1．TCP提供以认可的方式显式地创建和终止连接。<br>        2．TCP保证可靠的、顺序的（数据包以发送的顺序接收）以及不会重复的数据传输。<br>        3．TCP处理流控制。<br>        4．允许数据优先<br>        5．如果数据没有传送到，则TCP套接口返回一个出错状态条件。<br>        6．TCP通过保持连续并将数据块分成更小的分片来处理大数据块。—无需程序员知道</p>
+<p>缺点： TCP在转移数据时必须创建（并保持）一个连接。这个连接给通信进程增加了开销，让它比UDP速度要慢。</p>
+<p>UDP优缺点：<br>        1．UDP不要求保持一个连接<br>        2．UDP没有因接收方认可收到数据包（或者当数据包没有正确抵达而自动重传）而带来的开销。<br>        3．设计UDP的目的是用于短应用和控制消息<br>        4．在一个数据包连接一个数据包的基础上，UDP要求的网络带宽比TCP更小。</p>
+<hr>
+<p>TCP编程的服务器端一般步骤是：</p>
+<p>1、创建一个socket，用函数socket()；<br>2、设置socket属性，用函数setsockopt(); * 可选<br>3、绑定IP地址、端口等信息到socket上，用函数bind();<br>4、开启监听，用函数listen()；<br>5、接收客户端上来的连接，用函数accept()；<br>6、收发数据，用函数send()和recv()，或者read()和write();<br>7、关闭网络连接；<br>8、关闭监听；</p>
+<p>TCP编程的客户端一般步骤是：</p>
+<p>1、创建一个socket，用函数socket()；<br>2、设置socket属性，用函数setsockopt(); <em>可选3、绑定IP地址、端口等信息到socket上，用函数bind();</em> 可选<br>4、设置要连接的对方的IP地址和端口等属性；<br>5、连接服务器，用函数connect()；<br>6、收发数据，用函数send()和recv()，或者read()和write();<br>7、关闭网络连接；</p>
+<p>UDP编程的服务器端一般步骤是：</p>
+<p>1、创建一个socket，用函数socket()；<br>2、设置socket属性，用函数setsockopt();* 可选<br>3、绑定IP地址、端口等信息到socket上，用函数bind();<br>4、循环接收数据，用函数recvfrom();<br>5、关闭网络连接；</p>
+<p>UDP编程的客户端一般步骤是：</p>
+<p>1、创建一个socket，用函数socket()；<br>2、设置socket属性，用函数setsockopt(); <em>可选3、绑定IP地址、端口等信息到socket上，用函数bind();</em> 可选<br>4、设置对方的IP地址和端口等属性;<br>5、发送数据，用函数sendto();<br>6、关闭网络连接；</p>
+<hr>
+<p>301重定向与302重定向的区别：</p>
+<p>301重定向是永久的重定向，搜索引擎在抓取新内容的同时也将旧的网址替换为重定向之后的网址。</p>
+<p>302重定向是临时的重定向，搜索引擎会抓取新的内容而保留旧的网址。因为服务器返回302代码，搜索引擎认为新的网址只是暂时的。</p>
+<hr>
+<p>目前web上的消息通讯方式主要有以下几种：</p>
+<p>1、轮询：隔一段时间访问服务器，服务器不管有没有新消息都立刻返回。</p>
+<p>2、长连接：页面向服务器发出请求，由服务器决定什么时候返回。（如果有新消息则立刻返回，没有的话就保持连接，直到有新消息才返回）</p>
+<p>3、WebSocket：类似Java Socket，由Http请求模拟实现的Socket。它实现了浏览器与服务器全双工(full-duplex)通信——允许服务器主动发送信息给客户端。</p>
+<hr>
+<p>从输入网址到显示网页，过程 ？</p>
+<p>DNS域名解析 –&gt; 发起TCP的三次握手 –&gt; 建立TCP连接后发起http请求 –&gt; 服务器响应http请求，浏览器得到html代码 –&gt; 浏览器解析html代码，并请求html代码中的资源（如JavaScript、css、图片等） –&gt; 浏览器对页面进行渲染呈现给用户。</p>
+<hr>
+<p>一个HTTP请求报文由请求行（request line）、请求头部（header）、空行和请求数据4个部分组成</p>
+<p>1.请求行由请求方法字段、URL字段和HTTP协议版本字段3个字段组成，它们用空格分隔。<br>2.请求头部由关键字/值对组成，每行一对，关键字和值用英文冒号“:”分隔。请求头部通知服务器有关于客户端请求的信息。<br>3.最后一个请求头之后是一个空行，发送回车符和换行符，通知服务器以下不再有请求头。<br>4.请求数据不在GET方法中使用，而是在POST方法中使用。</p>
+<p>HTTP响应也由三个部分组成，分别是：状态行、消息报头、响应正文。</p>
+<hr>
+<p>递归查询是一种DNS 服务器的查询模式，在该模式下DNS 服务器接收到客户机请求，必须使用一个准确的查询结果回复客户机。如果DNS 服务器本地没有存储查询DNS 信息，那么该服务器会询问其他服务器，并将返回的查询结果提交给客户机。</p>
+<p>DNS 服务器另外一种查询方式为迭代查询，DNS 服务器会向客户机提供其他能够解析查询请求的DNS 服务器地址，当客户机发送查询请求时，DNS 服务器并不直接回复查询结果，而是告诉客户机另一台DNS 服务器地址，客户机再向这台DNS 服务器提交请求，依次循环直到返回查询的结果为止。</p>
+<p>从客户端到本地DNS服务器是属于递归查询，而DNS服务器之间就是的交互查询就是迭代查询。</p>
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"></div><div style="display:inline-block"></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>澈崽子</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://zeozzz.github.com/2019/04/30/31/" title="校招面试知识点复习之计算机网络">https://zeozzz.github.com/2019/04/30/31/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2019/05/05/32/" rel="prev" title="无线网络问题排查"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">无线网络问题排查</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2019/04/29/30/" rel="next" title="Nginx的配置、虚拟主机、负载均衡和反向代理"><span class="post-nav-text">Nginx的配置、虚拟主机、负载均衡和反向代理</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="http://www.beian.miit.gov.cn" target="_blank"></a></div><div class="copyright"><span>&copy; 2015 – 2020 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 澈崽子</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.0.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v0.9.5</span></div><div class="live_time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  window.setTimeout(blog_live_time, 1000);
+  const start = new Date('2015-09-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div></div><script defer src="/js/utils.js"></script><script defer src="/js/hexo-theme-yun.js"></script></body></html>

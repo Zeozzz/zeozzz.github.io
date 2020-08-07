@@ -1,0 +1,533 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="澈崽子"><meta name="copyright" content="澈崽子"><meta name="generator" content="Hexo 5.0.0"><meta name="theme" content="hexo-theme-yun"><title>企业园区网络建设技术方案（华为） | 澈崽子 | 家有网工初长成</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="none" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.19/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_stqaphw3j4.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true}
+    ]
+  });
+});</script><link class="aplayer-style-marker" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script class="aplayer-script-marker" src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" defer></script><script class="meting-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js" defer></script><link rel="shortcut icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"root":"/","title":"澈崽子的小窝","version":"0.9.5","anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><meta name="description" content="原文链接：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;53512258 1 项目概述根据实际情况增加项目介绍 1.1 项目背景1.2 项目目标2 园区总体系统规划设计2.1 需求分析随着企业信息化建设不断深入，企业的生产业务系统、经营管理系统、办公自动化系统均得到大力发展，对于企业园区网的建设要求越来越高。传统园区网建设初期往往面临如下问题： (一) 网络架构较为混乱，不便于扩容和维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="企业园区网络建设技术方案（华为）">
+<meta property="og:url" content="https://zeozzz.github.com/2019/07/16/67/index.html">
+<meta property="og:site_name" content="澈崽子 | 家有网工初长成">
+<meta property="og:description" content="原文链接：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;53512258 1 项目概述根据实际情况增加项目介绍 1.1 项目背景1.2 项目目标2 园区总体系统规划设计2.1 需求分析随着企业信息化建设不断深入，企业的生产业务系统、经营管理系统、办公自动化系统均得到大力发展，对于企业园区网的建设要求越来越高。传统园区网建设初期往往面临如下问题： (一) 网络架构较为混乱，不便于扩容和维">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-d1590ffcea82b0fe3068edc687ac18dc_hd.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-ffa4d15431ded70c16cff9f15017968a_hd.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-744e089d67b0cf05a87b327b1af520f0_hd.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-92948290e3947c9f34c68a3eeb56d803_hd.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-df3c4a7cd992bd1267be40be41f73bea_hd.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-018f448a3251ad1f49542e718dfbb802_hd.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-17997fcaaceda05f154de148900df07c_hd.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-f103961d2a1c7fb70c8dd312f6913976_hd.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-0cc406480699395a23b35c186680bfa8_hd.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-4888f5bb80b393f464eb7d731d65a1ad_hd.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-1350c0781e69a3f6d037f6d39d1b2037_hd.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-78493c57b0a8348b7d93149242b19fb9_hd.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-d1a5d87863061b5546c7abadfe5a8fb5_hd.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-9b29f3528db581a98619c2bdeb98f9f5_hd.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-527ba6b04b5c60ed944efa2e520d2529_hd.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-c5086aa8281c1dbbb44ee4846fa86d50_hd.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-e949721a660854fbf1d774dbd273b8cb_hd.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-11e14d7a5a1afc3f7fe9fa4b30ee4176_hd.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-5661bc9f8207e04faa4de1987d91aae6_hd.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-7fb633ba9f33f9cba422880adfda6280_hd.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-5d55ac60b912355a4b4eaa4ab66a055f_hd.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-50302d7131326557fd277713b91f6df9_hd.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-277788db4419b1426820ffb7179f834e_hd.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-ca94d77f5504c02fb071a3249dc97879_hd.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-7483e7441c549e4ce0899cf884f36d9a_hd.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-f7ead39000ee1c32e6f755ca9bde88ad_hd.jpg">
+<meta property="article:published_time" content="2019-07-16T01:35:08.000Z">
+<meta property="article:modified_time" content="2020-01-21T09:35:10.450Z">
+<meta property="article:author" content="澈崽子">
+<meta property="article:tag" content="华为">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.zhimg.com/80/v2-d1590ffcea82b0fe3068edc687ac18dc_hd.jpg"></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script defer src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="澈崽子"><img width="96" loading="lazy" src="/avatar.jfif" alt="澈崽子"></a><div class="site-author-name"><a href="/about/">澈崽子</a></div><a class="site-name" href="/about/site.html">澈崽子 | 家有网工初长成</a><sub class="site-subtitle"></sub><div class="site-desciption">念念不忘 必有回响</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">74</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">29</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">36</span></a></div><a class="site-state-item hty-icon-button" href="/null" title="常用文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 群" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Zeozzz" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/linche521chn" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/zeozzz/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=46666755" title="网易云音乐" target="_blank" style="color:#C20C0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/janz1995chn/activities" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/15054940" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/zeozzz" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/zeozzz" title="Telegram Channel" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:zhangzhe@live.in" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.now.sh/" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-send-plane-2-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://huawei.com" title="华为文档" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-huawei-line"></use></svg></a></div></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%A1%B9%E7%9B%AE%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">1 项目概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">1.1 项目背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E9%A1%B9%E7%9B%AE%E7%9B%AE%E6%A0%87"><span class="toc-number">3.</span> <span class="toc-text">1.2 项目目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%9B%AD%E5%8C%BA%E6%80%BB%E4%BD%93%E7%B3%BB%E7%BB%9F%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">4.</span> <span class="toc-text">2 园区总体系统规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="toc-number">5.</span> <span class="toc-text">2.1 需求分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-number">6.</span> <span class="toc-text">2.2 设计原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">7.</span> <span class="toc-text">3 园区网络架构规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BB%9C%E6%80%BB%E4%BD%93%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">8.</span> <span class="toc-text">3.1 园区网络总体网络架构规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-1-%E5%85%B8%E5%9E%8B%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84"><span class="toc-number">9.</span> <span class="toc-text">3.1.1 典型园区网网络架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-2-%E7%BB%8F%E6%B5%8E%E5%9E%8B%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84"><span class="toc-number">10.</span> <span class="toc-text">3.1.2 经济型园区网网络架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-3-%E8%99%9A%E6%8B%9F%E4%BA%A4%E6%8D%A2%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84"><span class="toc-number">11.</span> <span class="toc-text">3.1.3 虚拟交换园区网网络架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BB%9C%E5%88%86%E5%B1%82%E7%BD%91%E7%BB%9C%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">12.</span> <span class="toc-text">3.2 园区网络分层网络规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-1-%E6%8E%A5%E5%85%A5%E5%B1%82"><span class="toc-number">13.</span> <span class="toc-text">3.2.1 接入层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-2-%E6%B1%87%E8%81%9A%E5%B1%82"><span class="toc-number">14.</span> <span class="toc-text">3.2.2 汇聚层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-3-%E6%A0%B8%E5%BF%83%E5%B1%82"><span class="toc-number">15.</span> <span class="toc-text">3.2.3 核心层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-4-%E5%87%BA%E5%8F%A3%E5%B1%82"><span class="toc-number">16.</span> <span class="toc-text">3.2.4 出口层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BB%9C%E9%AB%98%E5%8F%AF%E9%9D%A0%E6%80%A7%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">17.</span> <span class="toc-text">4 园区网络高可靠性规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BB%9C%E9%AB%98%E5%8F%AF%E9%9D%A0%E6%80%A7%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">18.</span> <span class="toc-text">4.1 园区网络高可靠性规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%E9%AB%98%E5%8F%AF%E9%9D%A0%E6%80%A7%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">19.</span> <span class="toc-text">4.2 园区网络设备高可靠性规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-1-%E9%87%8D%E8%A6%81%E9%83%A8%E4%BB%B6%E5%86%97%E4%BD%99"><span class="toc-number">20.</span> <span class="toc-text">4.2.1 重要部件冗余</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-2-%E8%AE%BE%E5%A4%87%E8%87%AA%E8%BA%AB%E5%AE%89%E5%85%A8"><span class="toc-number">21.</span> <span class="toc-text">4.2.2 设备自身安全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BB%9C%E4%BA%A4%E6%8D%A2%E6%9C%BA%E8%99%9A%E6%8B%9F%E5%8C%96%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">22.</span> <span class="toc-text">4.3 园区网络交换机虚拟化规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-1-%E6%B1%87%E8%81%9A%E4%BA%A4%E6%8D%A2%E6%9C%BA%E7%9A%84%E9%9B%86%E7%BE%A4CSS-Cluster-Switch-Switching"><span class="toc-number">23.</span> <span class="toc-text">4.3.1 汇聚交换机的集群CSS(Cluster Switch Switching)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-2-%E6%8E%A5%E5%85%A5%E4%BA%A4%E6%8D%A2%E6%9C%BA%E7%9A%84%E5%A0%86%E5%8F%A0iStack"><span class="toc-number">24.</span> <span class="toc-text">4.3.2 接入交换机的堆叠iStack</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%96%B9%E6%A1%88%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">25.</span> <span class="toc-text">5 园区网络安全方案规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-%E5%9B%AD%E5%8C%BA%E7%BD%91%E5%AE%89%E5%85%A8%E6%96%B9%E6%A1%88%E6%80%BB%E4%BD%93%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">26.</span> <span class="toc-text">5.1 园区网安全方案总体规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-%E5%9B%AD%E5%8C%BA%E6%8E%A5%E5%85%A5%E5%AE%89%E5%85%A8%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">27.</span> <span class="toc-text">5.2 园区接入安全规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BB%9C%E7%9B%91%E7%AE%A1-%E7%9B%91%E6%8E%A7-%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">28.</span> <span class="toc-text">5.3 园区网络监管&#x2F;监控 规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-1-%E9%98%B2IP-MAC%E5%9C%B0%E5%9D%80%E7%9B%97%E7%94%A8%E5%92%8CARP%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB"><span class="toc-number">29.</span> <span class="toc-text">5.3.1 防IP&#x2F;MAC地址盗用和ARP中间人攻击</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-2-%E9%98%B2IP-MAC%E5%9C%B0%E5%9D%80%E6%89%AB%E6%8F%8F%E6%94%BB%E5%87%BB"><span class="toc-number">30.</span> <span class="toc-text">5.3.2 防IP&#x2F;MAC地址扫描攻击</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-3-%E5%B9%BF%E6%92%AD-%E7%BB%84%E6%92%AD%E6%8A%A5%E6%96%87%E6%8A%91%E5%88%B6"><span class="toc-number">31.</span> <span class="toc-text">5.3.3 广播&#x2F;组播报文抑制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-%E5%9B%AD%E5%8C%BA%E7%BD%91%E8%BE%B9%E7%95%8C%E9%98%B2%E5%BE%A1-%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">32.</span> <span class="toc-text">5.4 园区网边界防御 规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-1-%E9%98%B2%E7%81%AB%E5%A2%99%E9%83%A8%E7%BD%B2%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">33.</span> <span class="toc-text">5.4.1 防火墙部署规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-2-%E9%98%B2%E7%81%AB%E5%A2%99%E5%8A%9F%E8%83%BD%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">34.</span> <span class="toc-text">5.4.2 防火墙功能规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-3-%E9%98%B2%E7%81%AB%E5%A2%99%E6%80%A7%E8%83%BD%E9%80%89%E6%8B%A9"><span class="toc-number">35.</span> <span class="toc-text">5.4.3 防火墙性能选择</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-4-%E8%99%9A%E6%8B%9F%E9%98%B2%E7%81%AB%E5%A2%99%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">36.</span> <span class="toc-text">5.4.4 虚拟防火墙规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-5-NAT%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">37.</span> <span class="toc-text">5.4.5 NAT规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-5-%E5%9B%AD%E5%8C%BA%E7%BD%91%E5%87%BA%E5%8F%A3%E5%AE%89%E5%85%A8%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">38.</span> <span class="toc-text">5.5 园区网出口安全规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%AE%A1%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1"><span class="toc-number">39.</span> <span class="toc-text">6 园区网络网管系统方案规划设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-%E7%BD%91%E7%AE%A1%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0"><span class="toc-number">40.</span> <span class="toc-text">6.1 网管系统概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-%E7%B3%BB%E7%BB%9F%E4%BC%98%E5%8A%BF%E4%BB%8B%E7%BB%8D"><span class="toc-number">41.</span> <span class="toc-text">6.2 系统优势介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-1-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86%E4%BC%98%E5%8A%BF%E5%8A%9F%E8%83%BD"><span class="toc-number">42.</span> <span class="toc-text">6.2.1 网络管理优势功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-2-%E7%BD%91%E7%BB%9C%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90%E5%99%A8%E4%BC%98%E5%8A%BF%E5%8A%9F%E8%83%BD"><span class="toc-number">43.</span> <span class="toc-text">6.2.2 网络流量分析器优势功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-3-%E8%AE%A4%E8%AF%81%E8%AE%A1%E8%B4%B9%E4%BC%98%E5%8A%BF%E5%8A%9F%E8%83%BD"><span class="toc-number">44.</span> <span class="toc-text">6.2.3 认证计费优势功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-%E7%BD%91%E7%AE%A1%E7%B3%BB%E7%BB%9F%E9%83%A8%E7%BD%B2"><span class="toc-number">45.</span> <span class="toc-text">6.3 网管系统部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-1-%E9%9B%86%E4%B8%AD%E5%BC%8F%E7%BD%91%E7%AE%A1%E7%B3%BB%E7%BB%9F%E9%83%A8%E7%BD%B2"><span class="toc-number">46.</span> <span class="toc-text">6.3.1 集中式网管系统部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-2-%E5%88%86%E5%B8%83%E5%BC%8F%E7%BD%91%E7%AE%A1%E7%B3%BB%E7%BB%9F%E9%83%A8%E7%BD%B2"><span class="toc-number">47.</span> <span class="toc-text">6.3.2 分布式网管系统部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%9B%AD%E5%8C%BA%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%E4%BB%8B%E7%BB%8D"><span class="toc-number">48.</span> <span class="toc-text">7 园区网络设备介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-1-%E5%9B%AD%E5%8C%BA%E6%B1%87%E8%81%9A-%E6%A0%B8%E5%BF%83%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="toc-number">49.</span> <span class="toc-text">7.1 园区汇聚&#x2F;核心交换机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-2-%E5%9B%AD%E5%8C%BA%E6%8E%A5%E5%85%A5%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="toc-number">50.</span> <span class="toc-text">7.2 园区接入交换机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-2-1-Quidway-S5300%E7%B3%BB%E5%88%97%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="toc-number">51.</span> <span class="toc-text">7.2.1 Quidway S5300系列交换机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-2-2-Quidway-S3300%E7%B3%BB%E5%88%97%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="toc-number">52.</span> <span class="toc-text">7.2.2 Quidway S3300系列交换机</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/07/16/67/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">企业园区网络建设技术方案（华为）</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-07-16 09:35:08" itemprop="dateCreated datePublished" datetime="2019-07-16T09:35:08+08:00">2019-07-16</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2020-01-21 17:35:10" itemprop="dateModified" datetime="2020-01-21T17:35:10+08:00">2020-01-21</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/%E5%8D%8E%E4%B8%BA/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">华为</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag" href="/tags/%E5%8D%8E%E4%B8%BA/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">华为</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>原文链接：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/53512258">https://zhuanlan.zhihu.com/p/53512258</a></p>
+<h2 id="1-项目概述"><a href="#1-项目概述" class="headerlink" title="1 项目概述"></a>1 项目概述</h2><p>根据实际情况增加项目介绍</p>
+<h2 id="1-1-项目背景"><a href="#1-1-项目背景" class="headerlink" title="1.1 项目背景"></a>1.1 项目背景</h2><h2 id="1-2-项目目标"><a href="#1-2-项目目标" class="headerlink" title="1.2 项目目标"></a>1.2 项目目标</h2><h2 id="2-园区总体系统规划设计"><a href="#2-园区总体系统规划设计" class="headerlink" title="2 园区总体系统规划设计"></a>2 园区总体系统规划设计</h2><h2 id="2-1-需求分析"><a href="#2-1-需求分析" class="headerlink" title="2.1 需求分析"></a>2.1 需求分析</h2><p>随着企业信息化建设不断深入，企业的生产业务系统、经营管理系统、办公自动化系统均得到大力发展，对于企业园区网的建设要求越来越高。传统园区网建设初期往往面临如下问题：</p>
+<p><strong>(一)</strong> <strong>网络架构较为混乱，不便于扩容和维护管理：</strong>园区网在建设初期，设备和光纤/电缆随意布放，缺乏统一的网络分层规划管理，网络拓扑相对混乱，不便于对网络性能瓶颈进行正确评估和有效扩容，给日常网络管理也带来很大难度。</p>
+<p><strong>(二)</strong> <strong>网络可靠性规划不合理，影响企业生产和经营管理、造成投资浪费：</strong>由于缺乏有效的园区网规划，对于网络可靠性考虑不够，网络中既存在单点故障导致网络可靠性低、影响企业生产和经营管理行为，同时也存在网络过度冗余、造成投资浪费的现象。</p>
+<p><strong>(三)</strong> <strong>网络信息安全存在隐患：</strong>网络安全性是园区网建设的重中之重，传统园区网安全漏洞较多，无法应对内外部用户日益猖獗的网络攻击行为（例如：对园区网设备进行攻击、消耗网络带宽、窃取企业核心电子资产信息），对于内部和外部用户缺乏有效的身份认证手段、用户可随意接入网络，网络层面的安全保证和防御措施也不到位，造成园区网的脆弱和易攻击。</p>
+<p><strong>(四)</strong> <strong>无法满足日益增长的网络业务需求：</strong>随着企业的业务发展，出现了基于园区网基础设施的丰富增值业务需求，例如：网络接入形式要求多样化，支持WLAN无线接入，满足移动办公、大区域无线缆覆盖等特殊要求；对于企业用户访问外网进行计费，计费策略可灵活设置（时长计费、流量计费、按目的地址计费）；企业多出口链路场景下的负载均衡、灵活选路需求。传统园区网建设缺乏有效满足这些增值业务需求的统一解决方案考虑，支持这些业务存在园区网络分散建设、重复投资的问题。</p>
+<p><strong>(五)</strong> <strong>缺乏简单有效的网络管理系统，企业IT网络运维部门面临很大压力：</strong>当前，企业网IT运维部门面临很大的网络运维压力，来自于园区网内外部的安全事件频发、网络可靠性低引起的网络业务中断现象，网络故障诊断、分析定位过程对于IT运维人员的技术能力和经验水平要求较高，缺乏简单有效/低成本的图形化网管工具、进行实时网络拓扑显示、状态监控和各种故障事件预警/告警展示。另外，IT运维部门也需要实施统计园区网各路径的流量信息，便于对网络带宽进行管理和规划，给后续网络扩容提供参考。</p>
+<h2 id="2-2-设计原则"><a href="#2-2-设计原则" class="headerlink" title="2.2 设计原则"></a>2.2 设计原则</h2><p><strong>(一)</strong> <strong>安全性：</strong>安全性是企业园区网建设中的关键，它包括物理空间的安全控制及网络的安全控制。需要有完整的安全策略控制体系来实现企业园区网的安全控制。</p>
+<p><strong>(二)</strong> <strong>可靠性、可用性：</strong>高可靠性是园区网提供使用的关键，其可靠性设计包括：关键设备冗余、链路/网络冗余和重要业务模块冗余。</p>
+<p>关键设备均采用电信级全冗余设计，可实现单板热拔插、冗余的控制模块设计、冗余电源设计。采用冗余网络设计，每个层次均采用双机方式，层次与层次之间采用全冗余连接。提供多种冗余技术，采用高效、负载均衡的双机备份。</p>
+<p>可采用交换机的集群或者堆叠技术，在不降低网络可靠性的前提下，减化网络架构。</p>
+<p><strong>(三)</strong> <strong>可扩展性：</strong>园区网方案设计中，采用分层的网络设计；每个层次的设计所采用的设备本身都应具足够高的端口密度，为后续园区网扩展奠定基础。</p>
+<p>在园区出口层、核心层、汇聚层的设备都采用模块化设计，可根据园区网的发展进行灵活扩展。</p>
+<p>功能的可扩展性是园区网随着发展提供增值业务的基础。实现防火墙、负载均衡、WLAN接入、认证计费等功能，为园区网增值业务的扩展提供基础。</p>
+<p><strong>(四)</strong> <strong>可维护、可管理性：</strong>网络可管理性是园区网成功运维的基础。应提供低成本、简单有效的园区网统一网管系统，对园区网所有网络设备进行管理，包括网络拓扑显示、网络状态监控、故障事件实时预警和告警、网络流量统计。</p>
+<a id="more"></a>
+
+<h2 id="3-园区网络架构规划设计"><a href="#3-园区网络架构规划设计" class="headerlink" title="3 园区网络架构规划设计"></a>3 园区网络架构规划设计</h2><h2 id="3-1-园区网络总体网络架构规划设计"><a href="#3-1-园区网络总体网络架构规划设计" class="headerlink" title="3.1 园区网络总体网络架构规划设计"></a>3.1 园区网络总体网络架构规划设计</h2><h2 id="3-1-1-典型园区网网络架构"><a href="#3-1-1-典型园区网网络架构" class="headerlink" title="3.1.1 典型园区网网络架构"></a>3.1.1 典型园区网网络架构</h2><p><img src="https://pic1.zhimg.com/80/v2-d1590ffcea82b0fe3068edc687ac18dc_hd.jpg" alt="img" loading="lazy">图 3‑1 典型园区网网络架构</p>
+<p>典型园区网方案采用层次化、模块化的设计思路，按照接入层、汇聚层、核心层和出口层进行网络设备设计部署，在汇聚层交换机，通过模块化（业务单板）方式提供WLAN AC控制器、防火墙、负载均衡器等增值业务功能，满足企业日益增长的业务需求。</p>
+<p>典型园区网的重要特征是不存在网络单点故障，交换机设备和链路都存在冗余备份，接入交换机与核心交换机通过双规或环网相连接，汇聚交换机双规接入核心交换机，交换机之间采用TRUNK链路保证链路级可靠性。</p>
+<h2 id="3-1-2-经济型园区网网络架构"><a href="#3-1-2-经济型园区网网络架构" class="headerlink" title="3.1.2 经济型园区网网络架构"></a>3.1.2 经济型园区网网络架构</h2><p><img src="https://pic3.zhimg.com/80/v2-ffa4d15431ded70c16cff9f15017968a_hd.jpg" alt="img" loading="lazy">图 3‑2 经济型园区网网络架构</p>
+<p>考虑到节省园区网网络建设投资成本，允许网络存在单点故障，不再部署冗余交换机设备，交换机之间互联采用TRUNK链路，保证链路级可靠性，但是园区网交换机设备故障，会导致网络故障和业务中断。</p>
+<p>经济型的园区网汇聚层交换机仍然可通过模块化（业务单板）方式提供WLAN AC控制器、防火墙、负载均衡器等增值业务功能。</p>
+<h2 id="3-1-3-虚拟交换园区网网络架构"><a href="#3-1-3-虚拟交换园区网网络架构" class="headerlink" title="3.1.3 虚拟交换园区网网络架构"></a>3.1.3 虚拟交换园区网网络架构</h2><p>图 3‑3 虚拟交换园区网网络架构</p>
+<p><img src="https://pic1.zhimg.com/80/v2-744e089d67b0cf05a87b327b1af520f0_hd.jpg" alt="img" loading="lazy">图 3‑3 虚拟交换园区网网络架构</p>
+<p>园区网仍然按照分层结构建设，园区交换机分为接入层交换机、汇聚层交换机和核心层交换机。为了增加园区网可靠性、降低园区网组网复杂度，园区网未来向虚拟化、扁平化方向发展，同层次交换机可以多台虚拟成一台，接入交换机通过堆叠（Stack）特性，将多台接入交换机虚拟成一台接入交换机，汇聚/核心交换机通过CSS（Cluster Switch ）将两台交换机虚拟成一台交换机。</p>
+<p>园区网接入层/汇聚层/核心层交换机虚拟化后，可以减少网络节点、简化网络拓扑，二层网络不需要部署RSTP/MSTP/RRPP/Smart Link等复杂的环网协议和可靠性保护协议，实现无二层环路网络构建，提高二层网络可靠性和链路故障收敛性能，三层网络虚拟化的多台设备间路由表统一计算、路由收敛速度快，</p>
+<p>通过交换机虚拟化设计，交换机互联的两条链路就可以作为Trunk链路进行管理，对于虚拟交换机而言，实现跨设备的链路聚合（TRUNK），大大增强链路可靠性，另外可实现链路的流量负载均衡，构建无二层环路网络，网络可靠性（链路故障自收敛性能）和带宽利用率都得到提高。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-92948290e3947c9f34c68a3eeb56d803_hd.jpg" alt="img" loading="lazy">图 3‑4 交换机集群（堆叠）方案</p>
+<h2 id="3-2-园区网络分层网络规划设计"><a href="#3-2-园区网络分层网络规划设计" class="headerlink" title="3.2 园区网络分层网络规划设计"></a>3.2 园区网络分层网络规划设计</h2><p>园区网的网络层次采用业界成熟的三层架构：接入、汇聚和核心，最后企业园区通过出口层网络设备（路由器或交换机）连接到外网通过。</p>
+<p>这种分层的网络架构，可以保证根据的业务需求，分别对不同层次进行扩容。</p>
+<h2 id="3-2-1-接入层"><a href="#3-2-1-接入层" class="headerlink" title="3.2.1 接入层"></a>3.2.1 接入层</h2><p>接入层交换机一般部署在楼道的网络机柜中，接入园区网用户（PC机或服务器），提供二层交换机功能，也支持三层接入功能（接入交换机为三层交换机）。</p>
+<p>由于接入层交换机直接接园区网用户，根据用户接入信息点数目和类型（GE/FE），对接入交换机的GE/FE接口密度有较高的要求。另外接入交换机部署在楼道网络机柜，数量大，对于成本、功耗和易管理维护等特性要求较高。</p>
+<p>高用户密度的园区接入场景推荐使用S5300/S9300作为接入交换机，低用户密度的场景推荐使用S2300/S3300作为接入交换机。</p>
+<h2 id="3-2-2-汇聚层"><a href="#3-2-2-汇聚层" class="headerlink" title="3.2.2 汇聚层"></a>3.2.2 汇聚层</h2><p>园区汇聚层交换机一般部署在楼宇独立的网络汇聚机柜中，汇聚园区接入交换机的流量，一般提供三层交换机功能，汇聚层交换机作为园区网的网关，终结园区网用户的二层流量，进行三层转发。</p>
+<p>根据需要，可以在汇聚交换机上集成增值业务板卡（如防火墙，负载均衡器、WLAN AC控制器）或者旁挂独立的增值业务设备，为园区网用户提供增值业务。</p>
+<p>汇聚交换机需要提供高密度的GE接口，汇聚接入交换机的流量，通过10GE接口接到核心交换机，推荐使用S9300系列交换机作为园区汇聚层交换机。</p>
+<h2 id="3-2-3-核心层"><a href="#3-2-3-核心层" class="headerlink" title="3.2.3 核心层"></a>3.2.3 核心层</h2><p>园区核心层交换机部署在园区核心机房中，汇聚各楼宇/区域之间的用户流量，提供三层交换机功能，连接园区外部网络到内部用户的“纵向流量”和不同汇聚区域用户之间的“横向流量”要求高密10GE、高转发性能。</p>
+<p>推荐使用S9300作为园区核心层交换机。</p>
+<h2 id="3-2-4-出口层"><a href="#3-2-4-出口层" class="headerlink" title="3.2.4 出口层"></a>3.2.4 出口层</h2><p>园区出口路由器，连接Internet/WAN广域网和园区内部局域网。推荐华为AR和SRG系列路由器作为企业出口路由器。</p>
+<p>对于中小型企业园区网，核心层和出口层可进行合并，通过核心交换机（S9300）的WAN接口板的广域网接口（POS等）直接与外网相连。 3.3 二三层网络分界点设计</p>
+<p><strong>二三层网络分界点（用户网关）设置在汇聚交换机</strong></p>
+<p>汇聚交换机作为用户的网关设备，接入交换机与汇聚交换机之间是二层网络，通过STP/RSTP/MSTP/RRPP保证网络可靠性和防止二层网络环路产生，汇聚交换机与核心交换机之间是三层网络，运行OSPF等路由协议，通过等价路由、IP FRR保证三层网络可靠性、加快路由收敛时间。</p>
+<p>【优点】</p>
+<ol>
+<li><p>接入交换机是二层交换机，成本低，并且可保护客户现有低端二层交换机的投资；</p>
+</li>
+<li><p>高可靠性，二层网络故障收敛速度快；</p>
+</li>
+</ol>
+<p>【缺点】</p>
+<ol>
+<li><p>接入交换机和汇聚交换机之间存在二层环路风险，需要配置保证；</p>
+</li>
+<li><p>接入交换机与汇聚交换机之间链路利用率低，需要启用二层协议负载均担多实例以提高链路利用率。</p>
+</li>
+</ol>
+<p>本方案的缺点可以通过接入交换机堆叠/汇聚交换机集群（交换机虚拟化）方案来解决。园区汇聚交换机作为二三层网络分界点（用户网关设备）是经典的园区网架构，推荐使用。</p>
+<p><strong>二三层网络分界点（用户网关）设置在接入交换机</strong></p>
+<p>接入交换机作为用户的二三层分界点（网关设备），即三层到边缘的园区网架构，接入交换机到汇聚交换机、汇聚交换机到核心交换机之间都是三层网络，运行OSPF等路由协议，整个企业园区是全路由型网络。</p>
+<p>【优点】</p>
+<ol>
+<li><p>网络易扩展：园区网架构对物理网络拓扑依赖度低，可以任意网络拓扑形式扩展；</p>
+</li>
+<li><p>网络易维护：全网为三层网络、无二层环路网络风险，无需配置生成树协议、RRPP和VRRP，降低网络配置和维护工作量。</p>
+</li>
+</ol>
+<p>【缺点】</p>
+<ol>
+<li><p>交换机成本相对较高：相对与二层接入交换机，成本较高；</p>
+</li>
+<li><p>接入层为三层网络，网络故障路由收敛速度相对较慢。</p>
+</li>
+</ol>
+<h2 id="4-园区网络高可靠性规划设计"><a href="#4-园区网络高可靠性规划设计" class="headerlink" title="4 园区网络高可靠性规划设计"></a>4 园区网络高可靠性规划设计</h2><h2 id="4-1-园区网络高可靠性规划设计"><a href="#4-1-园区网络高可靠性规划设计" class="headerlink" title="4.1 园区网络高可靠性规划设计"></a>4.1 园区网络高可靠性规划设计</h2><p>园区网高可靠性设计总体方案如下图所示：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-df3c4a7cd992bd1267be40be41f73bea_hd.jpg" alt="img" loading="lazy">图 4‑1 园区网高可靠性设计方案总览</p>
+<p>针对二层接入（接入交换机是二层交换机、汇聚交换机作为用户网关）典型园区网架构，从接入层、汇聚层、核心层来分层考虑网络可靠性设计。</p>
+<p>接入层网络是二层网络，接入交换机与汇聚交换机之间通过Smart Link/STP/RSTP/MSTP/RRPP保证网络可靠性，同时解决二层网络环路问题；汇聚层交换机之间通过VRRP（BFD for VRRP）协议确定用户的主备网关，交换机互联通过TRUNK链路，保证链路级可靠性，汇聚交换机与接入交换机之间可通过DLDP协议检测光纤单向故障（单通故障）。</p>
+<p>园区网接入/汇聚/核心交换机通过虚拟化技术进行集群（或堆叠），将两台/多台交换机虚拟化成一台交换机，降低网络拓扑复杂度的同时，提高网络可靠性，是未来高可靠性园区网的发展趋势。</p>
+<p>典型园区网可靠性组网设计方案有：口子型组网、三角型组网、U子型组网。 </p>
+<p><strong>可靠性组网方案1：口子型组网</strong></p>
+<p><img src="https://pic3.zhimg.com/80/v2-018f448a3251ad1f49542e718dfbb802_hd.jpg" alt="img" loading="lazy">图 4‑2 口子型组网</p>
+<p>接入交换机与汇聚交换机之间是二层网络，汇聚交换机作为用户网关设备，两台汇聚交换机之间通过二层TRUNK链路互连，多台接入交换机与两台汇聚交换机之间组成口子型二层环网，并且通过部署STP/RSTP/MSTP/RRPP等协议进行二层环网阻断、环网故障检测和保护倒换功能。两台汇聚交换机运行VRRP（BFD+VRRP）协议确定主备用户网关，VRRP报文直接在汇聚交换机直连的TRUNK链路上收发。注意：两台汇聚交换机链路需要保证绝对可靠，必须采用TRUNK链路、包含两条以上物理链路，因为汇聚交换机间链路DOWN，两台汇聚交换机VRRP状态都为主（VRRP双主情况产生），此时接入二层环网阻塞在汇聚交换机之间的直连链路上，这样接入用户同时感知两个处于VRRP主用状态的网关设备（汇聚交换机），出现问题。</p>
+<p>口子型组网方案的优点是，园区网各个楼层接入交换机可以串在一起，与汇聚交换机组成二层环网，汇聚交换机统一为各楼层接入交换机下的用户分配IP地址，实现园区不同楼层的用户可以共用同一个IP地址网段； 该组网方案的缺点是接入层网络需要部署较为复杂的二层环网协议、网络配置和维护较为复杂。</p>
+<p>口子型组网方案是园区网非常经典的可靠性设计方案，适合各种规模的园区网应用场景。</p>
+<p><strong>可靠性组网方案2：三角型组网</strong></p>
+<p><img src="https://pic1.zhimg.com/80/v2-17997fcaaceda05f154de148900df07c_hd.jpg" alt="img" loading="lazy">图 4‑3 三角型组网</p>
+<p>汇聚交换机作为用户网关设备，两台汇聚交换机之间通过二层链路互连，每台接入交换机上行有两条链路接入到两台汇聚交换机，接入交换机上行两条链路的主备关系由运行的Smart Link协议确定。两台汇聚交换机运行VRRP（BFD+VRRP）协议确定主备用户网关，VRRP报文直接在汇聚交换机直连链路上收发。注意：两台汇聚交换机链路需要保证绝对可靠，必须采用TRUNK链路。口子型组网场景下，多个楼层之间可以共用VRRP组，不受汇聚交换机VRRP组数量限制，可实现不同楼层间的园区用户可以共享一个IP地址网段。</p>
+<p>三角型组网方案的优点是：二层接入网不存在环路，不需要配置相对复杂的环网保护协议（STP/RSTP/MSTP/RRPP）；Smart Link故障检测和保护倒换速度快（200～400ms）；支持园区网园区不同楼层的用户可以共用同一个IP地址网段。</p>
+<p>三角型组网方案的缺点是每台接入交换机上行需要部署主备两条链路，增加布线成本，对汇聚交换机的端口密度有较高要求。</p>
+<p><strong>可靠性组网方案3：U字型组网</strong></p>
+<p><img src="https://pic3.zhimg.com/80/v2-f103961d2a1c7fb70c8dd312f6913976_hd.jpg" alt="img" loading="lazy">图 4‑4 U字型组网</p>
+<p>园区网汇聚交换机之间通过纯三层链路互连，无直连二层链路。汇聚交换机作为园区用户网关，与接入交换机组成二层网络，汇聚交换机的主备通过VRRP（BFD for VRRP）协议协商，VRRP协议通过接入交换机转发，每组接入交换机与两台汇聚交换机组成的一个物理U型网络需要启用一组VRRP，汇聚交换机通过多个物理端口会接入多个二层U型网络，这样汇聚交换机间需要运行多个VRRP组（每个二层U型接入网络运行一个VRRP组），一般一个U型二层接入网覆盖的是同一个楼层的接入交换机。由于不同VRRP组的网关IP网段不能相同，因此每个U型接入网下的所有园区用户需要独占一个IP网段，不同U型接入网的用户（不同楼层的园区用户）之间不能共享一个IP网段，这是此方案应用的最大缺点。</p>
+<p>U子型方案的优点：二层接入网不存在环路，不需要配置相对复杂的环网保护协议（STP/RSTP/MSTP/RRPP）。</p>
+<p><strong>可靠性设计目标方案（发展趋势）：园区网交换机虚拟化</strong></p>
+<p><img src="https://pic1.zhimg.com/80/v2-0cc406480699395a23b35c186680bfa8_hd.jpg" alt="img" loading="lazy">图 4‑5 可靠性设计目标方案组网</p>
+<p>园区网可靠性方案设计的目标方案或发展趋势是各层次园区网交换机都进行虚拟化，通过集群/堆叠技术将两台或多台交换机虚拟成一台交换机。可以提高单节点设备可靠性，一台交换机故障，另外一台交换机自动接管故障设备上的所有业务，可以做到业务无损切换。设备虚拟化通过跨设备的TRUNK链路，提升链路级可靠性，并且流量可以均匀分布在TRUNK成员链路上，提高链路带宽利用率，条或多条链路故障后,流量自动切换到其他正常的链路。</p>
+<p>该方案另外一个优点网络配置和维护简单，园区二层接入网，不需要配置复杂的二层环网和保护倒换协议，二层链路故障直接感知快速切换，三层网络中多个设备间共享路由表，网络故障路由收敛速度快。网络管理和维护难度大大降低，此方案适应面广，扩展性强，是未来园区网的发展趋势。</p>
+<h2 id="4-2-园区网络设备高可靠性规划设计"><a href="#4-2-园区网络设备高可靠性规划设计" class="headerlink" title="4.2 园区网络设备高可靠性规划设计"></a>4.2 园区网络设备高可靠性规划设计</h2><h2 id="4-2-1-重要部件冗余"><a href="#4-2-1-重要部件冗余" class="headerlink" title="4.2.1 重要部件冗余"></a>4.2.1 重要部件冗余</h2><p>设备本身要具有电信级5个9的可靠性，需要网络设备支持:</p>
+<p>主控1:1备份</p>
+<p>交换网1+1/1:1两种方式</p>
+<p>DC电源1+1备份；AC电源1+1/2+2备份</p>
+<p>模块化的风扇设计，高端配置支持单风扇失效</p>
+<p>无源背板，高可靠性</p>
+<p>独立的设备监控单元，和主控解耦</p>
+<p>所有模块热插拔</p>
+<p>完善的各种告警功能</p>
+<p>设备管理1:1备份</p>
+<h2 id="4-2-2-设备自身安全"><a href="#4-2-2-设备自身安全" class="headerlink" title="4.2.2 设备自身安全"></a>4.2.2 设备自身安全</h2><p>如下图所示,随着黑客工具的泛滥和使用的方便,使的网络攻击的成本越来越来,但危害越来越大.</p>
+<p><img src="https://pic2.zhimg.com/80/v2-4888f5bb80b393f464eb7d731d65a1ad_hd.jpg" alt="img" loading="lazy">图 4‑6 黑客工具的危害性</p>
+<p>这就要求具有强大灵活的自身防护功能,以不变应万变的方法,才能抵挡日益泛滥的网络攻击。</p>
+<p>华为公司全系列园区网交换机（S9300/S5300/S3300/S2300）提供攻击防范功能，能够检测出多种类型的网络攻击，并能采取相应的措施保护设备自身及其所连接的内部网络免受恶意攻击，保证内部网络及设备的正常运行。</p>
+<p>华为全系列交换机支持的攻击防范功能包括防DDOS攻击、IP欺骗攻击、Land攻击、Ping of Death攻击、Teardrop攻击、ICMP Flood攻击、SYN FLOOD攻击等。</p>
+<p>另外，以太网交换机的MAC地址表作为二层报文转发的核心，在受到攻击的时候，直接导致交换机无法正常工作。发生MAC地址攻击的时候，攻击者通过不停的发送MAC地址来刷新，填充交换机的MAC地址表，由于MAC地址表的规格有限，导致正常流量由于没有正确的转发表项而无法正常转发。ARP攻击与此类似，通过攻击报文来更改MAC与IP地址的绑定，从而重新定向流量。</p>
+<p>华为全系列交换机可以通过MAC地址与端口的绑定以及限制端口/VLAN/VSI下MAC地址的最大学习个数可防止MAC扫描，并通过VLAN、IP、MAC之间的任意绑定可防范ARP攻击（SAI/DAI功能）。</p>
+<p>华为全系列交换机支持黑洞MAC功能，园区交换机收到报文时比较报文目的MAC地址，若与黑洞MAC表项相同则丢弃该报文。当用户察觉到某MAC地址的报文具有一定攻击性，则可以在园区交换机上配置黑洞MAC，从而将具有该MAC地址的报文过滤掉，避免遭受攻击。</p>
+<h2 id="4-3-园区网络交换机虚拟化规划设计"><a href="#4-3-园区网络交换机虚拟化规划设计" class="headerlink" title="4.3 园区网络交换机虚拟化规划设计"></a>4.3 园区网络交换机虚拟化规划设计</h2><h2 id="4-3-1-汇聚交换机的集群CSS-Cluster-Switch-Switching"><a href="#4-3-1-汇聚交换机的集群CSS-Cluster-Switch-Switching" class="headerlink" title="4.3.1 汇聚交换机的集群CSS(Cluster Switch Switching)"></a>4.3.1 汇聚交换机的集群CSS(Cluster Switch Switching)</h2><p>所谓集群，就是把物理的多台服务器连接在一起，对外表现为一台逻辑的服务器，提供服务。</p>
+<p>因为企业园区网为了增加可靠性，都是双节点备份，特别适合集群技术。如下图所示：</p>
+<p><img src="https://pic4.zhimg.com/80/v2-1350c0781e69a3f6d037f6d39d1b2037_hd.jpg" alt="img" loading="lazy">图 4‑7 集群组网的优势</p>
+<p>采用集群技术，对企业园区网络，有四大优势：</p>
+<ol>
+<li>减化管理和配置</li>
+</ol>
+<p>首先，集群后需要管理的设备节点减少一半以上。</p>
+<p>其次，组网变得简洁，不需要配置复杂的协议，包括STP/SmartLink/VRRP等。</p>
+<ol start="2">
+<li>快速的故障收敛</li>
+</ol>
+<p>故障收敛时间可以控制在&lt; 1ms, 大大降低了网络链路/节点的故障，对业务的影响。</p>
+<ol start="3">
+<li>带宽利用率高</li>
+</ol>
+<p>采用链路Trunk的方式，带宽利用率可以达到100％。</p>
+<ol start="4">
+<li>扩容方便</li>
+</ol>
+<p>保护用户投资。随着业务的增加，当用户进行网络升级时，采用集群的方式，只需要增加新设备既可，不需要更改网络配置的情况下，平滑扩容，很好的保护了用户投资。</p>
+<p>目前，业界有两种堆叠的方式，一种是采用业务接口堆叠，一种是采用专用的堆叠线；</p>
+<p><img src="https://pic2.zhimg.com/80/v2-78493c57b0a8348b7d93149242b19fb9_hd.jpg" alt="img" loading="lazy">图 4‑8 两种集群方式比较</p>
+<p>华为的S93系列交换机采用堆叠线的方式，通过在主板板上插入堆叠卡，连接多台设备。如下图所示，这种方式有如下的优势：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-d1a5d87863061b5546c7abadfe5a8fb5_hd.jpg" alt="img" loading="lazy">图 4‑9 华为CSS集群技术</p>
+<p>采用交换机网集群的方式，相比接口板集群，有如下的优势：</p>
+<p><strong>堆叠带宽高</strong></p>
+<p>交换机网集群一般采用专用的接口线，堆叠带宽高。</p>
+<p>S93系列的堆叠带宽高达128G(单向)；并且可平滑升级到200G(单向)； 相对于业界的80G（单向）的互联带宽，具有明显的优势。</p>
+<p><strong>不占用业务槽位</strong></p>
+<p>S93系列采用在主控板预留的灵活插卡槽位，插入堆叠卡互联的方式，不占用接口槽位。相对于接口堆叠的方式，节省了1～2个接口槽位。</p>
+<p><strong>可靠性高</strong></p>
+<p>S93系列采用堆叠线连接，实际上是对交换网的延伸。从上图可以看出，接口板堆叠方式需要经过两个堆叠接口板转发，处理复杂度增加；另外，接口板的硬件可靠性也比交换网低。</p>
+<p>总体来看，交换网堆叠在软件和硬件方面，可靠性都高于接口堆叠的方式。</p>
+<h2 id="4-3-2-接入交换机的堆叠iStack"><a href="#4-3-2-接入交换机的堆叠iStack" class="headerlink" title="4.3.2 接入交换机的堆叠iStack"></a>4.3.2 接入交换机的堆叠iStack</h2><p>iStack堆叠就是将多台设备通过堆叠口连接起来形成一台虚拟的逻辑设备。一个园区网用户上行的2个网络接口，对于堆叠后的设备，可以看作Trunk接口。</p>
+<p>多台设备堆叠成一台设备后，从功能和管理方面，都可以作为一台设备来看待。</p>
+<p>华为的iStack堆叠技术有如下的优势： </p>
+<p>ü <strong>简化管理</strong></p>
+<p>堆叠设备的角色分为Master和Slave；通过对Master 设备的配置达到管理整个iStack 堆叠以及堆叠内所有成员设备的效果，而不用物理连接到每台成员设备上分别对它们进行配置和管理。</p>
+<p><strong>简化网络运行</strong></p>
+<p>iStack 形成的虚拟设备中运行的各种控制协议也是作为单一设备统一运行的，例如路由协议会作为单一设备统一计算。这样省去了设备间大量协议报文的交互，简化了网络运行，缩短了网络动荡时的收敛时间。</p>
+<p><strong>强大的网络扩展能力</strong></p>
+<p>通过增加成员设备，可以轻松自如的扩展堆叠系统的端口数、带宽和处理能力。</p>
+<p><strong>高可靠性</strong></p>
+<p>堆叠的高可靠性体现在多个方面，比如：成员设备之间堆叠物理端口支持聚合功能，堆叠系统和上、下层设备之间的物理连接也支持聚合功能，这样通过多链路备份提高了堆叠系统的可靠性；堆叠系统由多台成员设备组成，Master 设备负责堆叠的运行、管理和维护，Slave 设备在作为备份的同时也可以处理业务，一旦Master 设备故障，系统会迅速自动选举新的Master，以保证通过堆叠的业务不中断，从而实现了设备级的1:N 备份。</p>
+<p><strong>高性能</strong></p>
+<p>由于iStack 设备是由多个支持iStack 特性的单机设备堆叠而成的，iStack设备的交换容量和端口数量就是iStack 内部所有单机设备交换容量和端口数量的总和。因此，iStack 技术能够通过多个单机设备的堆叠，轻易的将设备的交换能力、用户端口的密度扩大数倍，从而大幅度提高了设备的性能。</p>
+<h2 id="5-园区网络安全方案规划设计"><a href="#5-园区网络安全方案规划设计" class="headerlink" title="5 园区网络安全方案规划设计"></a>5 园区网络安全方案规划设计</h2><h2 id="5-1-园区网安全方案总体规划设计"><a href="#5-1-园区网安全方案总体规划设计" class="headerlink" title="5.1 园区网安全方案总体规划设计"></a>5.1 园区网安全方案总体规划设计</h2><p><img src="https://pic2.zhimg.com/80/v2-9b29f3528db581a98619c2bdeb98f9f5_hd.jpg" alt="img" loading="lazy">图 5‑1 园区网安全方案总体设计</p>
+<p>从园区接入、网络监管/监控、边界防御、园区出口传输安全等多纬度、多层次进行安全设计和安全防御，对内部员工进行身份认证和网络访问权限控制，对企业内部进行安全区域划分、隔离和权限控制，对企业外部用户访问进行安全控制、数据加密，防止恶意攻击。园区网全方位的</p>
+<p>安全设计方案保证内部、外部用户访问园区网资源的安全性。</p>
+<h2 id="5-2-园区接入安全规划设计"><a href="#5-2-园区接入安全规划设计" class="headerlink" title="5.2 园区接入安全规划设计"></a>5.2 园区接入安全规划设计</h2><p><img src="https://pic2.zhimg.com/80/v2-527ba6b04b5c60ed944efa2e520d2529_hd.jpg" alt="img" loading="lazy">图 5‑2 网络准入控制NAC</p>
+<p>企业网交换机与华为赛门铁克的NAC方案配套，实现对接入用户的身份认证、终端健康检查，并实现基于用户角色的差异化权限控制。NAC解决方案包含三个关键组件：通信代理、网络访问控制设备（园区交换机）和认证策略服务器组：</p>
+<p>通信代理也就是安全客户端，是安装在用户终端系统上的软件，是对用户终端进行身份认证、安全状态评估检查以及安全策略实施的主体，其主要功能包括：</p>
+<p>支持802.1x、Portal、MAC等多种认证方式，可以与园区网交换机实现接入、汇聚层的端点准入控制。</p>
+<p>检查用户终端的安全状态，包括操作系统版本、系统补丁等信息；同时提供与防病毒客户端联动的接口，实现与第三方防病毒客户端的联动，检查用户终端的防病毒软件版本、病毒库版本、以及病毒查杀信息，这些信息将被传递到安全策略服务器，执行端点准入的判断与控制。</p>
+<p>安全策略实施，接收安全策略服务器下发的安全策略并强制用户终端执行，包括设置安全策略（是否监控邮件、注册表）、系统修复通知与实施（自动或手工升级补丁和病毒库）等功能。不按要求实施安全策略的用户终端将被限制在隔离区。</p>
+<p>实时监控系统安全状态，包括是否更改安全设置、是否发现新病毒等，并将安全事件定时上报到安全策略服务器，用于事后进行安全审计。</p>
+<p>网络访问控制设备是企业网络中安全策略的实施点，起到强制用户准入认证、隔离不合格终端、为合法用户提供网络服务的作用。园区网的网络访问控制设备推荐为华为交换机，可分别实现不同认证方式（如802.1x、MAC认证和Portal等）的端点准入控制,具备以下功能：</p>
+<p>强制网络接入终端进行身份认证和安全状态评估。</p>
+<p>隔离不符合安全策略的用户终端，园区交换机接收到安全策略服务器下发的隔离指令后，可以通过 VLAN 或 ACL 方式限制用户的访问权限；同样，收到解除用户隔离的指令后也可以在线解除对用户终端的隔离。</p>
+<p>提供基于身份的网络服务，园区交换机可以根据安全策略服务器下发的策略，为用户提供个性化的网络服务，如提供不同的 QoS、ACL、VLAN 等。</p>
+<p>根据用户接入安全控制范围需要，作为NAC网络访问控制设备的交换机可以部署在园区接入层、汇聚层，设置可部署在核心层、仅控制用户访问园区外部网络的权限。</p>
+<p>策略服务器也就是管理服务器，NAC方案的核心是整合与联动，其中的安全策略服务器是NAC方案中的管理与控制中心，兼具用户管理、安全策略管理、安全状态检查评估、安全联动控制以及安全事件审计等功能。</p>
+<p><strong>802.1x接入认证</strong></p>
+<p><img src="https://pic1.zhimg.com/80/v2-c5086aa8281c1dbbb44ee4846fa86d50_hd.jpg" alt="img" loading="lazy"></p>
+<p>图 5‑3 802.1x接入认证流程</p>
+<p><strong>802.1x认证过程如下：</strong></p>
+<ol>
+<li><p>用户在802.1x客户端输入用户名、密码，发起802.1x认证请求至园区交换机； 2) 交换机作为Radius客户端将用户名、密码发送到认证服务器进行Radius认证；</p>
+</li>
+<li><p>认证服务器将携带VLAN或二三层ACL的Radius属性下发至园区交换机，根据用户认证结果控制其网络访问权限；</p>
+</li>
+<li><p>用户获取IP地址，NAC客户端软件与策略服务器联动，按照预先定制的安全检查策略，对用户终端健康状态进行检查，检查不通过Radius COA下发VLAN或ACL，限制用户网络访问权限；</p>
+</li>
+<li><p>用户通过802.1x身份认证和终端健康检查后，获取业务网络访问权限。</p>
+</li>
+</ol>
+<p><strong>用户MAC认证</strong></p>
+<p><img src="https://pic4.zhimg.com/80/v2-e949721a660854fbf1d774dbd273b8cb_hd.jpg" alt="img" loading="lazy"></p>
+<p>图 5‑4 MAC认证流程</p>
+<p><strong>用户MAC认证过程如下：</strong></p>
+<ol>
+<li><p>用户终端上电（无802.1x认证客户端），用户发起ARP或DHCP请求等报文；</p>
+</li>
+<li><p>园区交换机收到用户终端的数据报文，触发Radius认证请求至认证服务器，根据MAC地址生成用户名和密码；</p>
+</li>
+<li><p>认证服务器将携带VLAN或二三层ACL的Radius属性下发至园区交换机，根据用户认证结果控制其网络访问权限；</p>
+</li>
+<li><p>用户获取IP地址，NAC客户端软件与策略服务器联动，按照预先定制的安全检查策略，对用户终端健康状态进行检查，检查不通过Radius COA下发VLAN或ACL，限制用户网络访问权限；</p>
+</li>
+<li><p>用户通过802.1x身份认证和终端健康检查后，获取业务网络访问权限。</p>
+</li>
+</ol>
+<p><strong>802.1X MAC旁路认证</strong></p>
+<p><img src="https://pic3.zhimg.com/80/v2-11e14d7a5a1afc3f7fe9fa4b30ee4176_hd.jpg" alt="img" loading="lazy"></p>
+<p>图 5‑5 802.1x MAC旁路认证流程</p>
+<p><strong>802.1x MAC旁路认证过程如下：</strong></p>
+<ol>
+<li><p>用户终端上电，用户发起ARP或DHCP请求等报文；</p>
+</li>
+<li><p>园区交换机先向用户终端发起EAP探测报文，如果用户终端已经安装802.1x认证客户端，则触发用户802.1x接入认证过程，否则进行MAC认证过程；</p>
+</li>
+<li><p>认证服务器将携带VLAN或二三层ACL的Radius属性下发至园区交换机，根据用户认证结果控制其网络访问权限；</p>
+</li>
+<li><p>用户获取IP地址，NAC客户端软件与策略服务器联动，按照预先定制的安全检查策略，对用户终端健康状态进行检查，检查不通过Radius COA下发VLAN或ACL，限制用户网络访问权限；</p>
+</li>
+<li><p>用户通过802.1x身份认证和终端健康检查后，获取业务网络访问权限。</p>
+</li>
+</ol>
+<p><strong>WEB Portal认证</strong></p>
+<p><img src="https://pic3.zhimg.com/80/v2-5661bc9f8207e04faa4de1987d91aae6_hd.jpg" alt="img" loading="lazy"></p>
+<p>图 5‑6 WEB Portal认证流程</p>
+<p><strong>WEB Portal认证过程如下：</strong></p>
+<ol>
+<li><p>用户终端打开WEB页面，发起HTTP请求至园区交换机；</p>
+</li>
+<li><p>园区交换机进行HTTP重定向，将用户的打开的WEB页面重定向至Portal服务器；</p>
+</li>
+<li><p>用户访问WEB Portal页面，输入用户名和密码进行认证；</p>
+</li>
+<li><p>Portal服务器通过Portal 2.0协议将用户输入的用户名和密码信息发送给交换机，交换机到认证服务器进行Radius认证；</p>
+</li>
+<li><p>认证服务器将携带VLAN或二三层ACL的Radius属性下发至园区交换机，根据用户认证结果控制其网络访问权限；</p>
+</li>
+<li><p>NAC客户端软件与策略服务器联动，按照预先定制的安全检查策略，对用户终端健康状态进行检查，检查不通过Radius COA下发VLAN或ACL，限制用户网络访问权限； 7) 用户通过802.1x身份认证和终端健康检查后，获取业务网络访问权限。</p>
+</li>
+</ol>
+<h2 id="5-3-园区网络监管-监控-规划设计"><a href="#5-3-园区网络监管-监控-规划设计" class="headerlink" title="5.3 园区网络监管/监控 规划设计"></a>5.3 园区网络监管/监控 规划设计</h2><h2 id="5-3-1-防IP-MAC地址盗用和ARP中间人攻击"><a href="#5-3-1-防IP-MAC地址盗用和ARP中间人攻击" class="headerlink" title="5.3.1 防IP/MAC地址盗用和ARP中间人攻击"></a>5.3.1 防IP/MAC地址盗用和ARP中间人攻击</h2><p><strong>防IP/MAC地址盗用</strong></p>
+<p>DHCP Snooping技术是DHCP安全特性，通过建立和维护DHCP Snooping绑定表过滤不可信任的DHCP信息，这些信息是指来自不信任区域的DHCP信息。DHCP Snooping绑定表包含不信任区域的用户MAC地址、IP地址、租用期、VLAN-ID 接口等信息，DHCP Snooping绑定表可以基于DHCP过程动态生成，也可以通过静态配置生成，此时需预先准备用户的IP 地址、MAC地址、用户所属VLAN ID、用户所属接口等信息。</p>
+<p>园区交换机开启DHCP-Snooping后，会对DHCP报文进行侦听，并可以从接收到的DHCP Request或DHCP Ack报文中提取并记录IP地址和MAC地址信息。另外，DHCP-Snooping允许将某个物理端口设置为信任端口或不信任端口。信任端口可以正常接收并转发DHCP Offer报文，而不信任端口会将接收到的DHCP Offer报文丢弃。这样，可以完成交换机对假冒DHCP Server的屏蔽作用，确保客户端从合法的DHCP Server获取IP地址。</p>
+<p><strong>防ARP中间人攻击</strong></p>
+<p><img src="https://pic1.zhimg.com/80/v2-7fb633ba9f33f9cba422880adfda6280_hd.jpg" alt="img" loading="lazy"></p>
+<p>图 5‑7 ARP中间人攻击防御</p>
+<p>Dynamic ARP Inspection (DAI)在交换机上基于DHCP Snooping技术提供用户网关IP地址和MAC地址、VLAN和接入端口的绑定， 并动态建立绑定关系。对于用户终端没有使用DHCP动态获取IP地址的场景，可采用静态添加用户网关相关信息的静态绑定表。此时园区交换机检测过滤ARP请求响应报文中的源MAC、源IP是否可以匹配上述绑定表，不能匹配则认为是仿冒网关回应的ARP响应报文，予以丢弃，从而可以有效实现防御ARP中间人/网关ARP仿冒欺骗攻击行为。</p>
+<h2 id="5-3-2-防IP-MAC地址扫描攻击"><a href="#5-3-2-防IP-MAC地址扫描攻击" class="headerlink" title="5.3.2 防IP/MAC地址扫描攻击"></a>5.3.2 防IP/MAC地址扫描攻击</h2><p><strong>防IP扫描攻击</strong></p>
+<p>地址扫描攻击是攻击者向攻击目标网络发送大量的目的地址不断变化的IP报文。当攻击者扫描网络设备的直连网段时，触发ARP miss，使网络设备给该网段下的每个地址发送ARP报文，地址不存在的话，还需要发送目的主机不可达报文。如果直连网段较大，攻击流量足够大时，会消耗网络设备较多的CPU和内存资源，可引起网络中断。</p>
+<p>园区交换机支持IP地址扫描攻击的防护能力，收到目的IP是直连网段的报文时，如果该目的地址的路由不存在，会发送一个ARP请求报文，并针对目的地址下一条丢弃表项（弃后续所有目的地址为该直连网段的ARP报文），以防止后续报文持续冲击CPU。如果有ARP应答，则立即删除相应的丢弃表项，并添加正常的路由表项；否则，经过一段时间后丢弃表项自动老化。这样，既防止直连网段扫描攻击对交换机造成影响，又保证正常业务流程的畅通。</p>
+<p>在上述基础上，交换机还支持基于接口设置ARP miss的速率。当接口上触发的ARP miss超过设置的阈值时，接口上的ARP miss不再处理，直接丢弃。</p>
+<p>如果用户使用相同的源IP进行地址扫描攻击，交换机还可以基于源IP做ARP miss统计。如果ARP miss的速率超过设定的阈值，则下发ACL将带有此源IP的报文进行丢弃，过一段时间后再允许通过。</p>
+<p><strong>防MAC地址扫描攻击</strong></p>
+<p>以太网交换机的MAC地址转发表作为二层报文转发的核心，在受到攻击的时候，直接导致交换机无法正常工作。发生MAC地址攻击的时候，攻击者向攻击目标网络发送大量的源MAC地址不断变化以太报文，园区交换机收到以太报文会基于报文的源MAC学习填充二层MAC转发表项，由于MAC地址转发表的规格有限，会因为MAC扫描攻击而很快填充满，无法再学习生成新的MAC转发表，已学习的MAC表条目需通过老化方式删除，这样途径园区交换机大量的单播报文会因为按照目的MAC找不到转发表项而不得不进行广播发送，导致园区网络中产生大量的二层广播报文，消耗网络带宽、引发网络业务中断异常。</p>
+<p>交换机二层MAC转发表是全局共享资源，单板内各端口/VLAN共享一份MAC转发表，华为园区交换机支持基于端口/VLAN的MAC学习数目限制，同时支持MAC表学习速率限制，有效防御MAC地址扫描攻击行为。MAC学习数目达到端口/VLAN上设置的阈值时，会进行丢弃/转发/告警等动作（动作策略可定制、可叠加）。另外通过园区交换机的MAC地址与端口绑定来限制跨端口的MAC扫描攻击。</p>
+<h2 id="5-3-3-广播-组播报文抑制"><a href="#5-3-3-广播-组播报文抑制" class="headerlink" title="5.3.3 广播/组播报文抑制"></a>5.3.3 广播/组播报文抑制</h2><p>攻击者不停地向园区网发送大量恶意的广播报文，恶意广播报文占据了大量的带宽，传统的广播风暴抑制无法识别用户VLAN，将导致正常的广播流量一并被交换机丢弃。园区网交换机需要识别恶意广播流量的VLAN ID，通过基于VLAN的广播风暴抑制丢弃恶意广播报文而不影响正常广播报文流量转发。可基于端口或VLAN限制广播报文流量百分比或速率阈值。</p>
+<p>同时园区网交换机支持组播报文抑制，可基于端口限制组播报文流量百分比或速率阈值。</p>
+<h2 id="5-4-园区网边界防御-规划设计"><a href="#5-4-园区网边界防御-规划设计" class="headerlink" title="5.4 园区网边界防御 规划设计"></a>5.4 园区网边界防御 规划设计</h2><h2 id="5-4-1-防火墙部署规划设计"><a href="#5-4-1-防火墙部署规划设计" class="headerlink" title="5.4.1 防火墙部署规划设计"></a>5.4.1 防火墙部署规划设计</h2><p><img src="https://pic4.zhimg.com/80/v2-5d55ac60b912355a4b4eaa4ab66a055f_hd.jpg" alt="img" loading="lazy"></p>
+<p>图 5‑8 园区网防火墙功能部署</p>
+<p>企业园区网边界防御分为两个部分：园区出口边界防御、园区内部边界防御。</p>
+<p>园区出口连接Internet和企业WAN网的接入，企业外部网络尤其Internet网络，是各种攻击行为、病毒传播、安全事件引入的风险点，通过在企业出口部署高性能防火墙设备、或者在核心交换机内置防火墙模块，可以很好的缓解风险的传播，阻挡来自Internet/企业外部网络攻击行为的发生。企业园区出口位置部署的独立防火墙设备（或核心交换机内置的防火墙模块），需要满足高性能、高可靠、高安全的要求，是企业园区网的第一道安全屏障。</p>
+<p>园区内部边界防御是将企业内部划分为多个区域，分为信任区域和非信任区域，分别实施不同的安全策略，包括部署区域间隔离、受限访问、防止来自区域内部的DOS攻击等安却措施。建议通过汇聚交换机上集成防火墙模块（单板）来实现园区内部的边界防御功能。</p>
+<p>园区网中防火墙功能无论是独立设备部署还是集成在核心/汇聚交换机内部，都必须支持灵活的业务流控制策略配置，能把特定的流量引到防火墙进行处理，其他流量进行旁路。</p>
+<p>防火墙本身需要保证高可靠性，需要考虑防火墙的冗余设计，支持Active/Active HA 设计方式，即交换机内集成的多块防火墙板卡支持负载分担和主备模式，不同交换机内的防火墙支持Active/Active模式，同时能够处理流量。</p>
+<h2 id="5-4-2-防火墙功能规划设计"><a href="#5-4-2-防火墙功能规划设计" class="headerlink" title="5.4.2 防火墙功能规划设计"></a>5.4.2 防火墙功能规划设计</h2><p>网络隔离：能够对网络区域进行分割，对不同区域之间的数据流进行控制，通过对数据包的源地址、目的地址、源端口、目的端口、网络协议等参数的检查，实现对数据流的精细控制，把可能的安全风险控制在相对独立的区域内；</p>
+<p>包过滤：支持基于ACL的基本包过滤，支持基于FTP、HTTP等应用层协议包过滤（ASPF）；</p>
+<p>攻击防范：对常见的ICMP重定向/不可达、TCP SYN/ARP FLOOD、Land、Smurf、TearDrop、网络端口扫描、畸形报文、拒绝服务（DoS/DDoS）等攻击行为，能够提供有效的检测和防范措施。</p>
+<p>NAT/PAT：支持园区外部公网地址到内部私网地址的代理转换，支持应用层网关ALG功能。</p>
+<h2 id="5-4-3-防火墙性能选择"><a href="#5-4-3-防火墙性能选择" class="headerlink" title="5.4.3 防火墙性能选择"></a>5.4.3 防火墙性能选择</h2><p>园区网防火墙的选择首先是安全防护能力，对于每秒新建连接数，并发连接数和吞吐量，ACL匹配速度，DDOS识别均要进行重点考察。</p>
+<p>防火墙的性能主要取决于以下参数：</p>
+<p>转发性能：从吞吐量方面考虑,决定设备的防护性能</p>
+<p>并发连接数： 从数据流数目方面考虑,决定设备的防护性能</p>
+<p>每秒新建连接数：决定单位时间的防护能力</p>
+<p>ACL匹配速度：决定规则匹配的可靠和性能</p>
+<p>华为S93系列集成的防火墙单板在性能方面有突出的表现：</p>
+<p>转发性能：每单板支持10Gbps (256Bytes)的吞吐量</p>
+<p>并发连接数：每单板达到400万的并发连接</p>
+<p>每秒新建连接数：每单板达到10万/，,同级别产品通常不足3万</p>
+<p>ACL匹配速度：采用智能匹配算法，万条匹配速度和单条速度一致，即ACL匹配动作不影响防火墙整体转发性能</p>
+<p>华为S93系列交换机集成的防火墙模块，每单板支持8Gbps的转发能力，400万的并发连</p>
+<p>接，每秒钟15万的新建流速度；并且支持1K的虚拟化多实例。</p>
+<h2 id="5-4-4-虚拟防火墙规划设计"><a href="#5-4-4-虚拟防火墙规划设计" class="headerlink" title="5.4.4 虚拟防火墙规划设计"></a>5.4.4 虚拟防火墙规划设计</h2><p>企业内部不同的部门具备不同的安全属性，部门内部需要进行独自的安全区域划分、并应用不同的安全策略。如下图所示，可以通过防火墙支持虚拟化实现上述需求，一个物理防火墙对资源进行划分和隔离，分配给企业内不同的部门使用，虚拟防火墙直接互相独立，就好像独立物理的防火墙一样，进行独立配置和控制。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-50302d7131326557fd277713b91f6df9_hd.jpg" alt="img" loading="lazy"></p>
+<p>图 5‑9 虚拟防火墙设计</p>
+<p>总结一下，虚拟防火墙具备如下特征：</p>
+<p>同物理防火墙一样独立管理、独立设置、每个虚拟防火墙专用的系统日志和攻击日志，以及每个虚拟防火墙的各种内部组件——例如独立路由表、转换数据库、ACL等 </p>
+<p>可通过VLAN划分园区网用户（PC机/服务器）属于那个虚拟防火墙 </p>
+<p>一台物理防火墙虚拟成多个逻辑防火墙，节省投资和维护成本 </p>
+<p>适合于大型企业园区各分支部门对防火墙相对独立使用和维护的场景</p>
+<h2 id="5-4-5-NAT规划设计"><a href="#5-4-5-NAT规划设计" class="headerlink" title="5.4.5 NAT规划设计"></a>5.4.5 NAT规划设计</h2><p>考虑到园区内网安全和企业公网地址缺乏等原因，会有一些企业选择通过采用私网IP地址来建设园区网，可以隐藏企业园区内部网络拓扑，需要在企业出口通过NAT设备进行IP地址转换。为了进行安全防护，NAT功能一般部署在防火墙设备上。NAT的应用一般主要有如下的应用场景：</p>
+<p><strong>1) PAT方式</strong></p>
+<p>它通过使用“IP地址＋端口号”的形式进行转换，使多个私网用户可共用一个公网IP地址访问外网，是地址转换实现的主要形式。</p>
+<p><strong>2) NAT Server方式</strong></p>
+<p>一般情况下，Internet/WAN上的用户，无法直接访问NAT后的私网地址服务器的； 但实际应用中，需要给公网用户提供一个访问私网服务器(如DNS服务器)的机会。 NAT Server方式就可以解决这个问题——通过静态配置“公网IP地址＋端口号”与“私网IP地址＋端口号”间的映射关系，NAT设备可以将公网地址“反向”转换成私网地址。</p>
+<p>在部署NAT时，需要考虑应用级ALG， 因为通常情况下，NAT只改变IP报文头部地址信息，而不对报文载荷进行分析，这对于普通的应用层协议（如Telnet）来说，并不会影响其业务的开展；然而有一些应用层协议，其报文载荷中可能也携带有数据通道的地址或端口信息，若这些信息不能被有效转换，就可能导致问题。所以，NAT需要采用ALG机制处理多种应用层协议。</p>
+<p>华为S9300交换机内置防火墙模块上的NAT功能， 支持上述企业园区网NAT需求，包括： </p>
+<p>1对1的IP地址转换</p>
+<p>PAT方式的多对多的IP地址转换：每板地址池：1K，地址池中地址个数：255 </p>
+<p>NAT Server功能,支持每板1K个Server</p>
+<p>ALG功能包括DNS、FTP、TFTP、ICMP、RTSP、SIP、QQ、MSN 等 </p>
+<p>NAT多实例</p>
+<h2 id="5-5-园区网出口安全规划设计"><a href="#5-5-园区网出口安全规划设计" class="headerlink" title="5.5 园区网出口安全规划设计"></a>5.5 园区网出口安全规划设计</h2><p>随着现代社会网络经济的发展，企业日益发展扩大，办事处、分支机构以及商业合作伙伴逐步增多，如何将这些小型的办公网络和企业总部网络进行经济灵活而有效的互联，并且与整个企业网络安全方案有机融合，提高企业信息化程度，优化商业运作效率，成为企业IT网络设计亟待解决的问题；大量普及的SOHO网络、小型办公网络、智能家居网络也越来越注重接入的便捷性和网络安全性。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-277788db4419b1426820ffb7179f834e_hd.jpg" alt="img" loading="lazy"></p>
+<p>图 5‑10 园区网出口安全设计</p>
+<p>企业园区网出口设备是企业内部网络与外部网络的连接点，其安全保证能力非常重要，企业在信息化的过程中面临核心技术、商业机密泄密等信息安全问题，VPN技术是企业传输数据非常理想的选择，因为VPN技术正式是为了解决在不安全的Internet上安全传输机密信息，保证信息的完整性、可用性以及保密性，包括IPSec VPN和SSL VPN。企业办事处、分支机构以及商业合作伙伴如果采用主机VPN客户端接入企业总部网络，那么分之机构网络中的每个主机需要单独拨号接入，VPN接入不可控造成内部网络安全隐患，同时也大量消耗企业总部VPN网关隧道资源；如果采用单独的VPN网关与企业总部网关建立VPN隧道，又面临投资过大的问题。需要有效解决企业分支机构VPN接入灵活性、安全性和经济性之间的矛盾。</p>
+<p>园区出口设备形态推荐：</p>
+<p><strong>接入路由器</strong></p>
+<p>针对企业办事处、分支机构、商业合作伙伴以及SOHO办公、智能家居等园区网络要求，采用华为SRG列业务路由网关（SRG1210/1220/2210/2220等多款产品）或AR系列接入路由器（AR18/28/46、AR19/29/49）作为园区网出口设备，集路由、交换、无线与数据安全于一体，能够提供灵活的宽带接入、WLAN解决方案、3G无线上网、NAT/PAT地址转换、攻击防范、状态检测等特性，全面满足客户自由安全联网需求。</p>
+<p><strong>交换机</strong></p>
+<p>针对部分小型园区网，可采用华为S9300交换机作为园区出口设备，考虑到降低设备投资成本，园区出口设备和核心交换机可以合一，通过S9300的WAN接口板提供POS/GE/10GE等广域网接口与企业外部网络互联，同时S9300作为园区核心交换机，下连各个汇聚交换机，S9300通过增值业务单板提供IPsec VPN和SSL VPN，满足企业分支机构安全互联以及企业员工或外部访客远程访问园区网的需求。</p>
+<h2 id="6-园区网络网管系统方案规划设计"><a href="#6-园区网络网管系统方案规划设计" class="headerlink" title="6 园区网络网管系统方案规划设计"></a>6 园区网络网管系统方案规划设计</h2><h2 id="6-1-网管系统概述"><a href="#6-1-网管系统概述" class="headerlink" title="6.1 网管系统概述"></a>6.1 网管系统概述</h2><p>网管系统 提供了“无缝式IT运维管理”功能，其系统架构清晰，采用模块化的设计理念，各功能模块既可独立运行、松散耦合；亦可整体功能无缝衔接覆盖整个业务系统，灵活的自由组合真正实现个性化的IT无忧运维。</p>
+<p>网管系统主要由网络管理、流量管理、认证计费等几个产品组成。</p>
+<p><strong>网络管理：</strong>实现了对交换机、路由器、防火墙等设备的全方位管理，提供了丰富的拓扑、配置、资产、故障、性能、事件、流量、报表等网络管理功能。</p>
+<p><strong>流量管理：</strong>提供网络流量监测、流量门限、协议分析、Web上网行为审计等功能。结合NetFlow网络流量分析器实现更为细化、便捷的全网流量分析功能。</p>
+<p><strong>认证计费：</strong>提供灵活多样的计费策略，支持多种认证方式，满足组性化的用户管理，实现多样化的控制策略。</p>
+<p>通过网管系统模块可以实现对IT资源的全面、可视化、统一管理。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-ca94d77f5504c02fb071a3249dc97879_hd.jpg" alt="img" loading="lazy"></p>
+<p>图 6‑1 企业网网管系统组件</p>
+<h2 id="6-2-系统优势介绍"><a href="#6-2-系统优势介绍" class="headerlink" title="6.2 系统优势介绍"></a>6.2 系统优势介绍</h2><p><strong>多角度管理:</strong></p>
+<p>面向基础设施：提供全面的IT资源管理，实现对网络、主机、存储设备、安全设备、数据库、中间件及应用软件等IT资源的全面监控和管理；同时对网络和业务应用等IT资源的性能进行监控，定期性能报表和趋势报表，为IT系统性能优化提供科学依据。</p>
+<p>面向维护管理人员：将人、技术与流程进行有效地融合，实现日常运维工作的自动化、信息化和标准化，实时展现当前企业IT系统的运行状态及趋势，帮助管理人员快速定位问题，修复故障，保障业务系统的稳定性，知识库能降低IT运维管理对个人的依赖。</p>
+<p>面向领导决策者：可及时汇总系统运行状态信息，帮助领导全面了解IT系统状况和趋势，为其提供科学依据。同时可借助自动生成的多种工作记录，实现对运维人员的绩效考核，提高团队技术水平，建立以客户为中心的运维模式，提供低成本、高质量的IT服务，提高客户满意度</p>
+<p>立体化分级管理：可根据不同用户的组织结构、地理分布及业务关系，实施跨地域、层次化的统一管理模式，使责权管理更加明确，拓扑图更加清晰，提高系统的工作效率；</p>
+<p><strong>主动预警：</strong></p>
+<p>对网络关键设备设置相关阈值，当达到范围时，自动产生告警，并执行事先设置动作。</p>
+<p>内置解释器，告警信息可按指定方式进行解释，更加明白易懂。</p>
+<p>支持声音、邮件和手机短信等多种告警方式，确保信息通知到相应负责人；</p>
+<p><strong>资产生命周期管理：</strong></p>
+<p>从运维的角度对IT资产进行管理，包括相关配置、使用年限、维修记录等。</p>
+<p>全程跟踪记录IT设备的使用周期，包括入库、领用、使用负荷和报废等。</p>
+<p>减少设备流失，提高设备利用率，以最少的资金投入带来最大的回报；</p>
+<p><strong>易于使用：</strong>操作简单方便，拓扑图支持全屏显示、局部放大镜、延时拖动、鹰眼、拖动图标无极缩放等丰富的操作功能，并支持任意层次的拓扑结构划分；</p>
+<p><strong>易于部署：</strong>无需在被监测信息系统、服务器上安装任何代理软件，只需将系统安装在一台管理机上，即可自动进行监测和管理，同时对现有系统性能影响甚微，不会改变现有系统的应用配置，便于安装实施、维护使用。</p>
+<p><strong>易于定制：</strong>提供了灵活的Web方式的客户化定制、发布工具，可对软件界面呈现及风格、数据库表、对象属性和方法进行灵活配置和定制，以满足用户特定的业务需求；提供了丰富的扩展和开发接口，可以快捷的集成各种管理工具，可以快速将各类IT资源纳入到系统管理范围内，加入到IT服务管理的流程中；此外，可视化的客户定制工具可以支持用户灵活定义和调整流程，以支持组织架构和流程的变化和发展。</p>
+<h2 id="6-2-1-网络管理优势功能"><a href="#6-2-1-网络管理优势功能" class="headerlink" title="6.2.1 网络管理优势功能"></a>6.2.1 网络管理优势功能</h2><p><strong>业界领先的全自动拓扑发现技术</strong></p>
+<p>自动搜索网络、发现网络节点，包括：网络设备、服务器、打印机、PC主机及VLAN等，并基于网络的二层连接关系构建物理拓扑。</p>
+<p><strong>故障智能预测与分析</strong></p>
+<p>通过实时的网络运行监测，Apex U2810可智能分析和预测潜在故障，并根据告警程度的不同发送警报。</p>
+<p><strong>智能阈值技术</strong></p>
+<p>能为每一个IT资源监控项给出科学的差异化阈值设置指导，并可随着时间段和业务量的变化进行动态调整。</p>
+<p><strong>网络拓扑快速全面</strong></p>
+<p>可快速全面的呈现网络拓扑结构，自动发现网络及其承载的服务，并支持多种协议。</p>
+<p><strong>支持分布式管理</strong></p>
+<p>支持多用户，多角色，IT运维人员，决策人员，不同角色有不同权限，不同区域级别也有不同权限。</p>
+<p><strong>多维度监控</strong></p>
+<p>支持从路由、设备、终端、流量、故障等方面多角度、细颗粒度地监控、管理整个IT网络。</p>
+<h2 id="6-2-2-网络流量分析器优势功能"><a href="#6-2-2-网络流量分析器优势功能" class="headerlink" title="6.2.2 网络流量分析器优势功能"></a>6.2.2 网络流量分析器优势功能</h2><p><strong>简化的带宽监控</strong></p>
+<p>NetFLow Analyzer能分析园区网交换机和出口路由器等设备中导出的Netstream数据。它支持标准的的操作硬件，支持Windows和Linux环境，易于部署易于操作，且无需广泛培训。</p>
+<p><strong>深入的流量分析</strong></p>
+<p>无需使用硬件探针或其他设备，NetFlow Analyzer能简单有效地执行流量分析。除了设置路由/交换设备导出NetFlow数据到NetFlow Analyzer，不需要其它的配置。</p>
+<p><strong>全面显示流量信息</strong></p>
+<p>NetFlow Analyzer通过NetFlow数据能呈现占用带宽最多的应用、主机和会话。要了解高峰时间的使用和历史趋势，该信息就显得非常重要。此外，从长期来看这些信息还可用于带宽容量规划和巩固安全策略。</p>
+<p><strong>高效的带宽利用</strong></p>
+<p>在多数企业中，对带宽不加管理将导致在高峰时间不重要的应用具有高于重要应用的优先级。NetFlow Analyzer中的带宽报表准确地显示了哪些应用在高峰时间使用带宽，并深入分析使用这些应用的主机。这将有助于控制带宽使用并加强企业安全策略。</p>
+<p><strong>灵活的设备管理</strong></p>
+<p>NetFlow Analyzer可以将NetFLow输出设备分组到不同的组别，以便进行针对性监控，以及向用户授予访问权限。利用NetFlow Analyzer中的设备分组，就可以专门管理某组导出NetFlow数据的设备，您可以将操作员指派到不同的组，监控带宽利用情况，以及查看针对每个设备组的流量模式。</p>
+<p><strong>降低运维成本</strong></p>
+<p>NetFlow Analyzer通过简化管理任务以降低成本。比起分析数据包需要许多时间分析结果并得到结论，故障诊断只需要相当少的时间。带宽报表以及深入分析选项使得流量分析更加快速有效，从而高效地使用企业的重要资源。</p>
+<p><strong>高效的报表，易于趋势分析</strong></p>
+<p>NetFlow Analyzer提供了丰富的带宽报表，便于分析流量的相关信息。通过查看不同时段的流量模式，NetFlow Analyzer显著简化了趋势分析过程。NetFlow Analyzer具有30多种不同的图表和报表，并带有能深入分析特定明细的选项，便于用户直接访问重要的信息。用户可以在线查看不同时段的图表，并将其输出为PDF格式。</p>
+<p><strong>完全基于Web</strong></p>
+<p>NetFlow Analyzer完全基于web，因此只需一个web浏览器就可以从网络中的任何位置跨WAN链接轻松查看流量报表。</p>
+<h2 id="6-2-3-认证计费优势功能"><a href="#6-2-3-认证计费优势功能" class="headerlink" title="6.2.3 认证计费优势功能"></a>6.2.3 认证计费优势功能</h2><p><strong>成熟先进的宽带综合业务管理平台</strong></p>
+<p>集成实时计费、业务管理和客户管理，提供各种应用的运行和管理、计费平台</p>
+<p><strong>先进宽带运营理念的载体</strong></p>
+<p><strong>基于用户的全方位管理控制手段</strong></p>
+<p><strong>支持多种接入认证方式：</strong></p>
+<p>802.1x、</p>
+<p>WEB、</p>
+<p>PPPoE、</p>
+<p>RADIUS认证</p>
+<p><strong>多层次计费策略：</strong></p>
+<p>针对储值卡、充值卡有效期设置；</p>
+<p>支持交费送免费用量设置；</p>
+<p>提供信用额功能，允许用户超支部分用量；</p>
+<p>支持预付费、后付费方式；</p>
+<p>支持月结、即用即结、先付后用、包日等结算方式；</p>
+<p>支持期限用户，即按每月固定月租，开通日开始计费，服务结束日自动停机，可以续交费，计费开始日自动按续费日开始计算；</p>
+<p>支持月结延迟停机，在线催费；</p>
+<p>支持开机停机预受理；</p>
+<p><strong>灵活的控制策略：</strong></p>
+<p>用户每日上网时段控制；</p>
+<p>目标地址控制过滤策略；</p>
+<p>目标端口控制策略；</p>
+<p>源地址控制策略；</p>
+<p>每日或每月上网时间和流量上限控制策略；</p>
+<p>完整的登录记录、访问记录；</p>
+<p>完整的设备运行日志</p>
+<h2 id="6-3-网管系统部署"><a href="#6-3-网管系统部署" class="headerlink" title="6.3 网管系统部署"></a>6.3 网管系统部署</h2><h2 id="6-3-1-集中式网管系统部署"><a href="#6-3-1-集中式网管系统部署" class="headerlink" title="6.3.1 集中式网管系统部署"></a>6.3.1 集中式网管系统部署</h2><p><img src="https://pic3.zhimg.com/80/v2-7483e7441c549e4ce0899cf884f36d9a_hd.jpg" alt="img" loading="lazy"></p>
+<p>图 6‑2 集中式网管系统部署</p>
+<p><strong>硬件推荐配置：</strong></p>
+<p><strong>软件推荐配置：</strong></p>
+<p>操作系统</p>
+<p>数据库</p>
+<p>Web服务器</p>
+<h2 id="6-3-2-分布式网管系统部署"><a href="#6-3-2-分布式网管系统部署" class="headerlink" title="6.3.2 分布式网管系统部署"></a>6.3.2 分布式网管系统部署</h2><p>系统可以通过将网管服务和数据库分离，降低数据库系统和网管服务器在高负荷状态下的相互影响。目前可将网管服务器和南向接口服务器分离。一方面可以降低南向接口承受的通信压力对网管服务器造成的影响。另外，对于大规模的网络，通过部署多个南向接口服务器，可以提高通信效率，降低单点失效造成的全网无法管理的风险。</p>
+<p>网络管理系统均部署在一台中心服务器（以下简称Apex中心服务器）上，并通过PlusWell HA Cluster做集群。数据库服务器单独部署一台服务器，流量分析单独部署一台服务器，网络管理的二级系统部署在一台二级服务器上，分布在各个分支机构，可已经根据网络规模的不断增长灵活扩容。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-f7ead39000ee1c32e6f755ca9bde88ad_hd.jpg" alt="img" loading="lazy"></p>
+<p>图 6‑3分布式网管系统部署</p>
+<p><strong>硬件推荐配置：</strong></p>
+<p><strong>软件推荐配置：</strong></p>
+<h2 id="7-园区网络设备介绍"><a href="#7-园区网络设备介绍" class="headerlink" title="7 园区网络设备介绍"></a>7 园区网络设备介绍</h2><h2 id="7-1-园区汇聚-核心交换机"><a href="#7-1-园区汇聚-核心交换机" class="headerlink" title="7.1 园区汇聚/核心交换机"></a>7.1 园区汇聚/核心交换机</h2><p>Quidway® S9300系列运营级园区汇聚交换机是由华为公司自主开发的新一代高性能核心路由交换机产品，提供大容量、高密度、模块化的二到四层线速转发性能，具有强大组播功能，完善的QoS保障、有效的安全管理机制和电信级的高可靠设计，满足高端用户对多业务、高可靠、大容量、模块化的需求，降低运营商的建网成本和维护成本，可广泛应用于构建各种类型型园区网核心层和汇聚层交换机，对于接入交换机性能和接口密度要求高的某些大型园区网，也可使用S9303/S9306系列交换机作为接入交换机使用。</p>
+<p><strong>产品特点</strong></p>
+<p><strong>先进体系结构，高性能，配置灵活</strong></p>
+<p>S9300系列交换机采用先进的全分布式体系结构设计，采用业界最新的硬件转发引擎技术，所有端口支持的业务能够线速转发，业务包括IPv4/MPLS/二层转发等。支持ACL线速转发。</p>
+<p>S9300系列交换机实现组播线速转发，硬件完成两级复制：交换网板复制到接口板和转发引擎复制到接口。</p>
+<p>S9300支持2Tbps交换容量，支持多种高密度板卡，满足核心、汇聚层设备大容量、高端口密度的要求，可以满足用户日益增长的带宽需求，能够极大的保护和节约用户投资。</p>
+<p><strong>设备的性能规格参数：</strong></p>
+<p><strong>安全机制</strong></p>
+<p><strong>可靠性</strong></p>
+<p>链路汇聚：S9300系列交换机最大支持128个汇聚组，每个汇聚组内支持最多8个成员端口，支持跨单板端口间的汇聚。</p>
+<p>支持DLDP（Device Link Detection Protocol，设备连接检测协议）：可以监控光纤或铜质双绞线的链路状态。如果发现单向链路存在，DLDP会根据用户配置，自动关闭或通知用户手工关闭相关端口，以防止网络问题的发生。</p>
+<p>支持RRPP及多实例：相比其他以太环网技术，RRPP具有以下优势――拓扑收敛速度快，低于50ms。收敛时间与环网上节点数无关，可应用于网络直径较大的网络。</p>
+<p>支持标准STP/RSTP/MSTP二层环网保护协议</p>
+<p>支持SmartLink及多实例</p>
+<p>支持BFD for 单播路由/VRRP/FRR/PIM</p>
+<h2 id="7-2-园区接入交换机"><a href="#7-2-园区接入交换机" class="headerlink" title="7.2 园区接入交换机"></a>7.2 园区接入交换机</h2><h2 id="7-2-1-Quidway-S5300系列交换机"><a href="#7-2-1-Quidway-S5300系列交换机" class="headerlink" title="7.2.1 Quidway S5300系列交换机"></a>7.2.1 Quidway S5300系列交换机</h2><p>Quidway S5300系列运营级园区交换机是华为公司为满足大带宽及多业务承载需求而推出的新一代全千兆运营级三层以太网交换机。S5300基于新一代高性能硬件和华为公司统一的VRP(Versatile Routing Platform)软件平台，支持万兆上行，提供高密度下行千兆端口，支持多种运营级可靠性技术，具备良好的扩展性和多业务接入/汇聚能力，可充分满足园区网络接入层交换机的应用需求。S5300为盒式产品设备，机箱高度1U，提供普通型(SI)和增强型(EI)产品版本，包括型号：S5328C-EI、S5328C-EI-24S、S5352C-EI、S5324TP-SI、S5324TP-PWR-SI、S5348TP-SI、S5348TP-PWR-SI、S5328C-PWR-EI、S5352C-PWR-EI、S5328C-SI、S5352C-SI、S5328C-PWR-SI、S5352C-PWR-SI。</p>
+<p><strong>产品特点：</strong></p>
+<p><strong>大带宽、高性能</strong></p>
+<p>S5300最大可提供48个GE接口，以及4个GE接口或者2个10GE接口，充分满足对高密度千兆和万兆上行设备的需求。S5300硬件支持二/三层数据包线速转发能力。 </p>
+<p><strong>强大的组播功能</strong></p>
+<p>S5300支持组播组，支持可控组播、IGMP Snooping/Proxy/Filter/Fast leave等特性。S5300支持线速的跨VLAN组播复制，支持捆绑端口的组播负载分担，支持基于VLAN的组播呼叫接纳控制功能(组播CAC)，支持IPv6组播，支持MLD V1/V2 snooping, 充分满足IPTV等组播业务的运营要求。</p>
+<p><strong>运营级高可靠性</strong></p>
+<p>S5300不仅支持STP/RSTP/MSTP生成树协议，还支持树形(Smartlink/Monitorlink)和环形(RRPP)拓扑等增强型运营级以太网链路冗余保护技术，实现毫秒级的链路保护倒换，保证高可靠性业务要求的网络质量。</p>
+<p>S5300支持Smartlink和RRPP的多实例功能，可实现链路负载分担，进一步提高链路带宽利用率。S5300支持BFD快速链路检测，可以为OSPF、ISIS、VRRP、PIM等路由协议提供毫秒级的连通性检测机制，提高网络拓扑收敛速度。</p>
+<p>S5300同时提供Eth-OAM功能，802.1ag提供端到端可靠性检测，802.3ah提供最后一公里故障检测和链路性能管理。此外，S3300支持BPDU tunnel功能，为用户利用运营商提供的专线构建自己的二层网络提供可能。</p>
+<p><strong>卓越的安全特性</strong></p>
+<p>S5300支持MCE功能，实现不同VPN用户在同一台设备上的路由隔离，有效解决用户的数据安全问题，同时降低用户设备投资成本。S5300提供多种用户安全保护功能，支持大ACL表项，支持IP/MAC/端口的组合绑定，支持黑洞MAC地址、端口隔离、MAC地址学习数目限制、、端口安全、Sticky MAC、MFF、动态ARP检测、IP SOURCE GUARD等安全技术，支持Radius、Tacacs、802.1x、NAC、SSH等认证技术，为网络穿上坚实的保护衣。</p>
+<p><strong>iStack功能</strong></p>
+<p>S5300全系列产品支持堆叠功能，提供高速堆叠模块，支持双向48Gbps的堆叠带宽，在保证了堆叠设备高性能的同时，简化了管理和网络运行，降低了成本，提供强大的网络扩展能力，保障了网络的可靠性。</p>
+<p><strong>支持IPv6功能</strong></p>
+<p>S5300支持IPv6协议，支持双栈，实现了多种IPv6协议，支持IPv4向IPv6的多种过渡技术，实现了IPv6的多种路由协议，为下一代网络提供了保证。</p>
+<h2 id="7-2-2-Quidway-S3300系列交换机"><a href="#7-2-2-Quidway-S3300系列交换机" class="headerlink" title="7.2.2 Quidway S3300系列交换机"></a>7.2.2 Quidway S3300系列交换机</h2><p>Quidway S3300系列运营级园区交换机是华为公司为满足以太网多业务承载需要而推出的新一代园区接入三层交换机。S3300基于新一代高性能硬件和华为公司统一的VRP(Versatile Routing Platform)软件平台，提供增强型灵活QinQ功能，具备限速的跨VLAN组播复制能力，支持环形拓扑和树形拓扑等运营级组网技术，具备以太网OAM功能，提供高性能低成本的堆叠功能，是企业网的楼宇、小区接入等多种场合的最佳选择。</p>
+<p>S3300为盒式产品设备，机箱高度1U，从特性上划分为标准型(SI)和增强型(EI)两个产品版本，标准型支持二层和基本的三层功能，增强型支持复杂的路由协议和丰富的业务特性，包含型号：S3328TP-SI、S3352P-SI、S3328TP-EI、S3328TP-EI-24S、S3325-EI、S3325-EI-24S、S3325-EI-48S、S3328TP-PWR-EI、S3352P-PWR-EI。</p>
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"></div><div style="display:inline-block"></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>澈崽子</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://zeozzz.github.com/2019/07/16/67/" title="企业园区网络建设技术方案（华为）">https://zeozzz.github.com/2019/07/16/67/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2019/07/17/68/" rel="prev" title="IPv6 auto config 原理详解之-----前缀公告"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">IPv6 auto config 原理详解之-----前缀公告</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2019/07/15/66/" rel="next" title="中小型园区/分支出口综合配置举例"><span class="post-nav-text">中小型园区/分支出口综合配置举例</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="http://www.beian.miit.gov.cn" target="_blank"></a></div><div class="copyright"><span>&copy; 2015 – 2020 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 澈崽子</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.0.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v0.9.5</span></div><div class="live_time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  window.setTimeout(blog_live_time, 1000);
+  const start = new Date('2015-09-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div></div><script defer src="/js/utils.js"></script><script defer src="/js/hexo-theme-yun.js"></script></body></html>

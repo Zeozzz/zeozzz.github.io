@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="澈崽子"><meta name="copyright" content="澈崽子"><meta name="generator" content="Hexo 5.0.0"><meta name="theme" content="hexo-theme-yun"><title>TCP协议详解(慢启动,流量控制,阻塞控制之类) | 澈崽子 | 家有网工初长成</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="none" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.19/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_stqaphw3j4.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true}
+    ]
+  });
+});</script><link class="aplayer-style-marker" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script class="aplayer-script-marker" src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" defer></script><script class="meting-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js" defer></script><link rel="shortcut icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"root":"/","title":"澈崽子的小窝","version":"0.9.5","anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><meta name="description" content="UDP协议提供了端到端之间的通讯，应用程序只需要在系统中监听一个端口，便可以进行网络通讯。随着计算机网络的发展，计算机网络所承载的业务越来越多，有些业务数据的传输需要具备可靠性，譬如我们在进行在线聊天的时候，我们发送的一条消息，我们必须明确地知道对方是否收到。如果对方对我们发送地消息不给予确认，我们就不知道对方是否已经收到。 显然，UDP协议并没有提供可靠交付的能力，因此我们可能需要在应用层之上，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP协议详解(慢启动,流量控制,阻塞控制之类)">
+<meta property="og:url" content="https://zeozzz.github.com/2019/05/17/45/index.html">
+<meta property="og:site_name" content="澈崽子 | 家有网工初长成">
+<meta property="og:description" content="UDP协议提供了端到端之间的通讯，应用程序只需要在系统中监听一个端口，便可以进行网络通讯。随着计算机网络的发展，计算机网络所承载的业务越来越多，有些业务数据的传输需要具备可靠性，譬如我们在进行在线聊天的时候，我们发送的一条消息，我们必须明确地知道对方是否收到。如果对方对我们发送地消息不给予确认，我们就不知道对方是否已经收到。 显然，UDP协议并没有提供可靠交付的能力，因此我们可能需要在应用层之上，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122133940284-204962813.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134032190-1748847585.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134103706-154997897.gif">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134152221-1000507329.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134214362-731995803.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134240456-2115623294.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134308237-629932547.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134351518-1967039548.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134422487-265445083.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134444096-127773858.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134517206-1938850580.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134545925-1064466217.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134612065-1730078873.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134637362-1765246929.jpg">
+<meta property="article:published_time" content="2019-05-17T09:08:53.000Z">
+<meta property="article:modified_time" content="2019-05-17T10:08:33.779Z">
+<meta property="article:author" content="澈崽子">
+<meta property="article:tag" content="TCP&#x2F;IP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122133940284-204962813.jpg"></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script defer src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="澈崽子"><img width="96" loading="lazy" src="/avatar.jfif" alt="澈崽子"></a><div class="site-author-name"><a href="/about/">澈崽子</a></div><a class="site-name" href="/about/site.html">澈崽子 | 家有网工初长成</a><sub class="site-subtitle"></sub><div class="site-desciption">念念不忘 必有回响</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">74</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">29</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">36</span></a></div><a class="site-state-item hty-icon-button" href="/null" title="常用文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 群" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Zeozzz" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/linche521chn" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/zeozzz/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=46666755" title="网易云音乐" target="_blank" style="color:#C20C0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/janz1995chn/activities" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/15054940" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/zeozzz" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/zeozzz" title="Telegram Channel" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:zhangzhe@live.in" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.now.sh/" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-send-plane-2-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://huawei.com" title="华为文档" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-huawei-line"></use></svg></a></div></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E6%A6%82%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">TCP概要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93-%E5%8F%AF%E9%9D%A0%E4%BA%A4%E4%BB%98"><span class="toc-number">2.</span> <span class="toc-text">数据的可靠传输(可靠交付)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E5%8F%91"><span class="toc-number">3.</span> <span class="toc-text">重发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6"><span class="toc-number">4.</span> <span class="toc-text">流量控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="toc-number">5.</span> <span class="toc-text">拥塞控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86"><span class="toc-number">6.</span> <span class="toc-text">TCP连接管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%BB%BA%E7%AB%8B%EF%BC%8D%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="toc-number">7.</span> <span class="toc-text">连接的建立－三次握手</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#TCP%E6%8A%A5%E6%96%87%E6%AE%B5%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="toc-number">7.1.</span> <span class="toc-text">TCP报文段的类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TCP%E6%8A%A5%E6%96%87%E6%AE%B5%E7%9A%84%E5%BA%8F%E5%8F%B7"><span class="toc-number">7.2.</span> <span class="toc-text">TCP报文段的序号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%BB%BA%E7%AB%8B%E8%BF%87%E7%A8%8B"><span class="toc-number">7.3.</span> <span class="toc-text">连接的建立过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="toc-number">7.4.</span> <span class="toc-text">为什么要使用三次握手</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E7%9A%84%E6%96%AD%E5%BC%80"><span class="toc-number">8.</span> <span class="toc-text">连接的断开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E8%BF%9E%E6%8E%A5%E5%85%B3%E9%97%AD"><span class="toc-number">9.</span> <span class="toc-text">TCP连接关闭</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93"><span class="toc-number">10.</span> <span class="toc-text">TCP的可靠传输</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%BA%E5%88%B6"><span class="toc-number">11.</span> <span class="toc-text">滑动窗口机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9C%E6%AD%A2-%E7%AD%89%E5%BE%85%E5%8D%8F%E8%AE%AE"><span class="toc-number">12.</span> <span class="toc-text">停止-等待协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E9%80%80N%E5%8D%8F%E8%AE%AE"><span class="toc-number">13.</span> <span class="toc-text">后退N协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E9%87%8D%E4%BC%A0"><span class="toc-number">14.</span> <span class="toc-text">选择重传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E7%9F%A5%E7%AA%97%E5%8F%A3"><span class="toc-number">15.</span> <span class="toc-text">通知窗口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="toc-number">16.</span> <span class="toc-text">TCP拥塞控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E4%B8%8E%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">17.</span> <span class="toc-text">拥塞控制与流量控制的关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E8%BD%AE%E6%AC%A1"><span class="toc-number">18.</span> <span class="toc-text">传输轮次</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%85%A2%E5%90%AF%E5%8A%A8%E6%9C%BA%E5%88%B6"><span class="toc-number">19.</span> <span class="toc-text">慢启动机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%A5%E5%A1%9E%E9%81%BF%E5%85%8D"><span class="toc-number">20.</span> <span class="toc-text">拥塞避免</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E9%80%9F%E9%80%92%E5%87%8F%E6%9C%BA%E5%88%B6"><span class="toc-number">21.</span> <span class="toc-text">加速递减机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%87%8D%E4%BC%A0%E5%92%8C%E5%BF%AB%E6%81%A2%E5%A4%8D"><span class="toc-number">22.</span> <span class="toc-text">快重传和快恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E6%81%A2%E5%A4%8D"><span class="toc-number">23.</span> <span class="toc-text">快恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E5%B7%AE%E9%94%99%E6%8E%A7%E5%88%B6"><span class="toc-number">24.</span> <span class="toc-text">TCP差错控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E4%B9%A0%E9%A2%98"><span class="toc-number">25.</span> <span class="toc-text">TCP习题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#A-B%E4%B8%A4%E5%8F%B0%E6%9C%BA%E5%99%A8%E9%83%BD%E6%AD%A3%E5%B8%B8%E5%B7%A5%E4%BD%9C-B%E6%9C%BA%E5%99%A8%E6%9C%AA%E7%9B%91%E5%90%AC%E4%BB%BB%E4%BD%95%E7%AB%AF%E5%8F%A3-%E5%A6%82%E6%9E%9CA%E6%9C%BA%E5%99%A8%E5%90%91B%E6%9C%BA%E5%99%A880%E7%AB%AF%E5%8F%A3%E5%8F%91%E9%80%81SYN%E5%8C%85-%E4%BC%9A%E6%94%B6%E5%88%B0%E4%BD%95%E7%A7%8D%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%9B%9E%E5%8C%85"><span class="toc-number">25.0.1.</span> <span class="toc-text">A,B两台机器都正常工作,B机器未监听任何端口.如果A机器向B机器80端口发送SYN包,会收到何种类型的回包?</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#TCP%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E7%9A%84%E8%BF%87%E7%A8%8B%E9%87%87%E7%94%A8%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%8C%E5%B7%B2%E7%9F%A5%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E6%8A%A5%E6%96%87%E7%9A%84%E5%8F%91%E9%80%81%E5%BA%8F%E5%88%97%E5%8F%B7%E4%B8%BA1000%EF%BC%8C%E7%A1%AE%E8%AE%A4%E5%BA%8F%E5%88%97%E5%8F%B7%E4%B8%BA2000%EF%BC%8C%E8%AF%B7%E9%97%AE%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8F%A1%E6%89%8B%E6%8A%A5%E6%96%87%E7%9A%84%E5%8F%91%E9%80%81%E5%BA%8F%E5%88%97%E5%8F%B7%E5%92%8C%E7%A1%AE%E8%AE%A4%E5%BA%8F%E5%88%97%E5%8F%B7%E5%88%86%E5%88%AB%E4%B8%BA"><span class="toc-number">25.0.2.</span> <span class="toc-text">TCP建立连接的过程采用三次握手，已知第三次握手报文的发送序列号为1000，确认序列号为2000，请问第二次握手报文的发送序列号和确认序列号分别为?</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9F%90%E4%B8%80%E9%80%9F%E7%8E%87%E4%B8%BA100M%E7%9A%84%E4%BA%A4%E6%8D%A2%E6%9C%BA%E6%9C%8920%E4%B8%AA%E7%AB%AF%E5%8F%A3%EF%BC%8C%E5%85%B6%E4%B8%80%E4%B8%AA%E7%AB%AF%E5%8F%A3%E4%B8%8A%E8%BF%9E%E7%9D%80%E4%B8%80%E5%8F%B0%E7%AC%94%E8%AE%B0%E6%9C%AC%E7%94%B5%E8%84%91%EF%BC%8C%E6%AD%A4%E7%94%B5%E8%84%91%E4%BB%8E%E8%BF%85%E9%9B%B7%E4%B8%8A%E4%B8%8B%E8%BD%BD%E4%B8%80%E9%83%A81G%E7%9A%84%E7%94%B5%E5%BD%B1%E9%9C%80%E8%A6%81%E7%9A%84%E6%97%B6%E9%97%B4%E5%8F%AF%E8%83%BD%E6%98%AF%E5%A4%9A%E4%B9%85"><span class="toc-number">25.0.3.</span> <span class="toc-text">某一速率为100M的交换机有20个端口，其一个端口上连着一台笔记本电脑，此电脑从迅雷上下载一部1G的电影需要的时间可能是多久?</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E9%83%A8%E5%88%86%E4%B8%BA%E4%B8%89%E4%B8%AA%E5%8A%9F%E8%83%BD%E7%BA%A7"><span class="toc-number">25.0.4.</span> <span class="toc-text">消息传递部分为三个功能级?</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/05/17/45/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">TCP协议详解(慢启动,流量控制,阻塞控制之类)</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-05-17 17:08:53" itemprop="dateCreated datePublished" datetime="2019-05-17T17:08:53+08:00">2019-05-17</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/TCP-IP/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">TCP/IP</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag" href="/tags/TCP-IP/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">TCP/IP</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>UDP协议提供了端到端之间的通讯，应用程序只需要在系统中监听一个端口，便可以进行网络通讯。随着计算机网络的发展，计算机网络所承载的业务越来越多，有些业务数据的传输需要具备可靠性，譬如我们在进行在线聊天的时候，我们发送的一条消息，我们必须明确地知道对方是否收到。如果对方对我们发送地消息不给予确认，我们就不知道对方是否已经收到。</p>
+<p>显然，UDP协议并没有提供可靠交付的能力，因此我们可能需要在应用层之上，基于UDP构建一套可靠的数据传输协议，有些公司就是这样做的。幸运的是，传输层已经为我们实现了一套可靠的数据传输协议，即TCP协议。</p>
+<h3 id="TCP概要"><a href="#TCP概要" class="headerlink" title="TCP概要"></a>TCP概要</h3><p>TCP的全称是Transmission Control Protocol,传输控制协议。TCP并不是基于UDP协议构建的，和UDP协议一样是基于IP协议构建的。</p>
+<p>TCP主要解决下面的三个问题:</p>
+<ul>
+<li>数据的可靠传输。发送方如何知道发出的数据，接收方已经收到。</li>
+<li>接收方的流量控制。因为各种原因，接收方可能来不及处理发送方发送的数据，而造成没有及时回应发送方，造成发送方不断的重发数据，最后造成接收方的主机宕机。</li>
+<li>计算机网络的拥塞控制。数据在计算机网络之上传输，当出现数据拥塞时如何进行处理(有疑问的你，意思是现实生活中不堵车哦?)</li>
+</ul>
+<h3 id="数据的可靠传输-可靠交付"><a href="#数据的可靠传输-可靠交付" class="headerlink" title="数据的可靠传输(可靠交付)"></a>数据的可靠传输(可靠交付)</h3><p>现实生活中，我们在打电话的时候，当我们自己根对方说了一句话或者一段话之后，我们都会等待对方的回应，譬如她们会回答”哦”、”嗯”、”知道了”，这时我们就会知道对方已经听到我们自己刚才说的话，如果她们不给予回应则会以为她们没有在听我讲话，也就是没有收到我发送的消息。</p>
+<p>TCP可靠传输的实现正是基于这样的例子，对于发送方发送的数据，接收方在接受到数据之后必须要给予确认，确认它收到了数据。如果在规定时间内，没有给予确认则意味着接收方没有接受到数据，然后发送方对数据进行重发。</p>
+<h3 id="重发"><a href="#重发" class="headerlink" title="重发"></a>重发</h3><p>当用户交给TCP传输的数据量很大时，如果使用简单的重发机制，即重发所有的数据，势必会严重占用和浪费带宽资源，甚至造成网络拥塞。因此TCP会将用户需要传输的数据进行分组，即将数据进行切割，分成多个数据段(data segment)，并给每个数据段编号。</p>
+<p>TCP报文段首部中通过长度为32bit的字段来表示这个TCP报文段的序号，另外通过长度为32bit的字段来表示确认报文段要确认的报文段的序号。</p>
+<h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><p>现实生活中，我们去一些热门的景点或者游乐园的某个娱乐项目时，都会需要进行排队，如果是小长假，则会出现人山人海的场景，这是这些机构就会控制每一次参观该景点的人数。<br>网络应用程序也是如此，当数据到达主机之后，TCP会将该数据放入相应的队列(又称为缓冲区)(如果让你自己基于UDP实现一个TCP模块供自己的应用程序使用，你也会采用这种方式)，等待监听该端口的应用程序从队列中获取数据，应用程序一次所能处理的数据有限，因此不可能一次性取出队列中的所有数据，当队列已经满了，则无法再存放新的数据，只能将接受到的数据丢弃，因此TCP协议需要提供流量控制的能力，控制发送方每次发送数据的大小。</p>
+<h3 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h3><p>现实生活中，高速公路也会堵车，在一段高速公路上，每辆车都在以很快的速度在运行，彼此并没有慢下来，但是为什么还是会出现堵车呢？通常都是因为每段道路的承载能力不一样，譬如当一段8车道公路上的汽车行驶到4车道公路上时，在这两段道路交汇的地方就会出现堵车。</p>
+<p>计算机网络是由无数的数据链路组成的，每一段链路的承载能力不一样，也会出现数据拥堵的情况，这通常是由路由器和交换机的处理能力不同造成的。我们还需要知道，这种情况下的拥塞是不能避免的，因为我们无法要求所有链路的承载能力一样，因此我们只能对拥塞进行控制。TCP协议对拥塞控制也提出了响应的解决方案，这也是为什么TCP叫做传输控制协议而不叫做可靠传输协议的原因吧，同时也解释了为什么在计算机网络可靠性能大大提供的今天，TCP还继续发挥着其作用的原因。</p>
+<h3 id="TCP连接管理"><a href="#TCP连接管理" class="headerlink" title="TCP连接管理"></a>TCP连接管理</h3><p>我们都说TCP是面向连接的，UDP不是面向连接的。那么什么是连接呢?为什么TCP需要面向连接呢？</p>
+<p>连接是一个动作。现实生活中，我们想和一个通话，我们需要先拨打她的电话，等待她接听我们的打电话之后就可以进行通话了，当我们通话结束之后还需要挂断电话。</p>
+<p>电话的连接会接通通信双方之间的电路，是一条真实存在的电路，在拆除这条电路之前，第三方是不能和两者之中的任何一方建立通信电路。和电话不同，TCP连接产生的通道是虚拟的，任何第三方端口都可以和两者之中的任何一个端口建立通道。我们称建立虚拟通道的过程为连接的建立。</p>
+<p>连接是可靠传输的前提，而不是可靠传输的保证。在QQ这些聊天软件支持离线消息之前，人们在发送消息之前总要确保对方在线，因为如果对方不在线，消息根本就不会被对方收到，也就不存在对你发送的消息进行回应。TCP通过在连接这个动作让接收方知道发送方想要发送数据给它，如果接收方允许，则连接建立，这时双方之间便可以进行数据传输，接收到数据之后须确认数据收到。如果不建立连接，则无法实现可靠传输，因为对于发送方发送的数据，可能接收方的主机根本就没有在监听该端口。例如，在采用UDP的P2P实现中中仍然需要信令服务器，为什么需要信令服务器呢?因为对方可能根本就没有启动该P2P程序或者其它原因无法跟你进行通讯。简而言之，连接的作用就是让通讯双方知道并准备好通讯。</p>
+<h3 id="连接的建立－三次握手"><a href="#连接的建立－三次握手" class="headerlink" title="连接的建立－三次握手"></a>连接的建立－三次握手</h3><h4 id="TCP报文段的类型"><a href="#TCP报文段的类型" class="headerlink" title="TCP报文段的类型"></a>TCP报文段的类型</h4><p>TCP属于全双工通信，连接建立之后，任何一方都可以随时发送数据，而不需要理会另外一方是否也在发送数据。加上TCP的确认机制，因此TCP的报文段存在传输有效数据(即用户数据)的报文段，和存在确认数据收到的报文段(ACK,Acknowledgment)。此外还有其他类型的报文段，用来控制连接的建立和拆除TCP连接以及表示紧急数据段。TCP协议通过TCP数据段首部中控制位字段来表示这些报文段的类型，并且采用按位表示，使得一个数据段可以有多种类型。</p>
+<table>
+<thead>
+<tr>
+<th align="left">控制字段取值</th>
+<th align="left">控制字段的含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">100000</td>
+<td align="left">URG,</td>
+</tr>
+<tr>
+<td align="left">010000</td>
+<td align="left">ACK,Acknowledgment，确认报文段</td>
+</tr>
+<tr>
+<td align="left">001000</td>
+<td align="left">PSH</td>
+</tr>
+<tr>
+<td align="left">000100</td>
+<td align="left">RST,Rest 表示TCP连接中出现差错必须断开连接，然后再重新建立连接</td>
+</tr>
+<tr>
+<td align="left">000010</td>
+<td align="left">SYN,</td>
+</tr>
+<tr>
+<td align="left">000001</td>
+<td align="left">FIN,Finally 表示发送此报文段的发送方已经发送完了所有数据，以后不会也不能再发送数据，当另外一方也发送FIN时，则连接断开</td>
+</tr>
+</tbody></table>
+<p>实际上，TCP是通过一个或多个控制位来表示TCP报文段的类型。</p>
+<h4 id="TCP报文段的序号"><a href="#TCP报文段的序号" class="headerlink" title="TCP报文段的序号"></a>TCP报文段的序号</h4><p>TCP的可靠传输是通过确认和重传来实现的，因此</p>
+<h4 id="连接的建立过程"><a href="#连接的建立过程" class="headerlink" title="连接的建立过程"></a>连接的建立过程</h4><p>TCP连接的建立采用的是C/S(Client/Server,客户端/服务器)模型。由客户端发出建立连接的请求。</p>
+<p>下面我们使用’ACK=1’这种方式来表示控制位中的相应位是否置1，’ACK=0’或者不说明则都为0。并使用’ack=1’这种方式表示TCP数据段首部中的确认序号，使用’seq=1’来表示TCP数据段首部中的发送序号。</p>
+<ul>
+<li>Client首先向Server发出建立连接的TCP报文段(SYN=1,seq=x(表示随机产生一个值,我们假设为100))，并等待Server的确认(确认收到该建立连接的请求)</li>
+<li>Server收到该建立连接的请求之后，如果同意建立连接，则发送TCP报文段(SYN=1,seq=y(也是随机产生一个值，我们假设为21),ACK=1,ack=x+1(这里表示发送方的x号数据段已经收到,这里为101))给Client表示确认接收到该TCP报文，并等待Client确认该TCP报文已经收到</li>
+<li>Client收到Server的确认报文段之后，再次向Server发送TCP报文段(seq=x+1(这里为101),ACK=1,ack=y(这里为22))，确认Server的确认报文已经收到。</li>
+</ul>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122133940284-204962813.jpg" alt="img" loading="lazy"></p>
+<p>我们可以看到，控制字段中的SYN是用来建立一个TCP连接的，只在前两次”握手”中置为1，第三次”握手”置为0.”我想和你谈话(SYN),我愿意和你谈话(SYN,ACK),那我们开始吧(ACK)”.</p>
+<h4 id="为什么要使用三次握手"><a href="#为什么要使用三次握手" class="headerlink" title="为什么要使用三次握手"></a>为什么要使用三次握手</h4><h3 id="连接的断开"><a href="#连接的断开" class="headerlink" title="连接的断开"></a>连接的断开</h3><p>通过TCP三次握手建立的通信属于全双工通信，因此每个方向都必须单独地进行关闭。关闭的原则就是当其中一方A完成数据的传输并且不再传输数据时，发送一个控制位FIN=1的TCP数据段来告知另一方B”我的数据已经传输完毕，并且不再传输数据”，另一方B收到数据之后依旧发送确认TCP数据段，来表示A=&gt;B方向的一条连接已经断开，此时TCP连接处于半关闭状态。需要注意的是，这里的不再传输数据是指A不再传输用户数据，对于B传输的数据,A仍然要接收并给予确认。</p>
+<p>当B发送完数据之后并准备断开连接时，发送一个控制位FIN=1,ACK=1(ack=A的FIN报文段的序号)的TCP报文段，并等待A的确认，A收到B的FIN报文段后给予确认，至此整个TCP连接关闭。</p>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134032190-1748847585.jpg" alt="img" loading="lazy"></p>
+<p>为了防止因为数据传输延时造成B的FIN报文段比B的有效数据传输报文段(用户数据)提前到达，因A会等待2MSL之后才真正关闭TCP连接。</p>
+<p>TCP的有限状态机</p>
+<table>
+<thead>
+<tr>
+<th align="left">状态</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">CLOSED</td>
+<td align="left">呈阻塞，关闭状态，表示当前主机没有活动的传输连接或没有正在进行传输连接</td>
+</tr>
+<tr>
+<td align="left">LISTEN</td>
+<td align="left">呈监听状态，表示服务器正在等待新的传输连接进入</td>
+</tr>
+<tr>
+<td align="left">SYNRCVD</td>
+<td align="left">表示服务器已经收到一个传输连接请求，但尚未确认</td>
+</tr>
+<tr>
+<td align="left">SYNSENT</td>
+<td align="left">表示客户端已经发出一个传输连接请求，等待服务器的确认</td>
+</tr>
+<tr>
+<td align="left">ESTABLISHED</td>
+<td align="left">传输连接建立</td>
+</tr>
+<tr>
+<td align="left">FIN_WAIT_1</td>
+<td align="left">主动关闭方的主机已经发送关闭连接请求，等待对方确认</td>
+</tr>
+<tr>
+<td align="left">CLOSE_WAIT</td>
+<td align="left">被动关闭方的主机收到主动关闭方的关闭连接请求，并已确认</td>
+</tr>
+<tr>
+<td align="left">FIN_WAIT_2</td>
+<td align="left">主动关闭方的主机已经收到对方对主动关闭连接请求的确认，等待对方发送关闭传输连接请求</td>
+</tr>
+<tr>
+<td align="left">LAST_ACT</td>
+<td align="left">被动关闭方的主机已经发送关闭连接请求，等到主动方确认</td>
+</tr>
+<tr>
+<td align="left">TIME_WAIT</td>
+<td align="left">主动关闭方的主机收到对方发送的关闭连接请求</td>
+</tr>
+</tbody></table>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134103706-154997897.gif" alt="img" loading="lazy"></p>
+<p>TCP连接建立:</p>
+<ul>
+<li>首先，服务器监听一个TCP端口，此时该端口处于Listen状态。</li>
+<li>一段时间后，客户端发送一个TCP连接请求，客户端的端口就出处于SYN_SENT状态，当服务器接收到一个客户端的TCP连接请求时，即收到客户端的SYN报文段，服务器监听的端口就会切换到SYN_RCVD状态,服务器向客户端发送SYN+ACK报文段==&gt;问题0</li>
+<li>当客户端收到服务器发送的SYN+ACK报文段时，客户端的端口切换到ESTAB-LISTEN状态,客户端同时向服务器发送SYN报文段确认 ==&gt;问题1</li>
+<li>当服务器收到客户端的SYN报文段时，服务器的端口切换到ESTAB-LISTEN状态。</li>
+</ul>
+<p>问题0:当客户端发送的SYN报文段，没有得到服务器的任何响应怎么办获者收到服务器的REST响应<br>当客户端发送一个SYN报文段之后就会启动定时器，如果在规定的时间内没有收到服务器的任何响应或者收到服务器的RESR响应，则会重新发送SYN报文段。如果在几次重发后仍然没有得到服务器的SYN+ACK响应就会放弃，端口切换CLOSE状态,并报告上层。</p>
+<p>问题1:如果当客户端发送给服务器的SYN报文段丢失了会怎样?</p>
+<p>连接仍然能正常工作。因为客户端已经处于ESTABLISHED状态，所以客户端能够像服务器发送数据。由于每个TCP报文段中都有ACK标识位,而在确认序号字段中包含正确的数值。所以当客户端发送的第一个数据到达服务器时，服务器的端口就会切换到ESTABLISHED状态。这实际上是TCP的重点，即每个TCP报文段报告发送方希望看到的下一个序号，即时这个序号与以前的一个或多个报文段包含的序号重复。</p>
+<h3 id="TCP连接关闭"><a href="#TCP连接关闭" class="headerlink" title="TCP连接关闭"></a>TCP连接关闭</h3><h3 id="TCP的可靠传输"><a href="#TCP的可靠传输" class="headerlink" title="TCP的可靠传输"></a>TCP的可靠传输</h3><p>TCP的可靠传输是通过确认和超时重传的机制来实现的，而确认和超时重传的具体的实现是通过以字节为单位的滑动窗口机制来完成。</p>
+<h3 id="滑动窗口机制"><a href="#滑动窗口机制" class="headerlink" title="滑动窗口机制"></a>滑动窗口机制</h3><p>虽然上层应用和TCP的交互是一次一个数据快(大小不等)，但是TCP把上层应用程序交付下来的数据看成仅仅是一串连续的无结构字节流。</p>
+<ul>
+<li>发送窗口:在为收到对方的ACK确认的情况下，只有发送窗口内的数据才能连续地发送出去。凡事已经发送过的数据，在未收到ACK确认之间都必须暂时保留在发送窗口内，以便超时重传使用。</li>
+<li>接收窗口:缓冲区，用来接收发送方的TCP数据段。</li>
+</ul>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134152221-1000507329.jpg" alt="img" loading="lazy"></p>
+<h3 id="停止-等待协议"><a href="#停止-等待协议" class="headerlink" title="停止-等待协议"></a>停止-等待协议</h3><p>发送方和接收方都采用窗口大小为1的滑动窗口,即发送窗口和接受窗口都为1个最大TCP数据段的大小。<br>停止等待协议的规则是:</p>
+<ul>
+<li>发送方发完1个分组并收到接收方ACK确认之后才能发送下一个分组;</li>
+<li>如果接收方收到一个错误的分组，则给发送方发送一个否认分组NAK,发送方收到NAK分组后重发，并继续等待发送方的ACK确认</li>
+<li>如果发送方在规定的时限内(发送完一个分组，就开启一个定时器)没有收到接收方的ACK确认分组，则重新发送该分组。</li>
+</ul>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134214362-731995803.jpg" alt="img" loading="lazy"></p>
+<h3 id="后退N协议"><a href="#后退N协议" class="headerlink" title="后退N协议"></a>后退N协议</h3><p>后退N协议思想的是流水线传输，即可以连续发送多个分组,而不必每发完一个分组就等待接收方的ACK确认。</p>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134240456-2115623294.jpg" alt="img" loading="lazy"></p>
+<p>规则如下:</p>
+<ul>
+<li>发送窗口的大小为n,接收窗口的大小为1</li>
+<li>发送方在发送完一个数据分组之后，不是停下来等待接收方的ACK确认，而是可以连续再发送若干个分组。</li>
+<li>接收方在收到发送方发送的分组之后发送ACK确认分组,并移动接收窗口。</li>
+<li>如果发送方发送一共连续发送了5个分组，中间的第3个分组丢失，则接收方要求发送方重传后面的3个分组(第3个、第4个、第5个分组)。(因为第4个和第5个分组不接序)这也说明了该协议为什么叫做后退N协议。</li>
+</ul>
+<p>描述:</p>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134308237-629932547.jpg" alt="img" loading="lazy"></p>
+<p>虽然在收到了有差错的2号分组之后，收到了正确的3号分组和4号分组，但是由于接收端只按顺序接收数据分组，造成3号和4号分组不能和1号分组接序而被丢弃，等到A的定时器超时重发。</p>
+<h3 id="选择重传"><a href="#选择重传" class="headerlink" title="选择重传"></a>选择重传</h3><p>选择重传协议是对后退N协议的一种优化，其只是选择性重发那些确实丢失的分组。</p>
+<p>规则:</p>
+<ul>
+<li>发送窗口的大小为m,接收窗口的大小为n</li>
+<li>接收方先接收序号不连续的分组，并发送ACK确认，然后等待发送方重发丢失的分组(发送方每收到一个ACK确认就会关闭相应的定时器，最终没有收到ACK确认的分组的定时器超时，发送方会再次重发)</li>
+<li>收到重发的分组后给予ACK确认，再对全部分组进行排序，最后交给上层应用。</li>
+</ul>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134351518-1967039548.jpg" alt="img" loading="lazy"></p>
+<h3 id="通知窗口"><a href="#通知窗口" class="headerlink" title="通知窗口"></a>通知窗口</h3><p>TCP采用通知窗口实现对发送端的流量控制，通知窗口大小的单位是字节。TCP通过在TCP数据段首部的窗口字段中填入当前设定的接收窗口(即通知窗口)的大小，用来告知对方’我方当前的接收窗口大小’，以实现流量控制。</p>
+<p>通信双方的发送窗口大小由双方在连接建立是商定，在通信过程，双方可以动态地根据自己的情况调整对方的发送窗口大小。</p>
+<h3 id="TCP拥塞控制"><a href="#TCP拥塞控制" class="headerlink" title="TCP拥塞控制"></a>TCP拥塞控制</h3><p>在某段时间，如果对计算机网络中某些资源的需求超过了所能提供该资源的总和，网络的性能就要变坏——产生拥塞(congestion)。即当需要&gt;供给时会造成网络拥塞。<br>如果计算机网络中有许多资源同时产生拥塞，网络的性能就要明显变坏，整个网络的吞吐量将随输入负荷的增大而下降。</p>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134422487-265445083.jpg" alt="img" loading="lazy"></p>
+<p>TCP协议通过慢启动机制、拥塞避免机制、加速递减机制、快重传和快恢复机制来共同实现拥塞控制。</p>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134444096-127773858.jpg" alt="img" loading="lazy"></p>
+<p>在拥塞控制中还有一个”拥塞窗口”的概念，该窗口由发送方根据当前计算机网络的拥塞情况来计算，和通知窗口共通作用于发送窗口，”拥塞窗口”的单位也是字节，通常拥塞窗口的初始值为一个最大TCP报文段的大小是,但下面我们以每个传输轮次所能发送TCP数据段(用户数据)的次数作为其单位来描述。</p>
+<p>TCP的慢启动机制、拥塞避免机制和加速递减机制都是通过改变拥塞窗口的大小来时对发送方的发送窗口进行控制。</p>
+<h3 id="拥塞控制与流量控制的关系"><a href="#拥塞控制与流量控制的关系" class="headerlink" title="拥塞控制与流量控制的关系"></a>拥塞控制与流量控制的关系</h3><p>拥塞控制是一个全局性的控制，涉及到计算机网络中所有的主机、路由器以及降低网络传输性能的相关因素。而流量控制只涉及到通信双方之间的收发平衡。</p>
+<p>TCP在控制数据传输时，既要考虑接收端的接收能力，又要避免网络拥塞，因而发送方的发送窗口大小为通知窗口和拥塞窗口的最小值。</p>
+<h3 id="传输轮次"><a href="#传输轮次" class="headerlink" title="传输轮次"></a>传输轮次</h3><p>在TCP的拥塞避免中，我们规定:每发送拥塞窗口值个数的TCP数据段(有效数据承载)，并且全部收到发送方对这些数据的ACK确认,我们就称完成了1个传输轮次。</p>
+<p>例如，拥塞窗口＝4，当发送方发送了4个TCP报文段，并收到这4个TCP报文段的ACK确认，我们就称完成了一个传输轮次。</p>
+<h3 id="慢启动机制"><a href="#慢启动机制" class="headerlink" title="慢启动机制"></a>慢启动机制</h3><p>慢启动通过逐步增大拥塞窗口的值来控制网络拥塞。</p>
+<p>慢启动机制规定:</p>
+<ul>
+<li>拥塞窗口的初始值为1</li>
+<li>每收到一个对发出的数据段的ACK确认，便将拥塞窗口的值增加1</li>
+</ul>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134517206-1938850580.jpg" alt="img" loading="lazy"></p>
+<p>我们可以发现，每完成一次传输轮次，拥塞窗口的值就翻倍，即拥塞窗口随着传输轮次的增加成指数增长。</p>
+<p>随着传输轮次的增加，拥塞窗口的值会变得很大，因此TCP拥塞控制給慢启动增加一个阈值(又称慢启动门限)，当拥塞窗口&gt;阈值时，就要进行尝试拥塞避免。</p>
+<p>当 拥塞窗口 &lt; 阈值 时，使用慢启动算法<br>当 拥塞窗口 &gt; 阈值 时，使用拥塞避免算法<br>当 拥塞窗口 ＝ 阈值时，既可以使用慢启动算法，也可时使用拥塞避免算法。</p>
+<p>随着网络拥塞的出现和变化，阈值也会不断变化。TCP拥塞控制中，阈值的初始值为16</p>
+<h3 id="拥塞避免"><a href="#拥塞避免" class="headerlink" title="拥塞避免"></a>拥塞避免</h3><p>拥塞避免算法的思路是让拥塞窗口缓慢地增大，呈线性增长，即每完成一个传输轮次，拥塞窗口增加1。</p>
+<p>拥塞避免是指在拥塞避免阶段把拥塞窗口控制为按线性规律增长，使网络比较不容易出现拥塞，而不是完全能够避免拥塞。</p>
+<h3 id="加速递减机制"><a href="#加速递减机制" class="headerlink" title="加速递减机制"></a>加速递减机制</h3><p>如果在使用慢启动机制或者拥塞避免机制中，发送数据时，出现了定时器超时，便执行加速递减机制:</p>
+<ul>
+<li>立刻将慢启动门限置为当前拥塞窗口大小的一般，然后拥塞窗口的值重置为1</li>
+<li>执行使用慢启动机制</li>
+</ul>
+<h3 id="快重传和快恢复"><a href="#快重传和快恢复" class="headerlink" title="快重传和快恢复"></a>快重传和快恢复</h3><p>如果发送方设置定时器超时，那么很可能是网络出现了拥塞，致使TCP报文段在网络中的某处被丢弃。在这种情况下，TCP马上把拥塞窗口减少到1，并执行慢开始算法，同时慢开始门限值减半。这是不采用快重传机制的情况:</p>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134545925-1064466217.jpg" alt="img" loading="lazy"></p>
+<p>快重传机制要求接收方每收到一个失序的TCP报文段后就立即发出重复确认(为了使发送方及早知道没有到达对方)而不要等待自己发送数据时才进行确认。</p>
+<p>快重传算法规定:发送方只要连续收到3个重复确认就应当立即重传未被确认的报文段。</p>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134612065-1730078873.jpg" alt="img" loading="lazy"></p>
+<h3 id="快恢复"><a href="#快恢复" class="headerlink" title="快恢复"></a>快恢复</h3><p>当发送端收到连续三个重复的确认时，就执行“乘法减小”算法，把慢开始门限 ssthresh 减半。但接下去不执行慢开始算法。</p>
+<p>由于发送方现在认为网络很可能没有发生拥塞，因此现在不执行慢开始算法，即拥塞窗口 cwnd 现在不设置为 1，而是设置为慢开始门限 ssthresh 减半后的数值，然后开始执行拥塞避免算法（“加法增大”），使拥塞窗口缓慢地线性增大。</p>
+<p><img src="http://images2015.cnblogs.com/blog/833931/201611/833931-20161122134637362-1765246929.jpg" alt="img" loading="lazy"></p>
+<h3 id="TCP差错控制"><a href="#TCP差错控制" class="headerlink" title="TCP差错控制"></a>TCP差错控制</h3><h3 id="TCP习题"><a href="#TCP习题" class="headerlink" title="TCP习题"></a>TCP习题</h3><h5 id="A-B两台机器都正常工作-B机器未监听任何端口-如果A机器向B机器80端口发送SYN包-会收到何种类型的回包"><a href="#A-B两台机器都正常工作-B机器未监听任何端口-如果A机器向B机器80端口发送SYN包-会收到何种类型的回包" class="headerlink" title="A,B两台机器都正常工作,B机器未监听任何端口.如果A机器向B机器80端口发送SYN包,会收到何种类型的回包?"></a>A,B两台机器都正常工作,B机器未监听任何端口.如果A机器向B机器80端口发送SYN包,会收到何种类型的回包?</h5><p>RST包</p>
+<h5 id="TCP建立连接的过程采用三次握手，已知第三次握手报文的发送序列号为1000，确认序列号为2000，请问第二次握手报文的发送序列号和确认序列号分别为"><a href="#TCP建立连接的过程采用三次握手，已知第三次握手报文的发送序列号为1000，确认序列号为2000，请问第二次握手报文的发送序列号和确认序列号分别为" class="headerlink" title="TCP建立连接的过程采用三次握手，已知第三次握手报文的发送序列号为1000，确认序列号为2000，请问第二次握手报文的发送序列号和确认序列号分别为?"></a>TCP建立连接的过程采用三次握手，已知第三次握手报文的发送序列号为1000，确认序列号为2000，请问第二次握手报文的发送序列号和确认序列号分别为?</h5><p>1999,1000</p>
+<h5 id="某一速率为100M的交换机有20个端口，其一个端口上连着一台笔记本电脑，此电脑从迅雷上下载一部1G的电影需要的时间可能是多久"><a href="#某一速率为100M的交换机有20个端口，其一个端口上连着一台笔记本电脑，此电脑从迅雷上下载一部1G的电影需要的时间可能是多久" class="headerlink" title="某一速率为100M的交换机有20个端口，其一个端口上连着一台笔记本电脑，此电脑从迅雷上下载一部1G的电影需要的时间可能是多久?"></a>某一速率为100M的交换机有20个端口，其一个端口上连着一台笔记本电脑，此电脑从迅雷上下载一部1G的电影需要的时间可能是多久?</h5><p>交换机为独占带宽，即每个端口数据通过率为为最大100Mb/s。注意单位是Mb。因此最短时间为：<br>1GB/(100Mb/s)=1024MB/(12.5MB/s)=81.92s。</p>
+<p>这里涉及到单位换算问题</p>
+<h5 id="消息传递部分为三个功能级"><a href="#消息传递部分为三个功能级" class="headerlink" title="消息传递部分为三个功能级?"></a>消息传递部分为三个功能级?</h5><p>第一级为数据链路功能级，第二级是信令链路功能级，第三级是信令网功能级</p>
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"></div><div style="display:inline-block"></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>澈崽子</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://zeozzz.github.com/2019/05/17/45/" title="TCP协议详解(慢启动,流量控制,阻塞控制之类)">https://zeozzz.github.com/2019/05/17/45/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2019/05/20/46/" rel="prev" title="NAT详解：基本原理、穿越技术(P2P打洞)、端口老化等"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">NAT详解：基本原理、穿越技术(P2P打洞)、端口老化等</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2019/05/16/44/" rel="next" title="接入交换机下挂hub后1x认证不下线的解决"><span class="post-nav-text">接入交换机下挂hub后1x认证不下线的解决</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="http://www.beian.miit.gov.cn" target="_blank"></a></div><div class="copyright"><span>&copy; 2015 – 2020 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 澈崽子</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.0.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v0.9.5</span></div><div class="live_time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  window.setTimeout(blog_live_time, 1000);
+  const start = new Date('2015-09-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div></div><script defer src="/js/utils.js"></script><script defer src="/js/hexo-theme-yun.js"></script></body></html>

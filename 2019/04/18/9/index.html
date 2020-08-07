@@ -1,0 +1,501 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="澈崽子"><meta name="copyright" content="澈崽子"><meta name="generator" content="Hexo 5.0.0"><meta name="theme" content="hexo-theme-yun"><title>华为S5700三层交换机基本配置 | 澈崽子 | 家有网工初长成</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="none" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.19/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_stqaphw3j4.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true}
+    ]
+  });
+});</script><link class="aplayer-style-marker" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script class="aplayer-script-marker" src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" defer></script><script class="meting-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js" defer></script><link rel="shortcut icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"root":"/","title":"澈崽子的小窝","version":"0.9.5","anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><meta name="description" content="通过Console口登录交换机  通过Console口登录主要用于交换机第一次上电或者本地配置。或者无法通过远程访问时，可通过Console口登录。 ​    如何才能通过Console口登录交换机呢？在配置通过Console口配置交换机之前，需要完成以下任务：  准备好PC&#x2F;终端（COM串口 和 RS-232电缆） PC已安装终端仿真程序（超级终端、SecureCRT、Xshell等）  ​">
+<meta property="og:type" content="article">
+<meta property="og:title" content="华为S5700三层交换机基本配置">
+<meta property="og:url" content="https://zeozzz.github.com/2019/04/18/9/index.html">
+<meta property="og:site_name" content="澈崽子 | 家有网工初长成">
+<meta property="og:description" content="通过Console口登录交换机  通过Console口登录主要用于交换机第一次上电或者本地配置。或者无法通过远程访问时，可通过Console口登录。 ​    如何才能通过Console口登录交换机呢？在配置通过Console口配置交换机之前，需要完成以下任务：  准备好PC&#x2F;终端（COM串口 和 RS-232电缆） PC已安装终端仿真程序（超级终端、SecureCRT、Xshell等）  ​">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s3.51cto.com/wyfs02/M00/6E/D7/wKioL1WKB0TRiWZKAABmEknY-fY018.jpg">
+<meta property="og:image" content="https://s3.51cto.com/wyfs02/M01/6C/C8/wKiom1VRwa_Sz7bcAAA57sRVrjE010.jpg">
+<meta property="og:image" content="https://s3.51cto.com/wyfs02/M01/54/6A/wKiom1SBZ2HArUAuAAG5uczoX0g009.jpg">
+<meta property="og:image" content="https://s3.51cto.com/wyfs02/M01/54/68/wKioL1SBaOGhKPOiAAJAEyFVkhU669.jpg">
+<meta property="og:image" content="https://s4.51cto.com/wyfs02/M00/78/82/wKioL1Z-i-WyqnxoAAA_XbMRZuE691.png">
+<meta property="og:image" content="https://s3.51cto.com/wyfs02/M01/78/87/wKiom1Z_RUCABcMhAAA6M0AYgl0364.png">
+<meta property="og:image" content="https://s3.51cto.com/wyfs02/M01/57/0C/wKioL1SQDmmB2a2PAACHNza34OY058.jpg">
+<meta property="og:image" content="https://s3.51cto.com/wyfs02/M01/6F/93/wKiom1Wgw13DMO0tAAWacQW-bEg063.jpg">
+<meta property="og:image" content="https://s3.51cto.com/wyfs02/M02/53/BE/wKiom1Rup82jEOVrAAFhQNaDtl4883.jpg">
+<meta property="og:image" content="https://s2.51cto.com/wyfs02/M02/78/82/wKioL1Z-j_ri7cmSAAC15DbHrIQ576.png">
+<meta property="og:image" content="https://s5.51cto.com/wyfs02/M00/78/82/wKioL1Z-kRWQRT76AACENIyDOAE785.png">
+<meta property="og:image" content="https://s3.51cto.com/wyfs02/M02/78/84/wKiom1Z-lMuDuHjbAABBNmH3vL8246.png">
+<meta property="og:image" content="https://s3.51cto.com/wyfs02/M02/78/84/wKiom1Z-lTbQmo4uAAAjkLh2x10779.png">
+<meta property="article:published_time" content="2019-04-18T06:50:46.000Z">
+<meta property="article:modified_time" content="2019-04-22T10:19:52.245Z">
+<meta property="article:author" content="澈崽子">
+<meta property="article:tag" content="华为">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s3.51cto.com/wyfs02/M00/6E/D7/wKioL1WKB0TRiWZKAABmEknY-fY018.jpg"></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script defer src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button sidebar-nav-active" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel sidebar-panel-active" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="澈崽子"><img width="96" loading="lazy" src="/avatar.jfif" alt="澈崽子"></a><div class="site-author-name"><a href="/about/">澈崽子</a></div><a class="site-name" href="/about/site.html">澈崽子 | 家有网工初长成</a><sub class="site-subtitle"></sub><div class="site-desciption">念念不忘 必有回响</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">74</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">29</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">36</span></a></div><a class="site-state-item hty-icon-button" href="/null" title="常用文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 群" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Zeozzz" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/linche521chn" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/zeozzz/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=46666755" title="网易云音乐" target="_blank" style="color:#C20C0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/janz1995chn/activities" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/15054940" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/zeozzz" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/zeozzz" title="Telegram Channel" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:zhangzhe@live.in" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.now.sh/" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-send-plane-2-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://huawei.com" title="华为文档" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-huawei-line"></use></svg></a></div></div><div class="sidebar-panel" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content">此文章未包含目录</div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/04/18/9/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">华为S5700三层交换机基本配置</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-04-18 14:50:46" itemprop="dateCreated datePublished" datetime="2019-04-18T14:50:46+08:00">2019-04-18</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2019-04-22 18:19:52" itemprop="dateModified" datetime="2019-04-22T18:19:52+08:00">2019-04-22</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-tag"><a class="tag" href="/tags/%E5%8D%8E%E4%B8%BA/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">华为</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p><strong>通过Console口登录交换机</strong></p>
+<p> 通过Console口登录主要用于交换机第一次上电或者本地配置。或者无法通过远程访问时，可通过Console口登录。</p>
+<p>​    如何才能通过Console口登录交换机呢？在配置通过Console口配置交换机之前，需要完成以下任务：</p>
+<ul>
+<li>准备好PC/终端（COM串口 和 RS-232电缆）</li>
+<li>PC已安装终端仿真程序（超级终端、SecureCRT、Xshell等）</li>
+</ul>
+<p>​    使用配置电缆将PC的9芯串口（串口标志是COM）插座，（如果没有COM口，可以使用USB转RS-232连接）和交换机的Console口连接，然后把交换机上电。然后通过终端软件连接，设置连接的接口以及通信参数。</p>
+<p>​    现在很多笔记本都没有com口了，所以最好需要一根 USB 转 RS232 线（在下给各位大神推荐 <strong>力特</strong> 品牌，相当给力）就更完美了。</p>
+<p><a target="_blank" rel="noopener" href="https://s3.51cto.com/wyfs02/M00/6E/D7/wKioL1WKB0TRiWZKAABmEknY-fY018.jpg"><img src="https://s3.51cto.com/wyfs02/M00/6E/D7/wKioL1WKB0TRiWZKAABmEknY-fY018.jpg" alt="wKioL1WKB0TRiWZKAABmEknY-fY018.jpg" loading="lazy"></a></p>
+<p><a target="_blank" rel="noopener" href="https://s3.51cto.com/wyfs02/M01/6C/C8/wKiom1VRwa_Sz7bcAAA57sRVrjE010.jpg"><img src="https://s3.51cto.com/wyfs02/M01/6C/C8/wKiom1VRwa_Sz7bcAAA57sRVrjE010.jpg" alt="wKiom1VRwa_Sz7bcAAA57sRVrjE010.jpg" loading="lazy"></a></p>
+<p><a target="_blank" rel="noopener" href="https://s3.51cto.com/wyfs02/M01/54/6A/wKiom1SBZ2HArUAuAAG5uczoX0g009.jpg"><img src="https://s3.51cto.com/wyfs02/M01/54/6A/wKiom1SBZ2HArUAuAAG5uczoX0g009.jpg" alt="wKiom1SBZ2HArUAuAAG5uczoX0g009.jpg" loading="lazy"></a></p>
+<p>​    <strong>这里我当时遇到的问题是：Port 应该选择COM* 呢？ 因PC端可能会存在多个连接接口， 这里需要选择的是连接Console线缆的那个接口。 一般情况下， 选择的接口是COM1。</strong></p>
+<p>​    这个端口号，我们可以在【设备管理器】中查看，并且可以更改端口的编号。方法如下：</p>
+<p>设备管理器 — 端口（COM和LPT）【只有连接到串口线才会出现】— 双击要修改的COM口（或者右键-属性）– 端口设置 – 高级 –端口号</p>
+<p><a target="_blank" rel="noopener" href="https://s3.51cto.com/wyfs02/M01/54/68/wKioL1SBaOGhKPOiAAJAEyFVkhU669.jpg"><img src="https://s3.51cto.com/wyfs02/M01/54/68/wKioL1SBaOGhKPOiAAJAEyFVkhU669.jpg" alt="wKioL1SBaOGhKPOiAAJAEyFVkhU669.jpg" loading="lazy"></a></p>
+<p><a target="_blank" rel="noopener" href="https://s4.51cto.com/wyfs02/M00/78/82/wKioL1Z-i-WyqnxoAAA_XbMRZuE691.png"><img src="https://s4.51cto.com/wyfs02/M00/78/82/wKioL1Z-i-WyqnxoAAA_XbMRZuE691.png" alt="wKioL1Z-i-WyqnxoAAA_XbMRZuE691.png" loading="lazy"></a></p>
+<p>OK， 登录到交换机之后，就开始配置吧。以下配置中，<strong>绿色字体是需要自定义的</strong>。</p>
+<p>## 命令是不区分大小写的 ##</p>
+<p># 设置设备的名称为GSH-FZ-Front<br><Quidway> system-view<br>[Quidway] sysname GSH-FZ-Front</p>
+<p># 设置查看设备的时区,时间</p>
+<p># 设置当前时间：clock datetime HH:MM:SS YYYY-MM-DD</p>
+<p># 设置时区： clock timezone time-zone-name { add | minus } offset<br># 注意这里是 &lt;用户&gt; 视图</p>
+<p><Quidway> clock timezone BJ add 8<br><Quidway> clock datetime 18:20:30 2011-06-08<br><Quidway> display clock</p>
+<p>#作为ntp客户端：设定NTP服务器，自动获取更新时间，假设NTP服务器为 202.120.2.101，202.112.10.36</p>
+<p><Quidway> system-view<br>[Quidway] ntp-service unicast-peer 202.120.2.101</p>
+<p>[Quidway] ntp-service unicast-peer 202.112.10.36</p>
+<p># 作为ntp服务器：配置S5700为内网的NTP服务器，内网的二层交换机指定这个S57为 NTP server 就行</p>
+<p><Quidway> system-view</p>
+<p>[Quidway] ntp-service authentication enable<br>[Quidway] ntp-service sync-interval 180<br>[Quidway] ntp-service authentication-keyid 42 authentication-mode md5 cipher 123456<br>[Quidway] ntp-service reliable authentication-keyid 42</p>
+<p># 查看NTP状态</p>
+<p><Quidway> display clock</p>
+<p><Quidway> display ntp-service status</p>
+<p><Quidway> display ntp-service sessions</p>
+<p># 设置标题文本</p>
+<p><Quidway> system-view</p>
+<p># 设置登录时的提示信息: header login { information text | file file-name }</p>
+<p>[Quidway]  header login information #Welcome S5700#</p>
+<p># 设置登录成功后的提示信息: header shell { information text | file file-name }</p>
+<p> [Quidway] header shell information #Welcome S5700#</p>
+<p>注意：输完命令header shell information后，需要敲一个特殊字符，什么符号都可以，比如“%”，然后回车进入“shell’ information”的输入界面，此时可以随意输入任何字符，最后一定要以我们刚才设定的符号结束（这里是 “%”），然后回车退出此界面，方可生效。</p>
+<p>注意：这条命令Header后面有两个参数，一个是shell，一个是login，shell是进入命令行时（<Quidway>）的提示信息，login是成功登录设备之后看到的提示信息。</p>
+<p><strong>#telnet远程登录</strong></p>
+<p>前提：</p>
+<p>1、交换机以太网接口的IP地址</p>
+<p>2、Telnet 访问的用户信息（用户名、口令和验证方式）</p>
+<p>3、保证PC与交换机路由可达</p>
+<p>有些盒式设备没有管理口，可使用VLANIF接口配置管理IP地址。</p>
+<p><strong>步骤一：</strong>创建VLAN，并配置交换机VLAN的管理IP</p>
+<p>#  创建vlan</p>
+<p><Quidway> system-view</p>
+<p>[Quidway] vlan 10</p>
+<p>[Quidway-vlan10] quit  </p>
+<p># 配置管理 IP</p>
+<p>[Quidway] interface vlan 10</p>
+<p>[Quidway-Vlanif10] ip address 192.168.1.2  24      【或  ip   addr  192.168.1.2  255.255.255.0】</p>
+<p>[Quidway-Vlanif10] quit</p>
+<p># 把端口加入vlan</p>
+<p>[Quidway] int gigabitethernet 0/0/1<br>[Quidway-GigabitEthernet0/0/1] port hybrid untagged vlan 10     （0/0/1端口以untag方式加入vlan 10）</p>
+<p>[Quidway-GigabitEthernet0/0/1] quit</p>
+<p><strong>步骤二：</strong>配置telnet用户，登录级别和认证方式. 在交换机上配置Telnet服务功能并使用AAA验证方式登录。</p>
+<p># password { simple | cipher }</p>
+<p># 如果使用simple选项，密码将以明文形式保存在配置文件中。一般情况下，应使用cipher 选项将密码加密保存，同时使用</p>
+<p># cipher选项后，无法从系统中取回，请妥善保管密码。<br><Quidway> system-view<br>[Quidway] aaa<br>[Quidway-aaa] local-user testadmin password cipher p@ssw0rd privilege level 15</p>
+<p>[Quidway-aaa] local-user testadmin service-type telnet        (设置用户登录方式为 telnet， 只能通过telnet方式登录，还有这几种 ssh   http   web)  一般不配置它。</p>
+<p>[Quidway-aaa] quit</p>
+<p>[Quidway] <strong>telnet server enable</strong></p>
+<p>[Quidway] <strong>user-interface vty 0 4</strong></p>
+<p>[Server-ui-vty0-4] <strong>user privilege level 15</strong></p>
+<p>[Quidway-vty0-4] authentication-mode aaa        （设置认证方式为: aaa ）</p>
+<p>[Quidway-vty0-4] quit</p>
+<p>小贴士： 如果采用eNSP做实验，验证telnet 配置。 使用PC是不行的。 可以用 AR 模拟代替PC， 需在用户模式下使用 telnet 命令。</p>
+<p><strong>#SSH远程登录</strong></p>
+<p>需求：PC能通过SSH协议远程登录交换机进行管理。</p>
+<p>1、生成本地密钥对：</p>
+<p><Quidway> system-view<br>[Quidway] rsa local-key-pair create</p>
+<p>The key name will be: Auotnavi-callcenter-01_Host</p>
+<p>The range of public key size is (512 ~ 2048).</p>
+<p>NOTES: If the key modulus is greater than 512,</p>
+<p>​       It will take a few minutes.</p>
+<p>Input the bits in the modulus[default = 512]:1024</p>
+<p>Generating keys…</p>
+<p>.++++++</p>
+<p>…………++++++</p>
+<p>……………++++++++</p>
+<p>.++++++++</p>
+<p>2、配置VTY用户界面</p>
+<p><Quidway> system-view<br>[Quidway] user-interface vty 0 4</p>
+<p>[Quidway-ui-vty0-4]  authentication-mode aaa</p>
+<p># 必须设置VTY用户验证方式为AAA，否则 protocol inbound ssh 命令无法成功</p>
+<p>[Quidway-ui-vty0-4]  protocol inbound ssh</p>
+<p>3、创建SSH用户及密码</p>
+<p>[Quidway] aaa</p>
+<p>[Quidway-aaa] local-user admin password cipher 123</p>
+<p>[Quidway-aaa] local-user admin privilege level 15</p>
+<p>[Quidway-aaa] local-user admin service-type ssh</p>
+<p>4、使用Stelnet，并配置SSH用户的认证方式</p>
+<p>[Quidway] stelnet server enable</p>
+<p>[Quidway] ssh authentication-type default password</p>
+<p><strong>## 划分VLAN</strong></p>
+<p><strong>默认情况下，所有交换机端口都属于vlan1</strong></p>
+<p><strong>#创建VLAN</strong><br><Quidway> system-view                    （一般缩写为：sys）</p>
+<p>[Quidway] vlan 10                               (批量添加vlan:  vlan batch 10 20 30;    vlan batch  2  3  to  10)<br>[Quidway-vlan10] quit                         （一般缩写为：q）</p>
+<p>[Quidway]display vlan                         （查看创建的VLAN）</p>
+<p>#设定端口模式，默认为trunk，需要将端口划入VLAN之前，先把端口类型转为 access</p>
+<p><Quidway> system-view<br>[Quidway] int gigabitethernet 0/0/1                    （进入端口配置模式： interface）<br>[Quidway-GigabitEthernet0/0/1] port   link-type  access</p>
+<p>[Quidway-GigabitEthernet0/0/1] port   default  vlan 10    # 将端口加入vlan</p>
+<p>[Quidway-GigabitEthernet0/0/1] <strong>dis this</strong></p>
+<p>#</p>
+<p>interface GigabitEthernet0/0/1</p>
+<p> port link-type access</p>
+<p> port default vlan 10</p>
+<p>#</p>
+<p>return</p>
+<p>[Quidway-GigabitEthernet0/0/1] quit</p>
+<p><strong>#将端口加入Vlan（第二种方式）</strong><br><Quidway> system-view<br>[Quidway] vlan 10<br>[Quidway-vlan131] port gigabitethernet 0/0/1      （连续多个端口，用 xx to xx， 如：port giga 0/0/5  to  0/0/10）<br>[Quidway-Vlan131] quit</p>
+<p><strong>#设置Trunk， 两台相连的交换机都要设置</strong><br><Quidway> system-view<br>[Quidway] interface GigabitEthernet 0/0/23<br>[Quidway-GigabitEthernet0/0/23] port link-type trunk<br># 如果不设置下面这条配置，VLAN10 ， VLAN131都会处于DOWN的状态</p>
+<p>[Quidway-GigabitEthernet0/0/23] port trunk allow-pass vlan 10 131    (多个VLAN列出，允许哪些VLAN通过)</p>
+<p>#设置VLAN IP(管理IP)</p>
+<p><strong>VLANIF 接口</strong></p>
+<p>当需要与网络层的其他设备通信时，可以创建基于VLAN的逻辑接口，即VLANIF接口。VLANIF接口是网络层接口，可以配置IP地址，借助VLANIF接口，就能与其他网络层的设备相互通信。</p>
+<p><Quidway> system-view</p>
+<p>[Quidway] interface vlanif 131<br>[Quidway-Vlanif131] ip address 192.168.0.253 255.255.255.0  (缩写： ip add  IP  MASK)<br>[Quidway-Vlanif131] shutdown<br>[Quidway-Vlanif131] undo shutdown</p>
+<p><strong># 删除VLAN</strong></p>
+<p>1、如果配置VLAN的管理IP，在系统视图下，使用 undo int  vlan 10 命令删除VLAN 10的3层虚拟接口，这样三层的VLAN 10就被删除了，但是划入VLAN 10 的那些端口依然在VLAN 10中。这时还需要把那些端口恢复，让他们不属于任何VLAN</p>
+<p><Quidway> system-view<br>[Quidway] undo int vlanif 10</p>
+<p>2、在系统视图下，使用 undo vlan 10 命令可以删除2层接口，这个命令可以释放那些原来划分为VLAN 10的端口，现在这些端口就属于默认的VLAN 1了。</p>
+<p><Quidway> system-view<br>[Quidway] undo vlan 10</p>
+<p>[Quidway] display vlan</p>
+<p>当然，要向VLAN添加端口，是可以直接在VLAN视图中添加的。</p>
+<p>需要注意的是：交换机上的某个端口被设置成access模式，且加入了一个VLAN， 要想将这个端口模式改为trunk，直接在接口视图中“port link-type trunk” 是不行的，会出现 Error: Please renew the default configurations. 这时需要先从VLAN中删除这个端口，也就是让这个接口恢复到默认的VLAN 1， 才能将这个端口设置为trunk。</p>
+<p><Quidway> system-view<br>[Quidway] vlan 10</p>
+<p>[Quidway] undo port giga 0/0/1</p>
+<p><strong>1**</strong>、批量创建**<strong>VLAN</strong></p>
+<p>&lt; Huawei &gt; <strong>system-view</strong></p>
+<p>[Huawei]<strong>vlan batch 2 to 100</strong></p>
+<p><strong>2**</strong>、批量端口加入**<strong>VLAN</strong></p>
+<p>[Huawei] <strong>port-group group-member GigabitEthernet 0/0/10 to</strong> <strong>GigabitEthernet 0/0/20</strong></p>
+<p>[Huawei-port-group]<strong>port link-type access</strong></p>
+<p>[Huawei-port-group]<strong>port default vlan 100</strong></p>
+<p>3、<strong>快速恢复端口**</strong>VLAN**<strong>缺省配置</strong></p>
+<p>想要快速恢复端口VLAN的缺省配置，必须要知道什么是缺省配置？华为交换机，缺省情况下所有端口都是只加入VLAN1的。</p>
+<p>那么下面和小编一起看看3种链路类型下，怎么快速恢复缺省配置呢？</p>
+<p> access口： 一步搞定，命令是<strong>undo port default vlan</strong></p>
+<p> trunk和hybrid口： 三步搞定，先恢复PVID的配置，再删除端口下所有vlan，然后再把缺省的VLAN1 加入。具体命令如下：</p>
+<p><a target="_blank" rel="noopener" href="https://s3.51cto.com/wyfs02/M01/78/87/wKiom1Z_RUCABcMhAAA6M0AYgl0364.png"><img src="https://s3.51cto.com/wyfs02/M01/78/87/wKiom1Z_RUCABcMhAAA6M0AYgl0364.png" alt="wKiom1Z_RUCABcMhAAA6M0AYgl0364.png" loading="lazy"></a></p>
+<p><strong># 配置端口组, 进行批量配置</strong></p>
+<p># S5700有48个端口，如果要配置VLAN，需要为每个端口先配置port link-type access，才能加入到VLAN，这岂不是很郁闷？</p>
+<p><strong>如此多的接口，要是我一个个逐一配置多麻烦啊。不仅容易出错，而且造成大量重复工作。  【配置端口组功能就可以解决该问题】</strong></p>
+<p># 于是乎，端口组的出现了，把一些端口添加到一个组里，然后对这个组进行配置，该组内的所有端口都会应用此配置，这样就能批量配置了，大大减少重复工作。</p>
+<p>你只需要将这些以太网接口加入同一个端口组，在端口组视图下，只需输入一次业务命令，该端口组内的所有以太网接口都会配置该命令，快速完成接口批量配置，减少重复工作。</p>
+<p>其实端口组也是有<strong>临时端口组和永久端口组</strong>两种。</p>
+<p><strong>临时端口组：一旦退出端口组视图，该临时端口组将被系统自动删除。</strong></p>
+<p><strong>永久端口组：将写入配置文件，如果希望删除永久端口组，需要手动删除。</strong></p>
+<p><strong>配置临时端口组：</strong></p>
+<p>需求：需要将GE0/0/1～GE0/0/10共二十个接口均关闭，但是后续这些接口由于配置不一致，还需要单独进行配置，那就可以选择临时端口组进行如下配置：</p>
+<p><HUAWEI> system-view                                             </p>
+<p>[HUAWEI] port-group group-member gigabitethernet 0/0/1 to gigabitethernet 0/0/10  // 将接口GE0/0/1～GE0/0/10加入到临时端口组，此步骤等同于执行命令interface range gigabitethernet 0/0/1 to gigabitethernet 0/0/10</p>
+<p>[HUAWEI-port-group]shutdown        // 临时端口组视图中配置需要批量下发的命令         </p>
+<p>[HUAWEI-port-group] quit       // 退出临时端口组后，系统就会自动删除这个临时端口组</p>
+<p><strong>配置永久端口组</strong></p>
+<p>需求：需要将GE2/0/1～GE2/0/10共十个接口均配置为access接口，而且这些接口配置信息相对固定，均保持一致，那就可以选择永久端口组进行如下配置：</p>
+<p><HUAWEI> system-view                                              </p>
+<p>[HUAWEI] port-group portgroup1                         // 创建名称为portgroup1的永久端口组 </p>
+<p>[HUAWEI-port-group-portgroup1] group-member gigabitethernet2/0/1  to  gigabitethernet  2/0/10<br>                         //  将接口GE2/0/1～GE2/0/10加入到永久端口组中</p>
+<p>[HUAWEI-port-group-portgroup1] port link-type  access </p>
+<p>​                         // 永久端口组视图中配置需要批量下发的命令                                      </p>
+<p>[HUAWEI-port-group-portgroup1] quit                            // 退出端口组视图后，名称portgroup1的永久端口组仍然存在</p>
+<p>江湖小贴士：<strong>如何知道永久端口组中的成员接口呢?</strong></p>
+<p>执行命令<strong>display port-group</strong> [ <strong>all</strong> | <em>port-group-name</em> ]，就可以查看永久端口组的成员接口信息啦。</p>
+<p><strong>如何批量清除一个接口的所有配置？</strong></p>
+<p>只需要在接口视图下执行命令<strong>clear configuration this</strong>就可以一键清除接口下的配置啦。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[HUAWEI] interface gigabitethernet 0&#x2F;0&#x2F;1</span><br><span class="line">[HUAWEI-GigabitEthernet0&#x2F;0&#x2F;1]</span><br><span class="line">#</span><br><span class="line">interface GigabitEthernet0&#x2F;0&#x2F;1</span><br><span class="line">description switch-A</span><br><span class="line">port link-type access</span><br><span class="line">#</span><br><span class="line">return</span><br><span class="line">[HUAWEI-GigabitEthernet0&#x2F;0&#x2F;1] clear configuration this       &#x2F;&#x2F; 清除接口下所有配置，恢复到缺省值</span><br><span class="line">Warning: All configurations of the interface will be cleared，and its state will be shutdown. Continue? [Y&#x2F;N] :y</span><br><span class="line">Info: Total 2 command(s) executed, 2 successful, 0 failed.</span><br><span class="line">[HUAWEI-GigabitEthernet0&#x2F;0&#x2F;1] display this</span><br><span class="line">#</span><br><span class="line">interface GigabitEthernet0&#x2F;0&#x2F;1</span><br><span class="line">shutdown &#x2F;&#x2F; 清除接口下所有配置后，接口将处于关闭状态</span><br><span class="line">#</span><br></pre></td></tr></table></figure>
+
+
+
+<p>为何我在华为的模拟器5700交换机上无法使用 clear configuration this 命令，交换机版本是 Version 5.110 (S5700 V200R001C00) ？？</p>
+<p>交换机V2R1版本不支持<strong>clear configuration this</strong> 命令，对于V2R1版本，您可以在系统视图下执行如下命令</p>
+<p>一键式清除接口下的配置—   [Quidway]   clear  configuration  interface  <em>interface-type  interface-number</em></p>
+<p>1、命令注释建议使用 # 空格+注释，不要使用 // ，因为 # 加空格的注释直接拷贝到设备上也不会提示错误~<br>2、注释建议另起一行（如命令行前面），不要直接跟在命令后，导致一行过长，换行看着比较乱</p>
+<p><Quidway> system-view<br>[Quidway] port-group 1      # 创建名为1的永久端口组</p>
+<p>[Quidway-port-group-1] group-member GigabitEthernet 0/0/10 to GigabitEthernet 0/0/20   # 添加端口到组</p>
+<p># 然后就可以批量设置端口了</p>
+<p>[Quidway-port-group-1] port link-type access            # 设置端口类型</p>
+<p>[Quidway-port-group-1] port default vlan 10             # 把端口加入vlan</p>
+<p># 查看组配置</p>
+<p>[Quidway] display cur | include group</p>
+<p><strong>对端口进行限速</strong></p>
+<p>​    假设对交换机的第2个端口进行限速，让通过这个端口的下载速度不超过 128KB/S</p>
+<p>Inbound:     入端口的流量限速</p>
+<p>Outbound:   出端口的流量限速</p>
+<p><Quidway> system-view</p>
+<p>[Quidway] int giga 0/0/2</p>
+<p>[Quidway-GigabitEthernet0/0/2] qos lr outbound cir 1024 cbs 204800 </p>
+<p># 默认单位：KB， 1024表示1M的带宽，理论下载速度就是 128KB/S， cbs代表突发信息速率，cir表示承诺信息速率</p>
+<p># 取消限速</p>
+<p>[Quidway-GigabitEthernet0/0/2] undo qos lr outbound </p>
+<p><strong>配置基于地址池的DHCP服务器</strong></p>
+<p>1、全局启用DHCP服务</p>
+<p><Quidway> system-view</p>
+<p>[Quidway] dhcp enable</p>
+<p>2、创建地址池并配置相关属性。配置IP地址池 10 的属性（地址池范围、DNS地址、出口网关、租期）</p>
+<p>[Quidway] ip pool 10</p>
+<p>[Quidway-ip-pool-10] network 192.168.10.0 mask 255.255.255.0</p>
+<p>[Quidway-ip-pool-10] excluded-ip-address 192.168.10.250 192.168.10.254  （start_ip - end_ip）</p>
+<p>[Quidway-ip-pool-10] dns-list 202.103.24.68</p>
+<p>[Quidway-ip-pool-10] gateway-list 192.168.10.1</p>
+<p>[Quidway-ip-pool-10] lease day 10</p>
+<p>[Quidway-ip-pool-10] quit</p>
+<p>同样， 也可以配置地址池 20 的属性。（地址池范围、DNS地址、出口网关、租期）</p>
+<p>2、配置VLANIF 10 接口下的客户端从全局地址池中获取IP地址</p>
+<p>[Quidway] interface vlanif 10</p>
+<p>[Quidway-Vlanif10] ip add 192.168.10.1 255.255.255.0    (或者 ip add 192.168.10.1  24)</p>
+<p>[Quidway-Vlanif10] dhcp select global</p>
+<p>[Quidway-Vlanif10] quit</p>
+<p>更多内容：<a target="_blank" rel="noopener" href="http://www.elvhome.com/html/2013-5-15/201351511175895517.html">http://www.elvhome.com/html/2013-5-15/201351511175895517.html</a></p>
+<p>#设置默认路由<br><Quidway> system-view<br>[Quidway] ip route-static 0.0.0.0 0.0.0.0 192.168.0.254</p>
+<p># 关闭WEB Server,dhcp<br><Quidway> system-view<br>[Quidway] undo http server enable<br>[Quidway] undo dhcp enable</p>
+<p><strong>## 用户管理</strong></p>
+<p><strong>用户登录界面</strong></p>
+<ul>
+<li>CON     适用于从Console接口进行本地登录</li>
+<li>VTY      适用于Telnet或SSH方式进行本地或远程登录，是虚拟接口。当用户以telnet, ssh, ftp 方式登录到交换机，就建立了一条VTY连接。</li>
+</ul>
+<p><strong>用户验证</strong></p>
+<p>​    对于登录到S5700的用户，系统需要根据配置对其进行验证以保证系统的安全性。</p>
+<p><strong>用户级别</strong></p>
+<p>​    用户分为多个级别，标识越高则优先级越高。如果不对用户进行优先级规划，默认用户登录级别为 0 - 3 级。</p>
+<p>用户所能访问命令的级别由用户的级别决定：</p>
+<ul>
+<li>如果对用户采用不验证或者password验证，登录到S5700的用户所能访问的命令级别由登录时的用户级别决定。</li>
+<li>如果对用户采用AAA验证，登录到S5700的用户所能访问的命令级别由AAA配置信息中本地用户的级别决定。</li>
+</ul>
+<p>登录用户划分为16级，与命令级别对应。不同级别的用户登录后，只能使用等于或低于自己级别的命令。用户所能访问的命令包括用户所在用户级别的命令以及低于此用户级别的命令。</p>
+<p><strong>验证用户的方式：</strong></p>
+<p><strong><img src="https://s3.51cto.com/wyfs02/M01/57/0C/wKioL1SQDmmB2a2PAACHNza34OY058.jpg" alt="wKioL1SQDmmB2a2PAACHNza34OY058.jpg" loading="lazy"></strong></p>
+<p><a target="_blank" rel="noopener" href="https://s3.51cto.com/wyfs02/M01/6F/93/wKiom1Wgw13DMO0tAAWacQW-bEg063.jpg"><img src="https://s3.51cto.com/wyfs02/M01/6F/93/wKiom1Wgw13DMO0tAAWacQW-bEg063.jpg" alt="wKiom1Wgw13DMO0tAAWacQW-bEg063.jpg" loading="lazy"></a>    </p>
+<p>系统提供AAA本地验证、密码验证和不验证三种方式。 如何配置启用哪种验证方式呢？</p>
+<p><Quidway> system-view</p>
+<p># user-interface 配置用户接口<br>[Quidway] user-interface [ui-type] first-ui-number [last-ui-number]</p>
+<p># 配置启用用户验证方式</p>
+<p>[Quidway] authentication-mode { aaa | password | none }</p>
+<p><strong>super密码：</strong></p>
+<p>​    华为super 命令设置的口令用于低级用户向高级别用户切换时进行验证，类似于Linux系统从普通用户切换到root用户时需要验证。用户共分为4级，分别是访问级（0）、监控级（1）、系统级（2）和管理级（3），当低级别的用户向高级别的用户身份切换时： super [level] , 此时只有验证通过后才能切换成功。可以通过super命令提升用户级别。</p>
+<p>​    如果使用 simple 选项，密码将以明文形式保存在配置文件中，以低级别登录的用户可以通过查看配置方式获取切换密码，造成安全问题。因此，应使用cipher 选项，将密码加密保存。</p>
+<p><strong>配置实例：</strong></p>
+<p>​    1、配置console口为密码验证方式</p>
+<p><Quidway> system-view<br>[Quidway] user-interface console 0</p>
+<p>[Quidway-ui-console0] idle-timeout 0  0   ( idle-timeout minutes [seconds] )</p>
+<p>[Quidway-ui-console0] history-command max-size 100</p>
+<p># 配置用户级别</p>
+<p>[Quidway-ui-console0] user privilege level 3        # 设置此接口登录的用户级别</p>
+<p># 配置验证方式  password</p>
+<p>[Quidway-ui-console0] authentication-mode  password </p>
+<p>[Quidway-ui-console0] set authentication password { cipher | simple } password</p>
+<p>​    2、配置VTY虚拟接口使用3a认证</p>
+<p>​    配置VTY 0-4， 优先级为2， 对从VTY 0-4登录的用户进行AAA验证，用户登录时需要输入用户名： huawei, 密码：huawei</p>
+<p>登录后，如果用户超过30分钟未对交换机进行操作，将断开与交换机的连接。</p>
+<p># 第一步：配置接口的验证方式</p>
+<p><Quidway> system-view</p>
+<p>[Quidway] user-interface maximum-vty 5        配置可以同时登录交换机的VTY最大个数</p>
+<p>[Quidway] user-interface vty 0 4</p>
+<p>[Quidway-ui-vty0-4] authentication-mode aaa</p>
+<p>[Quidway-ui-vty0-4] user privilege level 2</p>
+<p># 这里的用户级别设置为2 ， 但是采用AAA验证，那么级别由AAA中的本地用户级别决定。 如果采用password或者不验证，那么从此接口登录的用户就是 level 2 级别的。</p>
+<p>[Quidway-ui-vty0-4] idle-timeout 30    （idle-timeout minutes [seconds]）</p>
+<p>[Quidway-ui-vty0-4] quit</p>
+<p># 第二步：配置AAA用户，密码以及权限</p>
+<p>[Quidway] aaa</p>
+<p>[Quidway-aaa] local-user huawei password cipher huawei </p>
+<p># 下面service-type一般不用配置, 将允许所有类型</p>
+<p>[Quidway-aaa] local-user huawei service-type telnet</p>
+<p>[Quidway-aaa] local-user huawei privilege level 15</p>
+<p>[Quidway-aaa] quit</p>
+<p># 第三步：配置supper密码</p>
+<p>[Quidway] super password level 3 cipher huawei</p>
+<p>#保存配置<br><Quidway> save</p>
+<p><strong># 配置FTP</strong></p>
+<p>1、创建vlan</p>
+<p><Quidway> system-view</p>
+<p>[Quidway] vlan 10</p>
+<p>2、将端口划入vlan</p>
+<p>[Quidway-vlan10] port GigabitEthernet 0/0/1 to 0/0/4            (注意：划入的端口模式必须为access)</p>
+<p>[Quidway-vlan10] quit</p>
+<p>3、配置vlan的管理IP</p>
+<p>[Quidway] int vlanif 10</p>
+<p>[Quidway-Vlanif10] ip add 192.168.1.254 255.255.255.0</p>
+<p>[Quidway-Vlanif10] quit</p>
+<p>4、添加FTP用户</p>
+<p>[Quidway] aaa</p>
+<p>[Quidway-aaa] local-user huawei password cipher huawei privilege level 15</p>
+<p>[Quidway-aaa] local-user huawei service-type ftp                # 配置用户为ftp登录</p>
+<p>[Quidway-aaa] local-user huawei ftp-directory flash:/          # 配置登录的FTP目录</p>
+<p>[Quidway-aaa] quit</p>
+<p>5、开启ftp服务</p>
+<p># 配置ftp服务器超时断开的时间</p>
+<p>[Quidway] ftp timeout 30        # 单位 minutes</p>
+<p># 默认情况下，交换机是没有开启ftp服务的，需要手动打开</p>
+<p>[Quidway] ftp server enable</p>
+<p># 使用display ftp-server 命令查看ftp服务器的配置和状态信息</p>
+<p>[Quidway] display ftp-server</p>
+<p>6、可选：配置ACL基本访问控制列表</p>
+<p># 配置ACL规则</p>
+<p>[Quidway] acl number 2001</p>
+<p>[Quidway-acl-basic-2001] rule permit source 192.168.1.10 0.0.0.0 </p>
+<p>[Quidway-acl-basic-2001] quit</p>
+<p># 把acl规则应用到ftp</p>
+<p>[Quidway] ftp acl 2001</p>
+<p>7、连接测试</p>
+<p># 打开命令提示符，或者其他ftp工具</p>
+<p>C:\Users\admin&gt; ftp 192.168.1.254</p>
+<p>Connected to 192.168.1.254</p>
+<p>220 FTP servece ready.</p>
+<p>User(192.168.1.254(none)):huawei</p>
+<p>331 Password required for huawei.</p>
+<p>Password:</p>
+<p>230 User logged in.</p>
+<p>ftp&gt; </p>
+<p><strong># 配置WEB</strong></p>
+<p>1、上传web文件</p>
+<p># 注意：要开启web服务，需要先上传web管理文件(xxx.web.zip) 到交换机的根目录下</p>
+<p># 可以通过ftp上传</p>
+<p>C:\Users\admin&gt; ftp 192.168.1.254</p>
+<p>ftp&gt; put xxx.web.zip </p>
+<p>2、开启web服务</p>
+<p><Quidway> system-view</p>
+<p>[Quidway] http server load flash:/xxx.web.zip</p>
+<p>[Quidway] http server enable</p>
+<p>3、配置web用户</p>
+<p>[Quidway] aaa</p>
+<p>[Quidway-aaa] local-user webadmin password cipher webadmin</p>
+<p>[Quidway-aaa] local-user webadmin service-type http</p>
+<p>[Quidway-aaa] quit</p>
+<p>4、通过浏览器测试</p>
+<p>URL 地址： <a target="_blank" rel="noopener" href="http://192.168.1.254/">http://192.168.1.254</a></p>
+<p><strong>#相关查看命令</strong><br>[Quidway] display version         显示VRP版本号，以及运行时间</p>
+<p>[Quidway] display cpu-usage         显示CPU信息</p>
+<p>[Quidway] display memory-usage              显示内存占用情况</p>
+<p>[Quidway] display device                          显示设备信息</p>
+<p>[Quidway] display current-configuration     显示系统运行配置信息<br>[Quidway] display saved-configuration       显示保存的配置信息<br>[Quidway] display interfaces brief             显示接口配置信息</p>
+<p>[Quidway] display history-command          显示历史命令记录</p>
+<p>[Quidway-GigabitEthernet0/0/1] display this     显示该接口的所有配置     </p>
+<p>接口视图： interface</p>
+<p> display interface [ interface-type [ interface-number ] ]    # 查看二层信息</p>
+<p> display interface brief</p>
+<p> display ip interface [ interface-type interface-number ]    # 查看三层信息</p>
+<p> display ip interface brief [ interface-type interface-number ] </p>
+<p># 管道过滤</p>
+<p>[Quidway] display xxx | { include | exclude | begin }  strings   </p>
+<p># 当出现 – More – 时，同样支持</p>
+<ul>
+<li>/expr        == begin</li>
+<li>-expr        == exclude</li>
+<li>+expr       == include </li>
+</ul>
+<p>[Quidway] display current-configuration | include ntp</p>
+<p>[Quidway] display current-configuration | include ip|user</p>
+<p># 注意第一个 | 是管道, 那么之后的 | 都不认为是管道，而是正则表达式的运算符</p>
+<p># 命令是不区分大小写的，但是 strings 是区分的。</p>
+<p>总结一下：</p>
+<p>对于一台全新的交换机，我们首先要确定用来做什么？（业务规划），然后结合已有的网络拓扑情况。</p>
+<p>能够对其进行如下几个方面的设定：</p>
+<ul>
+<li>系统管理</li>
+<li>接口管理（逻辑接口，物理接口，user-interface …）</li>
+<li>业务管理（DHCP, STP, VRRP …）</li>
+<li>ACL</li>
+<li>路由管理（优先级，动态，静态）</li>
+<li>安全管理</li>
+</ul>
+<p>配置实例：</p>
+<p>实验拓扑如下图所示</p>
+<p><img src="https://s3.51cto.com/wyfs02/M02/53/BE/wKiom1Rup82jEOVrAAFhQNaDtl4883.jpg" alt="wKiom1Rup82jEOVrAAFhQNaDtl4883.jpg" loading="lazy"></p>
+<p>规划：</p>
+<p>路由器LAN： 192.168.100.2 / 30</p>
+<p>VLAN100：192.168.100.1 / 30</p>
+<p>VLAN10: 192.168.10.1 / 24</p>
+<p>VLAN20：192.168.20.1 / 24</p>
+<p>路由器上需要配置回程路由：</p>
+<p>192.168.0.0 255.255.0.0  192.168.100.1</p>
+<p>汇聚交换机：将GE0/0/3作为连接路由器的端口，GE0/0/1到GE0/0/2分别和2个接入层交换机相连，剩余端口全部shutdown，以后扩展时在启用。</p>
+<p>接入层交换机无需配置，即插即用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">三层交换机 SW1 配置：</span><br><span class="line">&lt;Huawei&gt;sys</span><br><span class="line">[Huawei]vlan bat 10 20 100    <span class="comment"># 批量添加vlan 10 和 20</span></span><br><span class="line">[Huawei]int g0/0/1</span><br><span class="line">[Huawei-GigabitEthernet0/0/1]port link-type trunk</span><br><span class="line">[Huawei-GigabitEthernet0/0/1]port trunk allow-pass vlan 1 10 20</span><br><span class="line">[Huawei-GigabitEthernet0/0/1]dis this</span><br><span class="line"><span class="comment">#</span></span><br><span class="line">interface GigabitEthernet0/0/1</span><br><span class="line"> port link-type trunk</span><br><span class="line"> port trunk allow-pass vlan 10 20</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">return</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>eNSP小贴士：</p>
+<p>使用SecureCRT 登录eNSP模拟器</p>
+<ul>
+<li>eNSP(Enterprise Network SimulationPlatform)是一款由华为提供的免费的、可扩展的、图形化操作的网络仿真工具平台，主要对企业网路由器、交换机进行软件仿真，完美呈现真实设备实景，支持大型网络模拟，让广大用户有机会在没有真实设备的情况下能够模拟演练，学习网络技术。</li>
+<li>SecureCRT是一款支持SSH的终端仿真程序，简单的说是Windows下登录UNIX或Linux服务器主机的软件。不同就是SecureCRT支持SSH，同时支持Telnet和rlogin协议。SecureCRT是一款用于连接运行包括Windows、UNIX和VMS的理想工具。</li>
+</ul>
+<p>下面介绍用SecureCRT登陆eNSP设备的方法</p>
+<p>1、  准备工作（查看IP 以及 相应设备的COM号）</p>
+<p>注：此处Hostname为eNSP软件的本地服务器IP，Port为设备的eNSP软件设备列表中相应设备的COM号， 如何查看？ </p>
+<p>（1）、查找eNSP的本地服务器IP：设置 —&gt;选项框里选择服务器设置。</p>
+<p>（2）、查看设备端口号：</p>
+<p>首先点击eNSP主界面的【菜单】 - 【视图】 - 【工具栏】 - 勾选【右工具栏】；  或者直接 Ctrl  +  R 调出右工具栏。</p>
+<p><img src="https://s2.51cto.com/wyfs02/M02/78/82/wKioL1Z-j_ri7cmSAAC15DbHrIQ576.png" alt="wKioL1Z-j_ri7cmSAAC15DbHrIQ576.png" loading="lazy"></p>
+<p>此时右侧弹出一个列表，在接口列表中查看设备端口号。在eNSP软件的接口视图中，会在设备名称后面显示一个端口号，这个端口号就是我们使用第三方工具时需要设置的端口号！</p>
+<p><a target="_blank" rel="noopener" href="https://s5.51cto.com/wyfs02/M00/78/82/wKioL1Z-kRWQRT76AACENIyDOAE785.png"><img src="https://s5.51cto.com/wyfs02/M00/78/82/wKioL1Z-kRWQRT76AACENIyDOAE785.png" alt="wKioL1Z-kRWQRT76AACENIyDOAE785.png" loading="lazy"></a></p>
+<p>1、  打开SecureCRT，新建会话 -&gt; 协议选择telnet ，单击下一步。   </p>
+<p>2、  填写主机名和端口号，单击下一步。</p>
+<p><a target="_blank" rel="noopener" href="https://s3.51cto.com/wyfs02/M02/78/84/wKiom1Z-lMuDuHjbAABBNmH3vL8246.png"><img src="https://s3.51cto.com/wyfs02/M02/78/84/wKiom1Z-lMuDuHjbAABBNmH3vL8246.png" alt="wKiom1Z-lMuDuHjbAABBNmH3vL8246.png" loading="lazy"></a></p>
+<p>注：端口号即为eNSP软件中接口列表中显示的数字。</p>
+<p>3、输入设备名，单击完成。  设置成功后， 进行连接。 按 Enter 即可登录成功。</p>
+<p><strong>额外设置</strong></p>
+<p>4、  接下来，在使用时会有乱码情况出现，我们还需要对SecureCRT进行一下简单的设置：</p>
+<p>打开SecureCRT软件，选项（options）-&gt;会话选项（Sessionl Options）-&gt;连接（connection）-&gt;Telnet-&gt;强制每次一个字符模式</p>
+<p>5、  如果您在使用过程中还是会出现乱码，可以尝试设置仿真终端为”VT100”</p>
+<p><a target="_blank" rel="noopener" href="http://support.huawei.com/ecommunity/bbs/10142395.html">http://support.huawei.com/ecommunity/bbs/10142395.html</a></p>
+<p>Xshell: </p>
+<p><a target="_blank" rel="noopener" href="https://s3.51cto.com/wyfs02/M02/78/84/wKiom1Z-lTbQmo4uAAAjkLh2x10779.png"><img src="https://s3.51cto.com/wyfs02/M02/78/84/wKiom1Z-lTbQmo4uAAAjkLh2x10779.png" alt="wKiom1Z-lTbQmo4uAAAjkLh2x10779.png" loading="lazy"></a></p>
+<p>eNSP 使用问题汇总： <a target="_blank" rel="noopener" href="http://support.huawei.com/ecommunity/bbs/10171461.html">http://support.huawei.com/ecommunity/bbs/10171461.html</a></p>
+<p><a target="_blank" rel="noopener" href="http://zcry21cn.blog.51cto.com/606036/1677887">http://zcry21cn.blog.51cto.com/606036/1677887</a></p>
+<p><a target="_blank" rel="noopener" href="http://yuan2.blog.51cto.com/446689/1580671">http://yuan2.blog.51cto.com/446689/1580671</a></p>
+<p><a target="_blank" rel="noopener" href="http://blog.sina.com.cn/s/blog_4a2a1a090101816y.html">http://blog.sina.com.cn/s/blog_4a2a1a090101816y.html</a></p>
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"></div><div style="display:inline-block"></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>澈崽子</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://zeozzz.github.com/2019/04/18/9/" title="华为S5700三层交换机基本配置">https://zeozzz.github.com/2019/04/18/9/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2019/04/18/8/" rel="prev" title="Linux TCP连接Connection Refused和Connection timed out的问题"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">Linux TCP连接Connection Refused和Connection timed out的问题</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2019/04/18/10/" rel="next" title="IPv6原理、应用与实践"><span class="post-nav-text">IPv6原理、应用与实践</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="http://www.beian.miit.gov.cn" target="_blank"></a></div><div class="copyright"><span>&copy; 2015 – 2020 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 澈崽子</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.0.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v0.9.5</span></div><div class="live_time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  window.setTimeout(blog_live_time, 1000);
+  const start = new Date('2015-09-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div></div><script defer src="/js/utils.js"></script><script defer src="/js/hexo-theme-yun.js"></script></body></html>

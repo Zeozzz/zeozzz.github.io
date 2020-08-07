@@ -1,0 +1,424 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="澈崽子"><meta name="copyright" content="澈崽子"><meta name="generator" content="Hexo 5.0.0"><meta name="theme" content="hexo-theme-yun"><title>Nginx的配置、虚拟主机、负载均衡和反向代理 | 澈崽子 | 家有网工初长成</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="none" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.19/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_stqaphw3j4.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true}
+    ]
+  });
+});</script><link class="aplayer-style-marker" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script class="aplayer-script-marker" src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" defer></script><script class="meting-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js" defer></script><link rel="shortcut icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"root":"/","title":"澈崽子的小窝","version":"0.9.5","anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><meta name="description" content="原文链接：https:&#x2F;&#x2F;www.zybuluo.com&#x2F;phper&#x2F;note&#x2F;89391  nginx在前面，我写过好几篇，相似的介绍它在各个平台上的安装配置以及和php-fpm的连接等。今天，这一篇，着重讲解它的配置，其中包括它比较擅长的负载均衡和反向代理，还有虚拟主机功能。 nginx启动和关闭按照惯例，先说下各个平台的配置情况： centos平台,源码安装的： 123&#x2F;usr&amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx的配置、虚拟主机、负载均衡和反向代理">
+<meta property="og:url" content="https://zeozzz.github.com/2019/04/29/30/index.html">
+<meta property="og:site_name" content="澈崽子 | 家有网工初长成">
+<meta property="og:description" content="原文链接：https:&#x2F;&#x2F;www.zybuluo.com&#x2F;phper&#x2F;note&#x2F;89391  nginx在前面，我写过好几篇，相似的介绍它在各个平台上的安装配置以及和php-fpm的连接等。今天，这一篇，着重讲解它的配置，其中包括它比较擅长的负载均衡和反向代理，还有虚拟主机功能。 nginx启动和关闭按照惯例，先说下各个平台的配置情况： centos平台,源码安装的： 123&#x2F;usr&amp;#">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image01.zhang-zhe.cn/20190429135953.png">
+<meta property="og:image" content="https://image01.zhang-zhe.cn/20190429140016.png">
+<meta property="article:published_time" content="2019-04-29T05:58:03.000Z">
+<meta property="article:modified_time" content="2019-05-05T05:13:03.501Z">
+<meta property="article:author" content="澈崽子">
+<meta property="article:tag" content="LINUX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image01.zhang-zhe.cn/20190429135953.png"></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script defer src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="澈崽子"><img width="96" loading="lazy" src="/avatar.jfif" alt="澈崽子"></a><div class="site-author-name"><a href="/about/">澈崽子</a></div><a class="site-name" href="/about/site.html">澈崽子 | 家有网工初长成</a><sub class="site-subtitle"></sub><div class="site-desciption">念念不忘 必有回响</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">74</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">29</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">36</span></a></div><a class="site-state-item hty-icon-button" href="/null" title="常用文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 群" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Zeozzz" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/linche521chn" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/zeozzz/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=46666755" title="网易云音乐" target="_blank" style="color:#C20C0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/janz1995chn/activities" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/15054940" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/zeozzz" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/zeozzz" title="Telegram Channel" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:zhangzhe@live.in" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.now.sh/" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-send-plane-2-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://huawei.com" title="华为文档" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-huawei-line"></use></svg></a></div></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx%E5%90%AF%E5%8A%A8%E5%92%8C%E5%85%B3%E9%97%AD"><span class="toc-number">1.</span> <span class="toc-text">nginx启动和关闭</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx-conf%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">nginx.conf配置文件详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#main%E6%A8%A1%E5%9D%97"><span class="toc-number">3.</span> <span class="toc-text">main模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#events-%E6%A8%A1%E5%9D%97"><span class="toc-number">4.</span> <span class="toc-text">events 模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#http-%E6%A8%A1%E5%9D%97"><span class="toc-number">5.</span> <span class="toc-text">http 模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#server-%E6%A8%A1%E5%9D%97"><span class="toc-number">6.</span> <span class="toc-text">server 模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#location-%E6%A8%A1%E5%9D%97"><span class="toc-number">7.</span> <span class="toc-text">location 模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#upstream-%E6%A8%A1%E5%9D%97"><span class="toc-number">8.</span> <span class="toc-text">upstream 模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9F%BA%E4%BA%8E%E5%9F%9F%E5%90%8D%E7%9A%84%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA"><span class="toc-number">9.</span> <span class="toc-text">1. 基于域名的虚拟主机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">10.</span> <span class="toc-text">2.反向代理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">10.1.</span> <span class="toc-text">正向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">10.2.</span> <span class="toc-text">反向代理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">11.</span> <span class="toc-text">3.负载均衡</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E-weight-%E6%9D%83%E9%87%8D%E7%9A%84%E8%B4%9F%E8%BD%BD"><span class="toc-number">11.1.</span> <span class="toc-text">基于 weight 权重的负载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E-ip-hash-%E7%9A%84%E8%B4%9F%E8%BD%BD"><span class="toc-number">11.2.</span> <span class="toc-text">基于 ip_hash 的负载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98"><span class="toc-number">12.</span> <span class="toc-text">4.页面缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx%E4%B8%AD%E7%9A%84-location-%E6%AD%A3%E5%88%99%E6%A8%A1%E5%9D%97"><span class="toc-number">13.</span> <span class="toc-text">nginx中的 location 正则模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#URL%E9%87%8D%E5%86%99%E6%A8%A1%E5%9D%97%EF%BC%88Rewrite%EF%BC%89"><span class="toc-number">14.</span> <span class="toc-text">URL重写模块（Rewrite）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#break"><span class="toc-number">14.1.</span> <span class="toc-text">break</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#if"><span class="toc-number">14.2.</span> <span class="toc-text">if</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#return"><span class="toc-number">14.3.</span> <span class="toc-text">return</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rewrite"><span class="toc-number">14.4.</span> <span class="toc-text">rewrite</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/04/29/30/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Nginx的配置、虚拟主机、负载均衡和反向代理</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-04-29 13:58:03" itemprop="dateCreated datePublished" datetime="2019-04-29T13:58:03+08:00">2019-04-29</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2019-05-05 13:13:03" itemprop="dateModified" datetime="2019-05-05T13:13:03+08:00">2019-05-05</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-tag"><a class="tag" href="/tags/LINUX/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">LINUX</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>原文链接：<a target="_blank" rel="noopener" href="https://www.zybuluo.com/phper/note/89391">https://www.zybuluo.com/phper/note/89391</a> </p>
+<p>nginx在前面，我写过好几篇，相似的介绍它在各个平台上的安装配置以及和php-fpm的连接等。今天，这一篇，着重讲解它的配置，其中包括它比较擅长的负载均衡和反向代理，还有虚拟主机功能。</p>
+<h2 id="nginx启动和关闭"><a href="#nginx启动和关闭" class="headerlink" title="nginx启动和关闭"></a>nginx启动和关闭</h2><p>按照惯例，先说下各个平台的配置情况：</p>
+<p>centos平台,源码安装的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;nginx # 启动</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;nginx -s reload #平滑重启</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;nginx.conf #配置文件</span><br></pre></td></tr></table></figure>
+
+<p>mac平台，我用brew安装的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;bin&#x2F;nginx # 启动</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;bin&#x2F;nginx -s reload #平滑重启</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;etc&#x2F;nginx&#x2F;nginx.cnf #配置文件。</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="nginx-conf配置文件详解"><a href="#nginx-conf配置文件详解" class="headerlink" title="nginx.conf配置文件详解"></a>nginx.conf配置文件详解</h2><p>其实，对比，apache的配置文件，它的相对比较清晰和简单，之前觉得很难，现在沉下心来想想，其实很简单。大致的分块下，基本就分为以下几块：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">main</span><br><span class="line">events   &#123;</span><br><span class="line">  ....</span><br><span class="line">&#125;</span><br><span class="line">http        &#123;</span><br><span class="line">  ....</span><br><span class="line">  upstream myproject &#123;</span><br><span class="line">    .....</span><br><span class="line">  &#125;</span><br><span class="line">  server  &#123;</span><br><span class="line">    ....</span><br><span class="line">    location &#123;</span><br><span class="line">        ....</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  server  &#123;</span><br><span class="line">    ....</span><br><span class="line">    location &#123;</span><br><span class="line">        ....</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>nginx配置文件主要分为六个区域：<br><code>main(全局设置)</code>、<code>events(nginx工作模式)</code>、<code>http(http设置)</code>、<br><code>sever(主机设置)</code>、<code>location(URL匹配)</code>、<code>upstream(负载均衡服务器设置)</code>。</p>
+<h2 id="main模块"><a href="#main模块" class="headerlink" title="main模块"></a>main模块</h2><p>下面时一个main区域，他是一个全局的设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">user nobody nobody;</span><br><span class="line">worker_processes 2;</span><br><span class="line">error_log  &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;error.log  notice;</span><br><span class="line">pid        &#x2F;usr&#x2F;local&#x2F;var&#x2F;run&#x2F;nginx&#x2F;nginx.pid;</span><br><span class="line">worker_rlimit_nofile 1024;</span><br></pre></td></tr></table></figure>
+
+<p><code>user</code> 来指定Nginx Worker进程运行用户以及用户组，默认由nobody账号运行。</p>
+<p><code>worker_processes</code>来指定了Nginx要开启的子进程数。每个Nginx进程平均耗费10M~12M内存。根据经验，一般指定1个进程就足够了，如果是多核CPU，建议指定和CPU的数量一样的进程数即可。我这里写2，那么就会开启2个子进程，总共3个进程。</p>
+<p><code>error_log</code>用来定义全局错误日志文件。日志输出级别有debug、info、notice、warn、error、crit可供选择，其中，debug输出日志最为最详细，而crit输出日志最少。</p>
+<p><code>pid</code>用来指定进程id的存储文件位置。</p>
+<p><code>worker_rlimit_nofile</code>用于指定一个nginx进程可以打开的最多文件描述符数目，这里是65535，需要使用命令“ulimit -n 65535”来设置。</p>
+<h2 id="events-模块"><a href="#events-模块" class="headerlink" title="events 模块"></a>events 模块</h2><p>events模块来用指定nginx的工作模式和工作模式及连接数上限，一般是这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">events &#123;</span><br><span class="line">    use kqueue; #mac平台</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>use</code>用来指定Nginx的工作模式。Nginx支持的工作模式有select、poll、kqueue、epoll、rtsig和/dev/poll。其中select和poll都是标准的工作模式，kqueue和epoll是高效的工作模式，不同的是epoll用在Linux平台上，而kqueue用在BSD系统中，因为Mac基于BSD,所以Mac也得用这个模式，对于Linux系统，epoll工作模式是首选。</p>
+<p><code>worker_connections</code>用于定义Nginx每个进程的最大连接数，即接收前端的最大请求数，默认是1024。最大客户端连接数由<code>worker_processes</code>和<code>worker_connections</code>决定，即<code>Max_clients=worker_processes*worker_connections</code>，在作为反向代理时，Max_clients变为：<code>Max_clients = worker_processes * worker_connections/4</code>。<br>进程的最大连接数受Linux系统进程的最大打开文件数限制，在执行操作系统命令“ulimit -n 65536”后worker_connections的设置才能生效。</p>
+<h2 id="http-模块"><a href="#http-模块" class="headerlink" title="http 模块"></a>http 模块</h2><p>http模块可以说是最核心的模块了，它负责HTTP服务器相关属性的配置，它里面的server和upstream子模块，至关重要，等到反向代理和负载均衡以及虚拟目录等会仔细说。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">http&#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application&#x2F;octet-stream;</span><br><span class="line">    log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;</span><br><span class="line">                      &#39;$status $body_bytes_sent &quot;$http_referer&quot; &#39;</span><br><span class="line">                      &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;</span><br><span class="line">    access_log  &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;access.log  main;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    tcp_nopush      on;</span><br><span class="line">    tcp_nodelay     on;</span><br><span class="line">    keepalive_timeout  10;</span><br><span class="line">    #gzip  on;</span><br><span class="line">    upstream myproject &#123;</span><br><span class="line">        .....</span><br><span class="line">    &#125;</span><br><span class="line">    server &#123;</span><br><span class="line">        ....</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面详细介绍下这段代码中每个配置选项的含义。<br><code>include</code> 用来设定文件的mime类型,类型在配置文件目录下的mime.type文件定义，来告诉nginx来识别文件类型。</p>
+<p><code>default_type</code>设定了默认的类型为二进制流，也就是当文件类型未定义时使用这种方式，例如在没有配置asp 的locate 环境时，Nginx是不予解析的，此时，用浏览器访问asp文件就会出现下载了。</p>
+<p><code>log_format</code>用于设置日志的格式，和记录哪些参数，这里设置为<code>main</code>，刚好用于<code>access_log</code>来记录这种类型。</p>
+<p>main的类型日志如下：也可以增删部分参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 - - [21&#x2F;Apr&#x2F;2015:18:09:54 +0800] &quot;GET &#x2F;index.php HTTP&#x2F;1.1&quot; 200 87151 &quot;-&quot; &quot;Mozilla&#x2F;5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;41.0.2272.76 Safari&#x2F;537.36&quot;</span><br></pre></td></tr></table></figure>
+
+<p><code>access_log</code> 用来纪录每次的访问日志的文件地址，后面的<code>main</code>是日志的格式样式，对应于<code>log_format</code>的<code>main</code>。</p>
+<p><code>sendfile</code>参数用于开启高效文件传输模式。将tcp_nopush和tcp_nodelay两个指令设置为on用于防止网络阻塞。</p>
+<p><code>keepalive_timeout</code>设置客户端连接保持活动的超时时间。在超过这个时间之后，服务器会关闭该连接。</p>
+<p>还有很多各种配置，以后等用到来再说。</p>
+<h2 id="server-模块"><a href="#server-模块" class="headerlink" title="server 模块"></a>server 模块</h2><p>sever 模块是http的子模块，它用来定一个虚拟主机，我们先讲最基本的配置，这些在后面再讲。</p>
+<p>我们看一下一个简单的server 是如何做的？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       8080;</span><br><span class="line">        server_name  localhost 192.168.12.10 www.yangyi.com;</span><br><span class="line">        # 全局定义，如果都是这一个目录，这样定义最简单。</span><br><span class="line">        root   &#x2F;Users&#x2F;yangyi&#x2F;www;</span><br><span class="line">        index  index.php index.html index.htm; </span><br><span class="line">        charset utf-8;</span><br><span class="line">        access_log  usr&#x2F;local&#x2F;var&#x2F;log&#x2F;host.access.log  main;</span><br><span class="line">        aerror_log  usr&#x2F;local&#x2F;var&#x2F;log&#x2F;host.error.log  error;</span><br><span class="line">        ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>server</code>标志定义虚拟主机开始。<br><code>listen</code>用于指定虚拟主机的服务端口。<br><code>server_name</code>用来指定IP地址或者域名，多个域名之间用空格分开。<br><code>root</code> 表示在这整个<code>server</code>虚拟主机内，全部的root web根目录。注意要和<code>locate &#123;&#125;</code>下面定义的区分开来。<br><code>index</code> 全局定义访问的默认首页地址。注意要和<code>locate &#123;&#125;</code>下面定义的区分开来。<br><code>charset</code>用于设置网页的默认编码格式。<br><code>access_log</code>用来指定此虚拟主机的访问日志存放路径，最后的main用于指定访问日志的输出格式。</p>
+<h2 id="location-模块"><a href="#location-模块" class="headerlink" title="location 模块"></a>location 模块</h2><p>location模块是nginx中用的最多的，也是最重要的模块了，什么负载均衡啊、反向代理啊、虚拟域名啊都与它相关。慢慢来讲：</p>
+<p>location 根据它字面意思就知道是来定位的，定位URL，解析URL，所以，它也提供了强大的正则匹配功能，也支持条件判断匹配，用户可以通过location指令实现Nginx对动、静态网页进行过滤处理。像我们的php环境搭建就是用到了它。</p>
+<p>我们先来看这个，设定默认首页和虚拟机目录。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">            root   &#x2F;Users&#x2F;yangyi&#x2F;www;</span><br><span class="line">            index  index.php index.html index.htm;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>location /</code>表示匹配访问根目录。</p>
+<p><code>root</code>指令用于指定访问根目录时，虚拟主机的web目录，这个目录可以是相对路径（相对路径是相对于nginx的安装目录）。也可以是绝对路径。</p>
+<p><code>index</code>用于设定我们<code>只输入域名后</code>访问的默认首页地址，有个先后顺序：<code>index.php index.html index.htm</code>，如果没有开启目录浏览权限，又找不到这些默认首页，就会报403错误。</p>
+<p>location 还有一种方式就是正则匹配，开启正则匹配这样：<code>location ~</code>。后面加个<code>~</code>。</p>
+<p>下面这个例子是运用<code>正则匹配</code>来链接php。我们之前搭建环境也是这样做：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">            root           &#x2F;Users&#x2F;yangyi&#x2F;www;</span><br><span class="line">            fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">            fastcgi_index  index.php;</span><br><span class="line">            include        fastcgi.conf;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>\.php$</code> 熟悉正则的我们直到，这是匹配<code>.php</code>结尾的URL，用来解析php文件。里面的<code>root</code>也是一样，用来表示虚拟主机的根目录。<br><code>fast_pass</code>链接的是<code>php-fpm</code> 的地址，之前我们也搭建过。其他几个参数我们以后再说。</p>
+<p>location 还有其他用法，等讲到实例的时候，再看吧。</p>
+<h2 id="upstream-模块"><a href="#upstream-模块" class="headerlink" title="upstream 模块"></a>upstream 模块</h2><p>upstream 模块负债负载均衡模块，通过一个简单的调度算法来实现客户端IP到后端服务器的负载均衡。我先学习怎么用，具体的使用实例以后再说。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">upstream iyangyi.com&#123;</span><br><span class="line">    ip_hash;</span><br><span class="line">    server 192.168.12.1:80;</span><br><span class="line">    server 192.168.12.2:80 down;</span><br><span class="line">    server 192.168.12.3:8080  max_fails&#x3D;3  fail_timeout&#x3D;20s;</span><br><span class="line">    server 192.168.12.4:8080;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面的例子中，通过<code>upstream</code>指令指定了一个负载均衡器的名称<code>iyangyi.com</code>。这个名称可以任意指定，在后面需要的地方直接调用即可。</p>
+<p>里面是<code>ip_hash</code>这是其中的一种负载均衡调度算法，下面会着重介绍。紧接着就是各种服务器了。用<code>server</code>关键字表识，后面接ip。</p>
+<p>Nginx的<code>负载均衡</code>模块目前支持<code>4种调度算法</code>:</p>
+<ol>
+<li>weight 轮询（默认）。每个请求按时间顺序逐一分配到不同的后端服务器，如果后端某台服务器宕机，故障系统被自动剔除，使用户访问不受影响。weight。指定轮询权值，weight值越大，分配到的访问机率越高，主要用于后端每个服务器性能不均的情况下。</li>
+<li>ip_hash。每个请求按访问IP的hash结果分配，这样来自同一个IP的访客固定访问一个后端服务器，有效解决了动态网页存在的session共享问题。</li>
+<li>fair。比上面两个更加智能的负载均衡算法。此种算法可以依据页面大小和加载时间长短智能地进行负载均衡，也就是根据后端服务器的响应时间来分配请求，响应时间短的优先分配。Nginx本身是不支持fair的，如果需要使用这种调度算法，必须下载Nginx的upstream_fair模块。</li>
+<li>url_hash。按访问url的hash结果来分配请求，使每个url定向到同一个后端服务器，可以进一步提高后端缓存服务器的效率。Nginx本身是不支持url_hash的，如果需要使用这种调度算法，必须安装Nginx 的hash软件包。</li>
+</ol>
+<p>在HTTP Upstream模块中，可以通过server指令指定后端服务器的IP地址和端口，同时还可以设定每个后端服务器在负载均衡调度中的状态。常用的状态有：</p>
+<ul>
+<li>down，表示当前的server暂时不参与负载均衡。</li>
+<li>backup，预留的备份机器。当其他所有的非backup机器出现故障或者忙的时候，才会请求backup机器，因此这台机器的压力最轻。</li>
+<li>max_fails，允许请求失败的次数，默认为1。当超过最大次数时，返回proxy_next_upstream 模块定义的错误。</li>
+<li>fail_timeout，在经历了max_fails次失败后，暂停服务的时间。max_fails可以和fail_timeout一起使用。</li>
+</ul>
+<p><strong>注意</strong> 当负载调度算法为ip_hash时，后端服务器在负载均衡调度中的状态不能是weight和backup。</p>
+<p>参考文件：<br><a target="_blank" rel="noopener" href="http://blog.csdn.net/xifeijian/article/details/20956605">http://blog.csdn.net/xifeijian/article/details/20956605</a><br><a target="_blank" rel="noopener" href="http://www.360doc.com/content/13/1114/12/7694408_329125489.shtml">http://www.360doc.com/content/13/1114/12/7694408_329125489.shtml</a><br><a target="_blank" rel="noopener" href="http://www.cnblogs.com/xiaogangqq123/archive/2011/03/02/1969006.html">http://www.cnblogs.com/xiaogangqq123/archive/2011/03/02/1969006.html</a><br><a target="_blank" rel="noopener" href="http://ixdba.blog.51cto.com/2895551/790611">http://ixdba.blog.51cto.com/2895551/790611</a><br><a target="_blank" rel="noopener" href="http://freeloda.blog.51cto.com/2033581/1288553">http://freeloda.blog.51cto.com/2033581/1288553</a></p>
+<p>下面看下虚拟主机、负债均衡和反向代理，是如何做到的。</p>
+<h2 id="1-基于域名的虚拟主机"><a href="#1-基于域名的虚拟主机" class="headerlink" title="1. 基于域名的虚拟主机"></a>1. 基于域名的虚拟主机</h2><p>在apache上搭建基于域名的虚拟主机很简单，我之前也写过一篇，来讲述如何搭建。在nginx上搭建也不难。</p>
+<p>假设我们在本地开发有3个项目，分别在hosts里映射到本地的127.0.0.1上：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 www.iyangyi.com iyangyi.com</span><br><span class="line">127.0.0.1 api.iyangyi.com</span><br><span class="line">127.0.0.1 admin.iyangyi.com</span><br></pre></td></tr></table></figure>
+
+<p>有这样3个项目，分别对应于web根目录下的3个文件夹，我们用域名对应文件夹名字，这样子好记：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;Users&#x2F;yangyi&#x2F;www&#x2F;www.iyangyi.com&#x2F;</span><br><span class="line">&#x2F;Users&#x2F;yangyi&#x2F;www&#x2F;api.iyangyi.com&#x2F;</span><br><span class="line">&#x2F;Users&#x2F;yangyi&#x2F;www&#x2F;admin.iyangyi.com&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>每个目录下都有一个index.php文件，都素简单的输入自己的域名。</p>
+<p>下面我们就来搭建这3个域名的虚拟主机，很显然，我们要新建3个<code>server</code>来完成。为了看起来简洁好看，我们使用<code>require</code>来包含外面的3个<code>server</code>在<code>nginx.conf</code>中，这样就清晰了很多。不会使得这个<code>nginx.conf</code>内容太多：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">main</span><br><span class="line">events   &#123;</span><br><span class="line">  ....</span><br><span class="line">&#125;</span><br><span class="line">http        &#123;</span><br><span class="line">  ....</span><br><span class="line">  include vhost&#x2F;www.iyangyi.conf;</span><br><span class="line">  include vhost&#x2F;api.iyangyi.conf;</span><br><span class="line">  include vhost&#x2F;admin.iyangyi.conf;</span><br><span class="line">  #或者用 *.conf  包含</span><br><span class="line">  # include vhost&#x2F;*.conf</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>既然每一个<code>conf</code>都是一个<code>server</code>，前面已经学习了一个完整的<code>server</code>写的了。下面就开始：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># www.iyangyi.conf</span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name www.iyangyi.com iyangyi.com;</span><br><span class="line">    root &#x2F;Users&#x2F;yangyi&#x2F;www&#x2F;www.iyangyi.com&#x2F;;</span><br><span class="line">    index index.php index.html index.htm;</span><br><span class="line">    access_log &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;www.iyangyi.access.log main;</span><br><span class="line">    error_log &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;www.iyangyi.error.log error;</span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass   127.0.0.1:9000; </span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        include        fastcgi.conf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># api.iyangyi.conf</span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name api.iyangyi.com;</span><br><span class="line">    root &#x2F;Users&#x2F;yangyi&#x2F;www&#x2F;api.iyangyi.com&#x2F;;</span><br><span class="line">    index index.php index.html index.htm;</span><br><span class="line">    access_log &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;api.iyangyi.access.log main;</span><br><span class="line">    error_log &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;api.iyangyi.error.log error;</span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass   127.0.0.1:9000; </span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        include        fastcgi.conf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># admin.iyangyi.conf</span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name admin.iyangyi.com;</span><br><span class="line">    root &#x2F;Users&#x2F;yangyi&#x2F;www&#x2F;admin.iyangyi.com&#x2F;;</span><br><span class="line">    index index.php index.html index.htm;</span><br><span class="line">    access_log &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;admin.iyangyi.access.log main;</span><br><span class="line">    error_log &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;admin.iyangyi.error.log error;</span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass   127.0.0.1:9000; </span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        include        fastcgi.conf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样3个很精简的虚拟域名就搭建好了。重启下nginx，然后打开浏览器访问一下这3个域名，就能看到对应的域名内容了。</p>
+<h2 id="2-反向代理"><a href="#2-反向代理" class="headerlink" title="2.反向代理"></a>2.反向代理</h2><h3 id="正向代理"><a href="#正向代理" class="headerlink" title="正向代理"></a>正向代理</h3><p>在说啥啥反向代理之前，先说下什么是<code>代理</code>或者<code>正向代理</code>。</p>
+<p><code>正向代理</code>也就是代理，他的工作原理就像一个跳板，简单的说，我访问不了google.com，但是我能访问一个代理服务器A，A能访问google.com，于是我先连上代理服务器A，告诉他我需要google.com的内容，A就去取回来，然后返回给我。从网站的角度，只在代理服务器来取内容的时候有一次记录，有时候并不知道是用户的请求，也隐藏了用户的资料，这取决于代理告不告诉网站。</p>
+<p>结论就是，<code>正向代理</code>是一个位于<code>客户端</code>和<code>原始服务器(origin server)</code>之间的服务器。为了从原始服务器取得内容，客户端向代理发送一个请求并指定目标(原始服务器)，然后代理向原始服务器转交请求并将获得的内容返回给客户端。</p>
+<p>目前代理软件很多，浏览器上的代理就更多了。什么自由门啊，红杏等。</p>
+<h3 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h3><p>ok，说完正向代理，再来说啥是<code>反向代理</code>！</p>
+<p>举个例子，比如我想访问 <code>http://www.test.com/readme</code>，但<code>www.test.com</code>上并不存在<code>readme</code>页面，于是他是偷偷从另外一台服务器上取回来，然后作为自己的内容返回用户，但用户并不知情。这里所提到的 <a target="_blank" rel="noopener" href="http://www.test.com/">www.test.com</a> 这个域名对应的服务器就设置了<code>反向代理功能</code>。</p>
+<p>结论就是，<code>反向代理</code>正好相反，对于客户端而言它就像是原始服务器，并且客户端不需要进行任何特别的设置。客户端向反向代理的命名空间(name-space)中的内容发送普通请求，接着反向代理将判断向何处(原始服务器)转交请求，并将获得的内容返回给客户端，就像这些内容原本就是它自己的一样。</p>
+<p>嗯。正向代理和反向代理就基本清楚了，那我们就来用nginx来配置一个反向代理。</p>
+<p>nginx 使用反向代理，主要是使用<code>location</code>模块下的<code>proxy_pass</code>选项。</p>
+<p>我们直接实战吧！</p>
+<p>来个最简单的。当我访问 mac 上的nginx 的 centos.iyangyi.com 的内容时候, 就反向代理到虚拟机centos上的 apache 192.168.33.10 的index.html页面。</p>
+<p>192.168.33.10 中的html 是很简单的一句输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">centos apache2 index.html</span><br></pre></td></tr></table></figure>
+
+<p>在hosts里新加上这个域名。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#vi &#x2F;etc&#x2F;hosts </span><br><span class="line">127.0.0.1 centos.iyangyi.com</span><br></pre></td></tr></table></figure>
+
+<p>在vhost目录中新建一个conf server</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#centos.iyangyi.conf</span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name centos.iyangyi.com;</span><br><span class="line">    access_log &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;centos.iyangyi.access.log main;</span><br><span class="line">    error_log &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;centos.iyangyi.error.log error;</span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">        proxy_pass http:&#x2F;&#x2F;192.168.33.10;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重启下nginx:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<p>打开浏览器，就可以看到页面输出了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">centos apache2 index.html</span><br></pre></td></tr></table></figure>
+
+<p>当然。proxy 还有其他的参数，比如：<code>proxy_set_header</code> 用来设置header头部信息参数转发等，等用了可以仔细看看。</p>
+<h2 id="3-负载均衡"><a href="#3-负载均衡" class="headerlink" title="3.负载均衡"></a>3.负载均衡</h2><p>别被这个名字给吓住了，以为是什么很牛逼的东西的。其实不然。也很简单。</p>
+<p>先简单说下负载均衡是干嘛的？举个例子：我们的小网站，刚开始就一台nginx服务器，后来，随着业务量增大，用户增多，一台服务器已经不够用了，我们就又多加了几台服务器。那么这几台服务器如何调度？如何均匀的提供访问？这就是负载均衡。</p>
+<p>负载均衡的好处是可以集群多台机器一起工作，并且对外的IP 和 域名是一样的，外界看起来就好像一台机器一样。</p>
+<p>nginx 也刚好提供了强大而又简单的负载均衡功能。</p>
+<p>在第一节中，我详细讲了nginx的负载均衡模块<code>upstream</code>，负载均衡呢，主要是用这个模块。</p>
+<p>我们先用vagrant搭建一个centos虚拟机集群（附vagrantfile文件）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Vagrant.configure(2) do |config|</span><br><span class="line">  config.vm.define :web1 do |web1|</span><br><span class="line">    web1.vm.provider &quot;virtualbox&quot; do |v|</span><br><span class="line">          v.customize [&quot;modifyvm&quot;, :id, &quot;--name&quot;, &quot;web1&quot;, &quot;--memory&quot;, &quot;128&quot;]</span><br><span class="line">    end</span><br><span class="line">    web1.vm.box &#x3D; &quot;centos65&quot;</span><br><span class="line">    web1.vm.hostname &#x3D; &quot;web1&quot;</span><br><span class="line">    web1.vm.network :private_network, ip: &quot;192.168.33.11&quot;</span><br><span class="line">  end</span><br><span class="line">  config.vm.define :web2 do |web2|</span><br><span class="line">    web2.vm.provider &quot;virtualbox&quot; do |v|</span><br><span class="line">          v.customize [&quot;modifyvm&quot;, :id, &quot;--name&quot;, &quot;web2&quot;, &quot;--memory&quot;, &quot;128&quot;]</span><br><span class="line">    end</span><br><span class="line">    web2.vm.box &#x3D; &quot;centos65&quot;</span><br><span class="line">    web2.vm.hostname &#x3D; &quot;web2&quot;</span><br><span class="line">    web2.vm.network :private_network, ip: &quot;192.168.33.12&quot;</span><br><span class="line">  end</span><br><span class="line">  config.vm.define :web3 do |web3|</span><br><span class="line">    web3.vm.provider &quot;virtualbox&quot; do |v|</span><br><span class="line">          v.customize [&quot;modifyvm&quot;, :id, &quot;--name&quot;, &quot;web3&quot;, &quot;--memory&quot;, &quot;128&quot;]</span><br><span class="line">    end</span><br><span class="line">    web3.vm.box &#x3D; &quot;centos65&quot;</span><br><span class="line">    web3.vm.hostname &#x3D; &quot;web3&quot;</span><br><span class="line">    web3.vm.network :private_network, ip: &quot;192.168.33.13&quot;</span><br><span class="line">  end</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+
+<p>分别配置静态ip并且取名字：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">web1 192.168.33.11</span><br><span class="line">web2 192.168.33.12</span><br><span class="line">web3 192.168.33.13</span><br></pre></td></tr></table></figure>
+
+<p>然后，我们分别启动<code>vagrant ssh web1,web2,web3</code>,并且分别用<code>yum</code>简单安装好<code>apache</code>。并在<code>www</code>目录里面新建<code>index.html</code>，分别输出一句简单的<code>web1</code>、<code>web2</code>、<code>web3</code>。</p>
+<p>好，这个时候，我们在浏览器里输入对应的IP就会显示对应的<code>web*</code>名字了。</p>
+<p>ok，我们再来配置mac下的nginx，前面说过，主要是用nginx的<code>upstream</code>，我接下来要完成的需求就是当我访问<code>upstram.iyangyi.com</code>时，会自动的负载均衡到这3个服务器上去。</p>
+<p>先在hosts里加上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 upstream.iyangyi.com</span><br></pre></td></tr></table></figure>
+
+<p>好，按照惯例，新建一个<code>upstream.iyangyi.conf</code>的server配置文件。</p>
+<h3 id="基于-weight-权重的负载"><a href="#基于-weight-权重的负载" class="headerlink" title="基于 weight 权重的负载"></a>基于 weight 权重的负载</h3><p>先来一个最简单的，weight权重的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">upstream webservers&#123;</span><br><span class="line">    server 192.168.33.11 weight&#x3D;10;</span><br><span class="line">    server 192.168.33.12 weight&#x3D;10;</span><br><span class="line">    server 192.168.33.13 weight&#x3D;10;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name upstream.iyangyi.com;</span><br><span class="line">    access_log &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;upstream.iyangyi.access.log main;</span><br><span class="line">    error_log &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;upstream.iyangyi.error.log error;</span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">        proxy_pass http:&#x2F;&#x2F;webservers;</span><br><span class="line">        proxy_set_header  X-Real-IP  $remote_addr;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重启nginx <code>nginx -s reload</code>，打开浏览器输入<code>upstream.iyangyi.com</code>，不断刷新下，就能看到变化显示<code>web1,web2,web3</code>。说明我们的负载均衡起作用了。</p>
+<p>我们再打开web[1-3]的apache的访问日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vi &#x2F;var&#x2F;log&#x2F;httpd&#x2F;access_log</span><br><span class="line"></span><br><span class="line">192.168.33.1 - - [12&#x2F;May&#x2F;2015:10:47:02 +0000] &quot;GET &#x2F; HTTP&#x2F;1.0&quot; 200 5 &quot;-&quot; &quot;Mozilla&#x2F;5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;42.0.2311.90 Safari&#x2F;537.36&quot;</span><br></pre></td></tr></table></figure>
+
+<p>上面也显示出了ip为这台mac的地址。说明负载均衡已经生效。</p>
+<p>我们再来继续看几个参数 : <code>max_fails</code>和<code>fail_timeout</code></p>
+<p><strong>max_fails :</strong> 允许请求失败的次数，默认为1。当超过最大次数时，返回proxy_next_upstream 模块定义的错误。</p>
+<p><strong>fail_timeout :</strong> 在经历了max_fails次失败后，暂停服务的时间。max_fails可以和fail_timeout一起使用，进行健康状态检查。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server 192.168.33.11 weight&#x3D;1 max_fails&#x3D;2 fail_timeout&#x3D;30s;</span><br></pre></td></tr></table></figure>
+
+<p>所以这2个一起搭配使用，表示：<code>当失败2次的时候，就停止使30秒</code></p>
+<p>好，我们来继续做实验，将<code>web1</code>的httpd服务停掉，然后我们加上max_fails可以和fail_timeout。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo &#x2F;usr&#x2F;sbin&#x2F;apachectl stop</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">upstream webservers&#123;    server 192.168.33.11 weight&#x3D;10 max_fails&#x3D;2 fail_timeout&#x3D;30s;    server 192.168.33.12 weight&#x3D;10 max_fails&#x3D;2 fail_timeout&#x3D;30s;    server 192.168.33.13 weight&#x3D;10 max_fails&#x3D;2 fail_timeout&#x3D;30s;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重启nginx，然后刷新<code>upstream.iyangyi.com</code>，就能看到变化显示，只有<code>web2,web3</code>，<code>web1</code>没有了。</p>
+<p>看下日志，显示web1 挂了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2015&#x2F;05&#x2F;14 15:15:56 [error] 2381#0: *93 kevent() reported that connect() failed (61: Connection refused) while connecting to upstream, client: 127.0.0.1, server: upstream.iyangyi.com, request: &quot;GET &#x2F; HTTP&#x2F;1.1&quot;, upstream: &quot;http:&#x2F;&#x2F;192.168.33.11:80&#x2F;&quot;, host: &quot;upstream.iyangyi.com&quot;</span><br></pre></td></tr></table></figure>
+
+<p>我们再来继续看剩下几个参数 : <code>down</code>和<code>backup</code></p>
+<p><strong>down</strong> 表示这台机器暂时不参与负载均衡。相当于注释掉了。</p>
+<p><strong>backup</strong> 表示这台机器是备用机器，是其他的机器不能用的时候，这台机器才会被使用，俗称<code>备胎</code> O__O “…</p>
+<p>我们继续来做实验，改一下，先把<code>web1</code>改成<code>down</code>，然后将web3改成<code>backup</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">upstream webservers&#123;</span><br><span class="line">    server 192.168.33.11 down;</span><br><span class="line">    server 192.168.33.12 weight&#x3D;10 max_fails&#x3D;2 fail_timeout&#x3D;30s;</span><br><span class="line">    server 192.168.33.13 backup;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重启下nginx，然后刷新下，不管怎么刷新，都显示是<code>web2</code>。</p>
+<p>接下来，我们将web2 的服务停掉：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo &#x2F;usr&#x2F;sbin&#x2F;apachectl stop</span><br></pre></td></tr></table></figure>
+
+<p>然后，我们再刷新下网页，看下备胎web3是不是被启用了：果然，页面上输出了<code>web3</code>。</p>
+<h3 id="基于-ip-hash-的负载"><a href="#基于-ip-hash-的负载" class="headerlink" title="基于 ip_hash 的负载"></a>基于 ip_hash 的负载</h3><p>这种分配方式，每个请求按访问IP的hash结果分配，这样来自同一个IP的访客固定访问一个后端服务器，有效解决了动态网页存在的session共享问题。</p>
+<p>动手看怎么操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">upstream webservers&#123;    ip_hash;    server 192.168.33.11 weight&#x3D;1 max_fails&#x3D;2 fail_timeout&#x3D;30s;    server 192.168.33.12 weight&#x3D;1 max_fails&#x3D;2 fail_timeout&#x3D;30s;    server 192.168.33.13 down;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重启nginx，我们刷新，发现，再怎么刷，都是<code>web1</code>, 是固定的了。</p>
+<p>我们讲web2的权重该大一点：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">upstream webservers&#123;    ip_hash;    server 192.168.33.11 weight&#x3D;1 max_fails&#x3D;2 fail_timeout&#x3D;30s;    server 192.168.33.12 weight&#x3D;2 max_fails&#x3D;2 fail_timeout&#x3D;30s;    server 192.168.33.13 down;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样就会永远是web2了。</p>
+<p>我们试着把web2服务关掉，再刷新，就会输出<code>web1</code>了，已经切换过来了。</p>
+<p><strong>注意</strong><br>ip_hash 模式下，最好不要设置<code>weight</code>参数，因为你设置了，就相当于手动设置了，将会导致很多的流量分配不均匀。</p>
+<p>ip_hash模式下, <code>backup</code>参数不可用，加了会报错，为啥呢？因为，本身我们的访问就是固定的了，其实，备用已经不管什么作用了。</p>
+<h2 id="4-页面缓存"><a href="#4-页面缓存" class="headerlink" title="4.页面缓存"></a>4.页面缓存</h2><p>页面缓存也是日常web 开发中很重要的一个环节，对于一些页面，我们可以将其静态化，保存起来，下次请求时候，直接走缓存，而不用去请求反相代理服务器甚至数据库服务了。从而减轻服务器压力。</p>
+<p>nginx 也提供了简单而强大的下<code>重定向</code>，<code>反向代理</code>的缓存功能，只需要简单配置下，就能将指定的一个页面缓存起来。它的原理也很简单，就是匹配当前访问的url, hash加密后，去指定的缓存目录找，看有没有，有的话就说明匹配到缓存了。</p>
+<p>好。现在开始学习！</p>
+<p>我们先来看一下一个简单的页面缓存的配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">  proxy_cache_path &#x2F;data&#x2F;nginx&#x2F;cache levels&#x3D;1:2 keys_zone&#x3D;cache_zone:10m inactive&#x3D;1d max_size&#x3D;100m;</span><br><span class="line">  upstream myproject &#123;</span><br><span class="line">    .....</span><br><span class="line">  &#125;</span><br><span class="line">  server  &#123;</span><br><span class="line">    ....</span><br><span class="line">    location ~* \.php$ &#123;</span><br><span class="line">        proxy_cache cache_zone; #keys_zone的名字</span><br><span class="line">        proxy_cache_key $host$uri$is_args$args; #缓存规则</span><br><span class="line">        proxy_cache_valid any 1d;</span><br><span class="line">        proxy_pass http:&#x2F;&#x2F;127.0.0.1:8080;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面我们来一步一步说。用到的配置参数，主要是<code>proxy_*</code>前缀的很多配置。</p>
+<p>首先需要在<code>http</code>中加入<code>proxy_cache_path</code> 它用来制定缓存的目录以及缓存目录深度制定等。它的格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_cache_path path [levels&#x3D;number] keys_zone&#x3D;zone_name:zone_size [inactive&#x3D;time] [max_size&#x3D;size]; </span><br></pre></td></tr></table></figure>
+
+<p><code>1. path</code>是用来指定 缓存在磁盘的路径地址。比如：<code>/data/nginx/cache</code>。那以后生存的缓存文件就会存在这个目录下。</p>
+<p><code>2. levels</code>用来指定缓存文件夹的级数，可以是：<code>levels=1</code>, <code>levels=1:1</code>, <code>levels=1:2</code>, <code>levels=1:2:3</code> 可以使用任意的1位或2位数字作为目录结构分割符，如 <code>X</code>, <code>X:X</code>,或 <code>X:X:X</code> 例如: <code>2</code>, <code>2:2</code>, <code>1:1:2</code>，但是最多只能是三级目录。</p>
+<p>那这个里面的数字是什么意思呢。表示取hash值的个数。比如：现在根据请求地址localhost/index.php?a=4 用md5进行哈希，得到e0bd86606797639426a92306b1b98ad9</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">levels&#x3D;1:2&#96; 表示建立2级目录，把hash最后1位(9)拿出建一个目录，然后再把9前面的2位(ad)拿来建一个目录, 那么缓存文件的路径就是&#96;&#x2F;data&#x2F;nginx&#x2F;cache&#x2F;9&#x2F;d&#x2F;e0bd86606797639426a92306b1b98ad9</span><br></pre></td></tr></table></figure>
+
+<p>以此类推：<code>levels=1:1:2</code>表示建立3级目录，把hash最后1位(9)拿出建一个目录，然后再把9前面的1位(d)建一个目录, 最后把d前面的2位(8a)拿出来建一个目录 那么缓存文件的路径就是<code>/data/nginx/cache/9/d/8a/e0bd86606797639426a92306b1b98ad9</code></p>
+<p><code>3. keys_zone</code> 所有活动的key和元数据存储在共享的内存池中，这个区域用keys_zone参数指定。one指的是共享池的名称，10m指的是共享池的大小。</p>
+<p>注意每一个定义的内存池必须是不重复的路径，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_cache_path  &#x2F;data&#x2F;nginx&#x2F;cache&#x2F;one  levels&#x3D;1      keys_zone&#x3D;one:10m;proxy_cache_path  &#x2F;data&#x2F;nginx&#x2F;cache&#x2F;two  levels&#x3D;2:2    keys_zone&#x3D;two:100m;proxy_cache_path  &#x2F;data&#x2F;nginx&#x2F;cache&#x2F;three  levels&#x3D;1:1:2  keys_zone&#x3D;three:1000m;</span><br></pre></td></tr></table></figure>
+
+<p><code>4. inactive</code> 表示指定的时间内缓存的数据没有被请求则被删除，默认inactive为10分钟。<code>inactive=1d</code> 1小时。<code>inactive=30m</code>30分钟。</p>
+<p><code>5. max_size</code> 表示单个文件最大不超过的大小。它被用来删除不活动的缓存和控制缓存大小，当目前缓存的值超出max_size指定的值之后，超过其大小后最少使用数据（LRU替换算法）将被删除。<code>max_size=10g</code>表示当缓存池超过10g就会清除不常用的缓存文件。</p>
+<p><code>6. clean_time</code> 表示每间隔自动清除的时间。<code>clean_time=1m</code> 1分钟清除一次缓存</p>
+<p>好。说完了这个很重要的参数。我们再来说在<code>server</code>模块里的几个配置参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_cache&#96; 用来指定用哪个&#96;keys_zone&#96;的名字，也就是用哪个目录下的缓存。上面我们指定了三个&#96;one, two,three&#96; 。比如，我现在想用&#96;one&#96; 这个缓存目录 : &#96;proxy_cache one</span><br></pre></td></tr></table></figure>
+
+<p><code>proxy_cache_key</code> 这个其实蛮重要的，它用来指定生成hash的url地址的格式。他会根据这个key映射成一个hash值，然后存入到本地文件。<br><code>proxy_cache_key $host$uri</code>表示无论后面跟的什么参数，都会访问一个文件，不会再生成新的文件。<br>而如果<code>proxy_cache_key $is_args$args</code>，那么传入的参数 localhost/index.php?a=4 与localhost/index.php?a=44将映射成两个不同hash值的文件。</p>
+<p><code>proxy_cache_key</code> 默认是 <code>&quot;$scheme$host$request_uri&quot;</code>。但是一般我们会把它设置成：<code>$host$uri$is_args$args</code> 一个完整的url路径。</p>
+<p><code>proxy_cache_valid</code> 它是用来为不同的http响应状态码设置不同的缓存时间,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_cache_valid  200 302  10m;proxy_cache_valid  404      1m;</span><br></pre></td></tr></table></figure>
+
+<p>表示为http status code 为200和302的设置缓存时间为10分钟，404代码缓存1分钟。<br>如果只定义时间：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_cache_valid 5m;</span><br></pre></td></tr></table></figure>
+
+<p>那么只对代码为200, 301和302的code进行缓存。<br>同样可以使用any参数任何相响应：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_cache_valid  200 302 10m;proxy_cache_valid  301 1h;proxy_cache_valid  any 1m; #所有的状态都缓存1小时</span><br></pre></td></tr></table></figure>
+
+<p>好。缓存的基本一些配置讲完了。也大致知道了怎么使用这些参数。</p>
+<p>现在开始实战！我们启动一台vagrant linux 机器 web1 (192.168.33.11) 用作远程代理机器，就不搞复杂的负载均衡了。</p>
+<p>先在Mac本地加一个域名<code>cache.iyangyi.com</code>, 然后按照上面的配置在vhost 下新建一个<code>proxy_cache.iyangyi.conf</code> 文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">proxy_cache_path &#x2F;usr&#x2F;local&#x2F;var&#x2F;cache levels&#x3D;1:2 keys_zone&#x3D;cache_zone:10m inactive&#x3D;1d max_size&#x3D;100m;</span><br><span class="line">server  &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name cache.iyangyi.com;</span><br><span class="line">    access_log &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;cache.iyangyi.access.log main;</span><br><span class="line">    error_log &#x2F;usr&#x2F;local&#x2F;var&#x2F;log&#x2F;nginx&#x2F;cache.iyangyi.error.log error;</span><br><span class="line">    add_header X-Via $server_addr;</span><br><span class="line">    add_header X-Cache $upstream_cache_status;</span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">        proxy_set_header  X-Real-IP  $remote_addr;</span><br><span class="line">        proxy_cache cache_zone;</span><br><span class="line">        proxy_cache_key $host$uri$is_args$args;</span><br><span class="line">        proxy_cache_valid 200 304 1m;</span><br><span class="line">        proxy_pass http:&#x2F;&#x2F;192.168.33.11;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然缓存文件夹 <code>/usr/local/var/cache</code>得提前新建好。然后重启nginx。</p>
+<p>192.168.33.11 是apache服务器，在index.html页面就写了一个<code>web1</code>。</p>
+<p>我们打开浏览器访问 <code>cache.iyangyi.com</code> 。就能看到<code>web1</code>了。</p>
+<p>打开<code>审核元素</code>或者<code>firebug</code>。看<code>network网络请求</code>选项，我们可以看到，Response Headers，在这里我们可以看到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">X-Cache:MISS</span><br><span class="line">X-Via:127.0.0.1</span><br></pre></td></tr></table></figure>
+
+<p>X-cache 为 <code>MISS</code> 表示未命中，请求被传送到后端。y因为是第一次访问，没有缓存，所以肯定是未命中。我们再刷新下，就发现其变成了<code>HIT</code>, 表示命中。它还有其他几种状态：</p>
+<blockquote>
+<p>MISS 未命中，请求被传送到后端<br>HIT 缓存命中<br>EXPIRED 缓存已经过期请求被传送到后端<br>UPDATING 正在更新缓存，将使用旧的应答<br>STALE 后端将得到过期的应答<br>BYPASS 缓存被绕过了</p>
+</blockquote>
+<p>我们再去看看缓存文件夹 <code>/usr/local/var/cache</code>里面是否有了文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cache git:(master) cd a&#x2F;13</span><br><span class="line">➜  13 git:(master) ls</span><br><span class="line">5bd1af99bcb0db45c8bd601d9ee9e13a</span><br><span class="line">➜  13 git:(master) pwd</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;var&#x2F;cache&#x2F;a&#x2F;13</span><br></pre></td></tr></table></figure>
+
+<p>已经生成了缓存文件。</p>
+<p>我们在url 后面随便加一个什么参数，看会不会新生成一个缓存文件夹及文件： <code>http://cache.iyangyi.com/?w=ww55</code>。因为我们使用的生成规则是全部url转换(<code>proxy_cache_key $host$uri$is_args$args</code>;)</p>
+<p>查看 X-cache 为 <code>MISS</code>，再刷新 ，变成<code>HIT</code>。再去看一下缓存文件夹 <code>/usr/local/var/cache</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~cache git:(master) ls</span><br><span class="line">4 a</span><br></pre></td></tr></table></figure>
+
+<p>果然又生成了一个4文件夹。</p>
+<p>参考资料：<a target="_blank" rel="noopener" href="http://freeloda.blog.51cto.com/2033581/1288553">http://freeloda.blog.51cto.com/2033581/1288553</a></p>
+<p>前面几节，陆陆续续的说了nginx平时做的大部分工作。第3篇主要讲还是蛮重要的<code>URL路由重写</code>和<code>读写分离</code>。</p>
+<h2 id="nginx中的-location-正则模块"><a href="#nginx中的-location-正则模块" class="headerlink" title="nginx中的 location 正则模块"></a>nginx中的 location 正则模块</h2><p>用过apache的知道，apache也是可以配置URL重写的，我之前一篇中也详细的写过：<a target="_blank" rel="noopener" href="https://zybuluo.com/phper/note/73726">apache的虚拟域名rewrite配置以及.htaccess的使用</a>。</p>
+<p>这一小节，主要来学习nginx中的URL重写怎么做。url重写模块，主要是在<code>location</code>模块面来实现，我们一点一点的看。</p>
+<p>首先看下<code>location 正则匹配</code>的使用。</p>
+<p>还记得之前是如何用<code>location</code>来定位<code>.php</code>文件的吗?</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass   127.0.0.1:9000; </span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        include        fastcgi.conf;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们用<code>~</code>来表示location开启正则匹配, 这样：<code>location ~</code>。</p>
+<p>还可以用这个来匹配静态资源，缓存它们，设置过期时间：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location ~ .*\.(gif|jpg|jpeg|bmp|png|ico|txt|mp3|mp4|swf)&#123;</span><br><span class="line">    expires 15d;</span><br><span class="line">&#125;</span><br><span class="line">location ~ .*\.(css|js)&#123;</span><br><span class="line">    expires 12h;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>expires</code> 用来设置HTTP应答中的<code>Expires</code>和<code>Cache-Control</code>的头标时间，来告诉浏览器访问这个静态文件时，不用再去请求服务器，直接从本地缓存读取就可以了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">语法： expires [time|epoch|max|off]</span><br><span class="line">默认值： expires off</span><br><span class="line">作用域： http, server, location</span><br></pre></td></tr></table></figure>
+
+<p>可以在time值中使用正数或负数。“Expires”头标的值将通过当前系统时间加上您设定的 time 值来获得。</p>
+<p>可以设置的参数如下：</p>
+<p><code>epoch</code> 指定“Expires”的值为 1 January, 1970, 00:00:01 GMT。<br><code>max</code> 指定“Expires”的值为 31 December 2037 23:59:59 GMT，“Cache-Control”的值为10年。<br><code>-1</code> 指定“Expires”的值为 服务器当前时间 -1s,即永远过期<br><code>负数</code>：Cache-Control: no-cache<br><code>正数或零</code>：Cache-Control: max-age = #, # 会转换为指定时间的秒数。比如：<code>1d</code>、<code>2h</code>、<code>3m</code>。<br><code>off</code> 表示不修改“Expires”和“Cache-Control”的值</p>
+<p>比如再看个例子:</p>
+<p>控制图片等过期时间为30天</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location~ \.(gif|jpg|jpeg|png|bmp|ico)$ &#123;</span><br><span class="line">        expires 30d;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们还可以控制哪一个文件目录的时间，比如控制匹配/resource/或者/mediatorModule/里所有的文件缓存设置到最长时间。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location ~ &#x2F;(resource|mediatorModule)&#x2F; &#123;</span><br><span class="line">        root    &#x2F;opt&#x2F;demo;</span><br><span class="line">        expires max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实战一下。我们设置下过期时间，然后用chrome看下http头部情况。</p>
+<p><img src="https://image01.zhang-zhe.cn/20190429135953.png" loading="lazy"></p>
+<p>我把这张图片的<code>expires</code>设置为30天，我们看图中的<code>cache-control</code>和<code>Expires</code>看到了，有30天的缓存了。说明生效了。我们再看下nginx的访问日志：</p>
+<p><img src="https://image01.zhang-zhe.cn/20190429140016.png" loading="lazy"></p>
+<p>看下code码，都是304，表示未修改，告诉浏览器直接读本地的。也就是说缓存生效了。</p>
+<h2 id="URL重写模块（Rewrite）"><a href="#URL重写模块（Rewrite）" class="headerlink" title="URL重写模块（Rewrite）"></a>URL重写模块（Rewrite）</h2><p>重写模块与很多模块一起使用。先看一下是怎么用的，看2个例子，然后我们再一点一点讲每个的使用方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F;download&#x2F; &#123;</span><br><span class="line">  if ($forbidden) &#123;</span><br><span class="line">    return   403;</span><br><span class="line">  &#125;</span><br><span class="line">  if ($slow) &#123;</span><br><span class="line">    limit_rate  10k;</span><br><span class="line">  &#125;</span><br><span class="line">  rewrite  ^&#x2F;(download&#x2F;.*)&#x2F;media&#x2F;(.*)\..*$  &#x2F;$1&#x2F;mp3&#x2F;$2.mp3    break;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">    root   html;</span><br><span class="line">    index  index.html index.htm;</span><br><span class="line">    rewrite ^&#x2F;bbs&#x2F;(.*)$ http:&#x2F;&#x2F;192.168.18.201&#x2F;forum&#x2F;$1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面2个例子就是利用<code>rewrite</code>来完成URL重写的。我们慢慢来看它的用法。</p>
+<h3 id="break"><a href="#break" class="headerlink" title="break"></a>break</h3><p>break 和变成语言中的用法一样，就是跳出某个逻辑。</p>
+<p>语法：break<br>默认值：none<br>使用字段：server, location, if</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (!-f $request_filename) &#123;  break;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面这个例子就是在<code>if</code>里面使用<code>break</code>,意思是如果访问的文件名不存在，就跳出。后续会有更多的例子。</p>
+<h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><p>语法：if (condition) { … }<br>默认值：none<br>使用字段：server, location</p>
+<p>if 判断一个条件，如果条件成立，则后面的大括号内的语句将执行，相关配置从上级继承。</p>
+<p>可以在判断语句中指定下列值：</p>
+<blockquote>
+<ul>
+<li>一个变量的名称；不成立的值为：空字符传”“或者一些用“0”开始的字符串。</li>
+<li>一个使用=或者!=运算符的比较语句。</li>
+<li>使用符号<del>*和</del>模式匹配的正则表达式：</li>
+<li>~为区分大小写的匹配。</li>
+<li>~*不区分大小写的匹配（firefox匹配FireFox）。</li>
+<li>!<del>和!</del>*意为“不匹配的”。</li>
+<li>使用-f和!-f检查一个文件是否存在。</li>
+<li>使用-d和!-d检查一个目录是否存在。</li>
+<li>使用-e和!-e检查一个文件，目录或者软链接是否存在。</li>
+<li>使用-x和!-x检查一个文件是否为可执行文件。</li>
+</ul>
+</blockquote>
+<p>我们一一来举例看看。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if ($http_user_agent ~ MSIE) &#123;  rewrite  ^(.*)$  &#x2F;msie&#x2F;$1  break;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>$http_user_agent</code>变量获取浏览器的agent，使用<code>~</code> 来匹配大小写<br>用户如果使用的IE 浏览器，就执行if 里面的操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if ($request_method &#x3D; POST ) &#123;  return 405;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>$request_method</code>变量获取请求的方法，使用<code>=</code>来判断是否等于POST 。如果复合，就执行if 里面的操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (!-f $request_filename) &#123;  break;  proxy_pass  http:&#x2F;&#x2F;127.0.0.1;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>$request_filename</code>变量获取请求的文件名，使用<code>!-f</code>来匹配文件，如果不是一个文件名，就执行if 里面的逻辑。</p>
+<h3 id="return"><a href="#return" class="headerlink" title="return"></a>return</h3><p>语法：return code<br>默认值：none<br>使用字段：server, location, if</p>
+<p>这个指令结束执行配置语句并为客户端返回状态代码，可以使用下列的值：204，400，402-406，408，410, 411, 413, 416与500-504。此外，非标准代码444将关闭连接并且不发送任何的头部。</p>
+<h3 id="rewrite"><a href="#rewrite" class="headerlink" title="rewrite"></a>rewrite</h3><p>语法：rewrite regex replacement flag<br>默认值：none<br>使用字段：server, location, if</p>
+<p>rewrite用来重写url,有3个位置：</p>
+<blockquote>
+<p>regex 表示用来匹配的正则<br>replacement 表示用来替换的<br>flag 是尾部的标记：</p>
+</blockquote>
+<p>flag可以是以下的值：</p>
+<blockquote>
+<ul>
+<li>last - url重写后，马上发起一个新的请求，再次进入server块，重试location匹配，超过10次匹配不到报500错误，地址栏url不变</li>
+<li>break - url重写后，直接使用当前资源，不再执行location里余下的语句，完成本次请求，地址栏url不变</li>
+<li>redirect - 返回302临时重定向，url会跳转，爬虫不会更新url。</li>
+<li>permanent - 返回301永久重定向。url会跳转。爬虫会更新url。</li>
+<li>为空 - URL 不会变，但是内容已经变化，也是永久性的重定向</li>
+</ul>
+</blockquote>
+<p>上面的正则表达式的一部分可以用圆括号，方便之后按照顺序用$1-$9来引用。</p>
+<p>我们来看几个例子：</p>
+<p>我们需要将/photos/123456重写成/path/to/photos/12/1234/123456.png</p>
+<p>可以这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rewrite  &quot;&#x2F;photos&#x2F;([0-9] &#123;2&#125;)([0-9] &#123;2&#125;)([0-9] &#123;2&#125;)&quot; &#x2F;path&#x2F;to&#x2F;photos&#x2F;$1&#x2F;$1$2&#x2F;$1$2$3.png;</span><br></pre></td></tr></table></figure>
+
+<p>下面是一些简单的常见的重写。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rewrite ^&#x2F;js&#x2F;base.core.v3.js &#x2F;js&#x2F;base.core.v3.dev.js redirect;</span><br><span class="line">rewrite ^&#x2F;js&#x2F;comment.frame.js &#x2F;js&#x2F;comment.frame.dev.js redirect;</span><br><span class="line">rewrite ^&#x2F;live-static&#x2F;(.*)$ http:&#x2F;&#x2F;live.bilibili.com&#x2F;public&#x2F;$1 last;</span><br></pre></td></tr></table></figure></div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"></div><div style="display:inline-block"></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>澈崽子</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://zeozzz.github.com/2019/04/29/30/" title="Nginx的配置、虚拟主机、负载均衡和反向代理">https://zeozzz.github.com/2019/04/29/30/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2019/04/30/31/" rel="prev" title="校招面试知识点复习之计算机网络"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">校招面试知识点复习之计算机网络</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2019/04/29/29/" rel="next" title="NGINX入门理解"><span class="post-nav-text">NGINX入门理解</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="http://www.beian.miit.gov.cn" target="_blank"></a></div><div class="copyright"><span>&copy; 2015 – 2020 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 澈崽子</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.0.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v0.9.5</span></div><div class="live_time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  window.setTimeout(blog_live_time, 1000);
+  const start = new Date('2015-09-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div></div><script defer src="/js/utils.js"></script><script defer src="/js/hexo-theme-yun.js"></script></body></html>

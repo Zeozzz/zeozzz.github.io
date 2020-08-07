@@ -1,0 +1,119 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="澈崽子"><meta name="copyright" content="澈崽子"><meta name="generator" content="Hexo 5.0.0"><meta name="theme" content="hexo-theme-yun"><title>揭密华为防火墙NAT地址复用专利技术 | 澈崽子 | 家有网工初长成</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="none" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.19/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_stqaphw3j4.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true}
+    ]
+  });
+});</script><link class="aplayer-style-marker" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script class="aplayer-script-marker" src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" defer></script><script class="meting-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js" defer></script><link rel="shortcut icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"root":"/","title":"澈崽子的小窝","version":"0.9.5","anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><meta name="description" content="提到多对多、多对一的NAT（多个私网地址转换为多个或一个公网地址），就不能回避公网地址利用率的问题。 “华为防火墙一个公网IP突破了65535端口限制，理论上能够无限制进行NAT转换”这个结论在江湖上已经广为流传，接触过华为防火墙的兄弟可能早有耳闻，几天前提起源NAT也有兄弟跳起来指出。这正是华为防火墙十年前申请的一项专利技术的应用。至此处，原谅强叔回忆下此专利发明人的大牛风采。几前路遇隐居的大牛">
+<meta property="og:type" content="article">
+<meta property="og:title" content="揭密华为防火墙NAT地址复用专利技术">
+<meta property="og:url" content="https://zeozzz.github.com/2019/04/24/18/index.html">
+<meta property="og:site_name" content="澈崽子 | 家有网工初长成">
+<meta property="og:description" content="提到多对多、多对一的NAT（多个私网地址转换为多个或一个公网地址），就不能回避公网地址利用率的问题。 “华为防火墙一个公网IP突破了65535端口限制，理论上能够无限制进行NAT转换”这个结论在江湖上已经广为流传，接触过华为防火墙的兄弟可能早有耳闻，几天前提起源NAT也有兄弟跳起来指出。这正是华为防火墙十年前申请的一项专利技术的应用。至此处，原谅强叔回忆下此专利发明人的大牛风采。几前路遇隐居的大牛">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://support.huawei.com/ecommunity/showimage-10082245-10118533-2736ab01a18fa49475f497edb28833c8.jpg">
+<meta property="og:image" content="http://support.huawei.com/ecommunity/showimage-10082239-10118533-c608346f0b55016f5217be1e6c915fc2.jpg">
+<meta property="og:image" content="http://support.huawei.com/ecommunity/showimage-10082241-10118533-d4a7ce46af7a521c3521c79d21375cf5.jpg">
+<meta property="article:published_time" content="2019-04-24T08:03:17.000Z">
+<meta property="article:modified_time" content="2019-04-24T08:04:18.508Z">
+<meta property="article:author" content="澈崽子">
+<meta property="article:tag" content="安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://support.huawei.com/ecommunity/showimage-10082245-10118533-2736ab01a18fa49475f497edb28833c8.jpg"></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script defer src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button sidebar-nav-active" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel sidebar-panel-active" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="澈崽子"><img width="96" loading="lazy" src="/avatar.jfif" alt="澈崽子"></a><div class="site-author-name"><a href="/about/">澈崽子</a></div><a class="site-name" href="/about/site.html">澈崽子 | 家有网工初长成</a><sub class="site-subtitle"></sub><div class="site-desciption">念念不忘 必有回响</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">74</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">29</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">36</span></a></div><a class="site-state-item hty-icon-button" href="/null" title="常用文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 群" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Zeozzz" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/linche521chn" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/zeozzz/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=46666755" title="网易云音乐" target="_blank" style="color:#C20C0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/janz1995chn/activities" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/15054940" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/zeozzz" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/zeozzz" title="Telegram Channel" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:zhangzhe@live.in" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.now.sh/" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-send-plane-2-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://huawei.com" title="华为文档" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-huawei-line"></use></svg></a></div></div><div class="sidebar-panel" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content">此文章未包含目录</div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/04/24/18/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">揭密华为防火墙NAT地址复用专利技术</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-04-24 16:03:17" itemprop="dateCreated datePublished" datetime="2019-04-24T16:03:17+08:00">2019-04-24</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-tag"><a class="tag" href="/tags/%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">安全</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>提到多对多、多对一的NAT（多个私网地址转换为多个或一个公网地址），就不能回避公网地址利用率的问题。 “华为防火墙一个公网IP突破了65535端口限制，理论上能够无限制进行NAT转换”这个结论在江湖上已经广为流传，接触过华为防火墙的兄弟可能早有耳闻，几天前提起源NAT也有兄弟跳起来指出。这正是华为防火墙十年前申请的一项专利技术的应用。<br>至此处，原谅强叔回忆下此专利发明人的大牛风采。几前路遇隐居的大牛下山，强叔敬仰地双手抱拳：“哥你已不在江湖多年，江湖中仍然流传着哥的传说。”――强叔还被称为小强之时，大牛已经名满防火墙。此时大牛仍然腼腆一笑，道声旧日小事飘然去也，唯强叔口水流了一地。之后，强叔又马不停蹄至襄阳，请教如今的NAT传人后，才算对此专利解读稍有眉目。围观兄弟且看，强叔接下来揭密华为防火墙NAT地址复用技术。 </p>
+<p><img src="http://support.huawei.com/ecommunity/showimage-10082245-10118533-2736ab01a18fa49475f497edb28833c8.jpg" alt="img" loading="lazy"></p>
+<p>在《源NAT》一节，强叔提到：“防火墙在应用源NAT功能时就是从地址池中挑选出一个公网IP，然后对私网IP进行转换。<strong>挑选哪个公网IP是随机的，**</strong>和配置时的顺序、IP大小等因素都没有关系。”**这其实就是我们看到的外部招式，所谓内功心法不外露的。</p>
+<p>那么在进行源NAT时，究竟是怎样从地址池中挑选出公网IP地址资源进行分配的呢？<br>请允许强叔引入Hash算法的概念，这应该是大家常听说的一种广泛应用于程序编写的方法。一句话解释，就是把一种任意长度的信息进行压缩映射，成为某一固定长度的信息。例如，把3000个私网IP映射成100个公网IP，也就是从地址池挑选出公网IP地址资源进行分配的过程，资料中也偶尔会提到的“基于源地址Hash”。</p>
+<p>Hash的具体规则或者说算法是什么呢？很灵活，自行设定，但是根据要达成的目标和计算结果，可以优选。在这里，我们使用的算法也比较简单取模运算。<br>估计很多不写代码兄弟的数学都已经还给老师了，但是提起求余运算应该都知道，思路如下：<br><img src="http://support.huawei.com/ecommunity/showimage-10082239-10118533-c608346f0b55016f5217be1e6c915fc2.jpg" alt="img" loading="lazy"></p>
+<p><strong>示例如下：</strong><br>内网用户10.1.1.1-10.10.10.1，NAT地址池202.169.1.1-202.169.1.5<br>X=5<br>Y=10.1.1.1<br>10.1.1.1—–&gt;00001010 00000001 00000001 00000001—–&gt;167837953<br>不用计算可目测余数为3，选择地址池的第四个资源即202.169.1.4。</p>
+<p>至此，内网用户的源IP地址已经可以全部被分配了对应的地址池中的公网IP地址资源，并且保证了每个内网的IP地址每次访问外部网络时始终转换为同一个公网IP地址。<br>按照上述运算后，一部分内网用户就会被分配相同的公网IP地址资源。</p>
+<p>下一步，我们来研究下如何分配端口资源。<br>其实强叔对于将复杂一点的数学运算表达清楚没有太多信心，决定到最后不得已的时候再引出来，下面端口分配先从防火墙的实现原理讲起，定性区分出端口分配带来的影响。<br>在《源NAT》一节中，我们已介绍了NAPT情况建立的会话表。<br>例如，内网10.1.1.1和10.1.1.2用户分别ping 220.180.20.50服务器，在USG上通过公网地址202.169.1.1进行NAT转换，查询会话表显示如下：<br><USG9000> display firewall session table<br> Current total sessions: 2<br> Slot: 5 CPU: 1<br> icmp VPN: public –&gt; public 10.1.1.1:1280[202.169.1.1:10298] –&gt; 220.180.20.50:2048<br> icmp VPN: public –&gt; public 10.1.1.2:1280[202.169.1.1:6103] –&gt; 220.180.20.50:2048<br>由于内网不同用户的IP地址和端口必不相同，仅使用“源地址+源端口”二元组信息在USG上即可标识一条数据流，来建立正向NAT地址转换。而进行反向地址还原时，使用“源地址+源端口+目的地址+目的端口+协议”五元组信息唯一标识一条数据流。<br>那么，根据会话表实现机制，只要内网不同用户访问“目的地址+目的端口+协议”三元组中的任一参数不同时，即使将地址池中同一公网地址的同一端口同时分配给内网多个用户时，也不会产生冲突。<br>示例如下：</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>内网源地址</th>
+<th>内网源端口</th>
+<th>NAT地址</th>
+<th>NAT端口</th>
+<th>目的地址</th>
+<th>目地端口</th>
+<th>协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>10.1.1.1</td>
+<td>80</td>
+<td>202.169.1.1</td>
+<td>8080</td>
+<td><a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a></td>
+<td>80</td>
+<td>http</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10.1.1.2</td>
+<td>80</td>
+<td>202.169.1.1</td>
+<td>8080</td>
+<td><a target="_blank" rel="noopener" href="http://www.sohu.com/">www.sohu.com</a></td>
+<td>80</td>
+<td>http</td>
+</tr>
+</tbody></table>
+<p>因此，只要内网不同用户访问“目的地址+目的端口+协议”三元组中的任一参数不同时，唯一的NAT地址和端口可以反复利用，不受65535端口的限制。此时无论端口如何分配，都不会产生问题。</p>
+<p>围观兄弟接下来肯定就有问题等着强叔了：在地址池<strong>只有一个公网IP</strong>情况下，如果访问<strong>相同的</strong>“目的地址+目的端口+协议”三元组时怎么办？现实可能就是这么残酷……<br>在内网不同用户访问相同的“目的地址+目的端口+协议”三元组时，不能被分配给相同的NAT地址和端口资源，这是因为一旦完全相同，访问的目的主机会发现出现同样的“源地址+源端口”访问本主机的同一“目的地址+端口+协议”，目的主机无法正确回应甚至可能会判定为受到攻击。</p>
+<p>关键点来了！因此，保证内网不同用户、访问相同的“目的地址+目的端口+协议”三元组时，不能被分配到相同地址的相同端口资源是关键。这就要引入冲突检测机制。<br>其实在分配端口的法则上，我们仍然使用Hash算法，使得在内存占用合理情况下、尽可能保证被分配到相同公网地址的用户、其被分配的端口尽量不一致，简化的基本思路如下：<img src="http://support.huawei.com/ecommunity/showimage-10082241-10118533-d4a7ce46af7a521c3521c79d21375cf5.jpg" alt="img" loading="lazy"></p>
+<p>这就保证了，不同内网户访问相同的 “目的地址+目的端口+协议”三元组，不会被分配到相同的NAT地址的端口资源。而且会话表是会实时老化的，被分配过的端口在会话表老化后会重新被利用，因此，概率上端口也不会受到限制。<br>除非最极端的情况发生：超过64k的内网用户，同一时刻、向外网同一目的主机的同一端口、采用同样协议发起链接。不过兄弟们觉不觉得很面熟，这看起来就是发起了传统而典型的DDoS攻击了吧-_-</p>
+<p>好了，揭密到此，强叔已经全盘兜出了，大家是否已经了然于胸了？<br>其实原专利本身是晦涩难懂的，华为防火墙也在这么多年的发展中进行着不断演进，强叔只是对其基本实现原理进行了简单大意解读。若有对原专利感兴趣的小伙伴可自行谷歌：CN1567907A 一种网络地址资源的利用方法。</p>
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"></div><div style="display:inline-block"></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>澈崽子</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://zeozzz.github.com/2019/04/24/18/" title="揭密华为防火墙NAT地址复用专利技术">https://zeozzz.github.com/2019/04/24/18/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2019/04/24/19/" rel="prev" title="交换机的带宽线速概念"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">交换机的带宽线速概念</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2019/04/24/17/" rel="next" title="Linux nc命令详解"><span class="post-nav-text">Linux nc命令详解</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="http://www.beian.miit.gov.cn" target="_blank"></a></div><div class="copyright"><span>&copy; 2015 – 2020 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 澈崽子</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.0.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v0.9.5</span></div><div class="live_time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  window.setTimeout(blog_live_time, 1000);
+  const start = new Date('2015-09-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div></div><script defer src="/js/utils.js"></script><script defer src="/js/hexo-theme-yun.js"></script></body></html>

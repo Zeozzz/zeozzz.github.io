@@ -1,0 +1,152 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="澈崽子"><meta name="copyright" content="澈崽子"><meta name="generator" content="Hexo 5.0.0"><meta name="theme" content="hexo-theme-yun"><title>为什么在12306买火车票要装根证书？ | 澈崽子 | 家有网工初长成</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="none" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.19/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_stqaphw3j4.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true}
+    ]
+  });
+});</script><link class="aplayer-style-marker" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script class="aplayer-script-marker" src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" defer></script><script class="meting-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js" defer></script><link rel="shortcut icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"root":"/","title":"澈崽子的小窝","version":"0.9.5","anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><meta name="description" content="12306主页上有一段很显眼的文字—–“为保障您顺畅购票，请下载安装根证书。”这段文字和12306很多的其他问题一起成为网友诟病12306的话题，但是这个看似安全的根证书确可能会成为让12306用户们的安全受到严重威胁的东西。 　　为什么在12306上买火车票要装根证书？想要回答这个问题，那么我们就必须先要提前回答说几个定义： 　　电脑在与服务器交换敏感信息时会使用一种叫做SSL的加密方式。在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为什么在12306买火车票要装根证书？">
+<meta property="og:url" content="https://zeozzz.github.com/2019/04/18/5/index.html">
+<meta property="og:site_name" content="澈崽子 | 家有网工初长成">
+<meta property="og:description" content="12306主页上有一段很显眼的文字—–“为保障您顺畅购票，请下载安装根证书。”这段文字和12306很多的其他问题一起成为网友诟病12306的话题，但是这个看似安全的根证书确可能会成为让12306用户们的安全受到严重威胁的东西。 　　为什么在12306上买火车票要装根证书？想要回答这个问题，那么我们就必须先要提前回答说几个定义： 　　电脑在与服务器交换敏感信息时会使用一种叫做SSL的加密方式。在">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.williamlong.info/upload/3461_1.jpg">
+<meta property="og:image" content="https://www.williamlong.info/upload/3461_2.jpg">
+<meta property="og:image" content="https://www.williamlong.info/upload/3461_3.jpg">
+<meta property="og:image" content="https://www.williamlong.info/upload/3461_4.jpg">
+<meta property="og:image" content="https://www.williamlong.info/upload/3461_5.jpg">
+<meta property="og:image" content="https://www.williamlong.info/upload/3461_6.jpg">
+<meta property="og:image" content="https://www.williamlong.info/upload/3461_7.jpg">
+<meta property="og:image" content="https://www.williamlong.info/upload/3461_8.jpg">
+<meta property="og:image" content="https://www.williamlong.info/upload/3461_9.jpg">
+<meta property="og:image" content="https://www.williamlong.info/upload/3461_10.jpg">
+<meta property="og:image" content="https://www.williamlong.info/upload/3461_11.jpg">
+<meta property="article:published_time" content="2019-04-18T06:50:46.000Z">
+<meta property="article:modified_time" content="2019-04-18T08:18:28.121Z">
+<meta property="article:author" content="澈崽子">
+<meta property="article:tag" content="安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.williamlong.info/upload/3461_1.jpg"></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script defer src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button sidebar-nav-active" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel sidebar-panel-active" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="澈崽子"><img width="96" loading="lazy" src="/avatar.jfif" alt="澈崽子"></a><div class="site-author-name"><a href="/about/">澈崽子</a></div><a class="site-name" href="/about/site.html">澈崽子 | 家有网工初长成</a><sub class="site-subtitle"></sub><div class="site-desciption">念念不忘 必有回响</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">74</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">29</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">36</span></a></div><a class="site-state-item hty-icon-button" href="/null" title="常用文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 群" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Zeozzz" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/linche521chn" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/zeozzz/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=46666755" title="网易云音乐" target="_blank" style="color:#C20C0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/janz1995chn/activities" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/15054940" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/zeozzz" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/zeozzz" title="Telegram Channel" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:zhangzhe@live.in" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.now.sh/" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-send-plane-2-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://huawei.com" title="华为文档" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-huawei-line"></use></svg></a></div></div><div class="sidebar-panel" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content">此文章未包含目录</div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/04/18/5/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">为什么在12306买火车票要装根证书？</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-04-18 14:50:46" itemprop="dateCreated datePublished" datetime="2019-04-18T14:50:46+08:00">2019-04-18</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/SSL/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">SSL</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag" href="/tags/%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">安全</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>　　12306主页上有一段很显眼的文字—–“为保障您顺畅购票，请下载安装根证书。”这段文字和12306很多的其他问题一起成为网友诟病12306的话题，但是这个看似安全的根证书确可能会成为让12306用户们的安全受到严重威胁的东西。</p>
+<p>　　为什么在12306上买火车票要装根证书？想要回答这个问题，那么我们就必须先要提前回答说几个定义：</p>
+<p>　　电脑在与服务器交换敏感信息时会使用一种叫做SSL的加密方式。在很多情况下，交换敏感信息必须要通过这个方式来进行。包括12306在内，淘宝、京东等在交换敏感信息的时候都使用了SSL进行加密。</p>
+<p>　　那么，我们怎么知道网站是否使用了SSL加密呢？最简单的办法就是看看地址栏——如果网址前面写的是“https://”，那么这个页面就是使用SSL加密的。这意味着你访问的页面是安全的并且可以用来交换敏感信息。如果你使用的是Internet Explorer 7或者以上版本浏览器，你应该能在浏览器地址栏的最右边看到一把小锁头。就像下图所示的那样。点开这把小锁头，就能看到关于https的信息。</p>
+<p><img src="https://www.williamlong.info/upload/3461_1.jpg" alt="为什么在12306上买火车票要装根证书" loading="lazy"></p>
+<p>　　用其他浏览器呢？现在流行的浏览器中，全部都会标示出来该网页是使用了https以防止窃听和用户的个人信息安全的。比如下边的图就是在Firefox中使用https浏览维基百科的画面。</p>
+<p><img src="https://www.williamlong.info/upload/3461_2.jpg" alt="为什么在12306上买火车票要装根证书" loading="lazy"></p>
+<p>　　但是，谁又能保证https的安全呢？这里就又是一个概念：数字证书认证机构。它的译名很多，不过大致意思对就可以了。英文Certificate Authority，经常被缩写为CA。下文中也使用“CA”来称呼数字证书认证机构。</p>
+<p>　　CA是一个机构——打个比方，这就像是信用卡一样。一个人向银行申请信用卡，就像网站向CA申请证书。CA觉得网站的信用合格，就签发SSL证书；银行觉得申请者的信用合格，就签发信用卡。等等，什么又是“SSL证书”呢？这就是CA签发给网站用以证明网站身份的“信用卡”。有了SSL证书，加密网页才能被信任。当你在访问一个被https加密的网页时，网页会出示一份证书，这份证书有助于用户信任这个网站。没有正规CA签发的证书的网站是不会受到浏览器的信任的——就算你用了SSL来加密也没用。</p>
+<p>　　再看看前面的两张图片。第一章支付宝的截图中，CA就是：<em>VeriSign Class 3 Public Primary Certification Authority - G5</em></p>
+<p>　　第二章维基百科的截图中，CA是：<em>DigiCert Inc</em></p>
+<p>　　浏览器又上哪知道CA是正规的呢？那就是根证书库，这是一个操作系统认为可以被信任的CA的名单。几乎每个能上网操作系统（甚至包括诺基亚最弱智的S40系统）都有一个。在这里用Mac做示例。Mac的根证书库在：</p>
+<p>　　<em>Finder-应用程序-其他（提示：OS X Lion或者以下操作系统叫“实用工具”）-钥匙串访问</em></p>
+<p>　　然后在最左边找“系统根证书”，点进去便是。看到的应该如下图所示。</p>
+<p><img src="https://www.williamlong.info/upload/3461_3.jpg" alt="为什么在12306上买火车票要装根证书" loading="lazy"></p>
+<p>　　可以试着找一下*VeriSign Class 3 Public Primary Certification Authority - G5—–*肯定能找到！每次浏览器浏览https网页时，都会把网站出示的证书在这个库里面找一圈，能找到就OK，找不到的话，就证明你这个CA是不可靠的！</p>
+<p>　　SSL加密的目的除了保证用户信息在传输过程中的安全外，还保障了服务器的身份。有些简单的SSL证书仅仅需要用该网站域名的邮箱向CA发封邮件就能签发了——不过如果是一个组织、团体、基金会或者盈利性机构（尤其是类似于支付宝或者PayPal的网络支付服务），那么SSL证书的签发就会变得十分繁琐。网站需要提供大量的文件以证明该网站是可靠的。如果能够证明该网站是可靠的，CA才会给签发证书。</p>
+<p>　　还有一种证书被称作EV SSL证书（Extended Validation SSL），这种证书遵循全球统一的严格身份验证标准颁发的SSL证书，是目前业界最高安全级别的SSL证书。这种证书显示起来，就是俗称的绿色地址栏证书。在IE 7和以上IE浏览器便会出现绿色地址栏，并且滚动展示该网站的信息和CA信息。如下图所示。</p>
+<p><img src="https://www.williamlong.info/upload/3461_4.jpg" alt="为什么在12306上买火车票要装根证书" loading="lazy"></p>
+<p>　　EV SSL的申请手续更复杂，申请费用也更多，但是可以换来更多用户的信任。左图是Firefox下显示EV SSL证书的样子。这个证书证明了这个网站的经营者为<em>Wikimedia Foundation, Inc.<em>，并且位置位于</em>San Francisco</em> <em>California, US</em></p>
+<p>　　据一个叫做VeriSign的CA的统计，使用EV SSL能大幅提升用户对于网站的信任。</p>
+<p><img src="https://www.williamlong.info/upload/3461_5.jpg" alt="为什么在12306上买火车票要装根证书" loading="lazy"></p>
+<p>　　总而言之，SSL证书的目的有两个：</p>
+<ul>
+<li>确保网站和用户之间的数据是加密并且可靠的</li>
+<li>确保网站所宣称身份的真实可靠</li>
+</ul>
+<p>　　如果访问12306.cn会出现什么情况呢？12306的确使用了SSL来加密以保障网页的安全，而访问直接访问12306就算不安装根证书也不会出现任何问题。以Chrome为例，访问主页不会出现任何问题，但是若要访问购票页面就会无法访问，如下图所示。</p>
+<p><img src="https://www.williamlong.info/upload/3461_6.jpg" alt="为什么在12306上买火车票要装根证书" loading="lazy"></p>
+<p>　　12306会让我们访问一个叫<em><a target="_blank" rel="noopener" href="https://dynamic.12306.cn/otsweb">https://dynamic.12306.cn/otsweb</a></em>的网址。如果我们直接用Chrome访问这个网址呢？华丽丽的一幕出现了：</p>
+<p><img src="https://www.williamlong.info/upload/3461_7.jpg" alt="为什么在12306上买火车票要装根证书" loading="lazy"></p>
+<p>　　使用IE8浏览这个页面会出现这样：</p>
+<p><img src="https://www.williamlong.info/upload/3461_8.jpg" alt="为什么在12306上买火车票要装根证书" loading="lazy"></p>
+<p>　　回到Chrome，如果我们点击“仍然继续”，就会正常的看到购票页面没有任何阻力。IE8也是一样，不过IE8的地址栏整个都会变成红色的。</p>
+<p>　　如果我们点击旁边的小锁头来查看关于这个证书的信息呢？会出现下图。</p>
+<p><img src="https://www.williamlong.info/upload/3461_9.jpg" alt="为什么在12306上买火车票要装根证书" loading="lazy"></p>
+<p>　　再点击“证书信息”，会看到这个12306的证书是一个叫做SRCA的CA签发的。</p>
+<p><img src="https://www.williamlong.info/upload/3461_10.jpg" alt="为什么在12306上买火车票要装根证书" loading="lazy"></p>
+<p>　　但是在“钥匙串访问”里面根本没有一个叫做SRCA的CA。</p>
+<p>　　如果安装上了首页给出的“根证书”，（依然以Mac为例）钥匙串访问里面就会有一个叫做“SRCA”的CA！并且本来这个证书是不受信任的，安装之后就会被设置为“<em>此证书已被标记为受此账户信任</em>”。</p>
+<p><img src="https://www.williamlong.info/upload/3461_11.jpg" alt="为什么在12306上买火车票要装根证书" loading="lazy"></p>
+<p>　　这样的话，浏览器和操作系统就会信任这个证书，便不会给予CA信息不对的提示了。</p>
+<p>　　“SRCA”又是何许人也？在上图中，可以看到SRCA的细节部分，“组织”填写的是<em>Sinorail Certification Authority</em></p>
+<p>　　这也就不难分析了，“Sinorial”中的“S”和“R”，“Certification Authority”的“S”和“A”，就拼出来了“SRCA”。</p>
+<p>　　在搜索引擎中搜索<em>Sinorail Certification Authority</em>中的<em>Sinorail</em>，就会找到这样一个网站。叫做“中铁信息工程集团”。网址就是<a target="_blank" rel="noopener" href="http://www.sinorail.com/%E3%80%82">http://www.sinorail.com/。</a></p>
+<p>　　听名字就知道这网站跟12306肯定是亲戚关系。换种话说，就是自己给自己发证书。你说这证书能可信吗？</p>
+<p>　　正规CA的证书可不是白给的。要不然CA靠什么吃饭？一个SSL证书从每年三百块RMB到一万五不等。据我所知，最贵的证书是VeriSign签发的，一万五的那个就是他。而便宜的三百块证书——只要不是VeriSign，其他CA签出来的最便宜的证书差不多都这个价。比较便宜的代表是Go Daddy、Comodo等。为什么12306要使用自己给自己的证书呢？貌似唯一的合理解释就是省钱。能省大概三百到一万五不等。</p>
+<p>　　铁道部有时候买一张火车票就差不多够一年的证书钱了。</p>
+<p>　　那么又为什么说铁道部用自己的证书不安全呢？有些人在12306上买票时会看到“<em>该站点安全证书的吊销信息不可用，是否继续</em>”的提示语，这又是什么意思呢？</p>
+<p>　　从前有个倒霉的的荷兰CA，叫DigiNotar。这CA被黑客攻破，导致这家CA办法给一些用户的证书的私钥失效（私钥是在SSL加密环节中非常重要的东西），这就使得以这家CA的名义伪造证书成了可能。黑客可以通过这家公司的名义伪造证书给一些非法网站，客户一看这是加密过的还是大型CA签出来的证书便很容易信任。因为DigiNotar名气很大，并且很多大公司都使用它的证书，微软等操作系统厂商在这事情发生之后开始忙不迭的发布更新补丁来宣布DigiNotar的证书失效。</p>
+<p>　　微软在 <a target="_blank" rel="noopener" href="http://technet.microsoft.com/zh-cn/security/advisory/2607712">KB2607712</a> 补丁中宣布了DigiNotar的根证书无效。原文如下：</p>
+<blockquote>
+<p>Microsoft 已获悉 DigiNotar 颁发了至少一个虚假数字证书，DigiNotar 是受信任的根证书颁发机构存储区中出现的一个证书颁发机构。虚假证书可能用于哄骗内容、执行网页仿冒攻击或者针对所有 Web 浏览器用户（包括 Internet Explorer 用户）执行中间人攻击。虽然这不是 Microsoft 产品中的一个漏洞，但是此问题会影响 Microsoft Windows 的所有受支持版本。</p>
+</blockquote>
+<p>　　这家倒霉公司最后因为这件事华丽丽的破产了。</p>
+<p>　　正如这件事一样，有些知名CA出了事，微软这些系统厂商会忙不迭的发布补丁来宣布该CA的根证书失效——有些小CA，尤其是“SRCA”这样貌似只给12306.cn一个网站签证书的CA，人还懒得管你呢！那么小CA的私钥失窃之后会有什么不就措施呢？那就是证书吊销列表，英文全称Certificate revocation list，简称CRL。下文也称呼它为CRL。更详细的内容可以参考<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%AF%81%E4%B9%A6%E5%90%8A%E9%94%80%E5%88%97%E8%A1%A8">这里</a>和<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Certificate_revocation_list">这里（英文）</a>。</p>
+<p>　　CRL是干什么的呢？比如你买的证书被盗了，只要将信息报告给CA，那么CA就会把你这个证书的信息添加到这个CA的CRL中，每次浏览器浏览加密网页时，都会检索CRL信息——如果没有的话，就会提示<em>该站点安全证书的吊销信息不可用，是否继续</em>。想必读到这里大家也都知道了，12306的证书没有CRL信息。这也就意味着，12306所使用的证书一旦失窃，系统厂商不会管这个，甚至连最后一根救命稻草CRL都没有。</p>
+<p>　　简而言之，如果证书出了事，两种解决办法：</p>
+<ul>
+<li>系统厂商发补丁宣布该证书失效</li>
+<li>通过CRL宣布证书失效</li>
+</ul>
+<p>　　不过可惜的是12306出了事，这两招哪一个都不顶用。</p>
+<p>　　如果证书失窃，会有什么后果？最可能的后果就是像前面的倒霉蛋一样倒闭。不过我大天朝铁道部（尽管已经倒闭）欠了两千多亿还巍然不动，这个可能便没有了。前面提到的两种解决方案一个也用不了，这就意味着遭殃的一定是用户。证书失窃，任何人都能用此来伪造虚假证书。尽管SRCA颁发的证书默认是不受到系统信任的，但是中国这么多去过12306网站买过火车票的人——假设所有人都安装了这个根证书使的系统对此证书信任——一个绿色地址栏都能提升用户这么大的信任，违法网站只要获得了SRCA颁发的证书，岂不就能轻易骗得用户的信任？</p>
+<p>　　如果你是Mac用户，并且访问<a target="_blank" rel="noopener" href="https://www.12306.cn/">https://www.12306.cn</a>没有任何障碍，那么可以参考<a target="_blank" rel="noopener" href="https://player.vimeo.com/video/65127548">这个视频</a>中的步骤来将SRCA的证书设为不信任。如果要购票，反其道而行之即可。</p>
+<p>　　从证书的角度看，中国很多大佬都做的非常不到位。比如我手里的建行网银，在安装U盾的时候必须安装一个网银根证书。SSL证书方面中国也做的很不到位。比如京东只有在用户登陆的时候才用了SSL来加密，而京东甚至在下订单的时候依然是明文传输。新浪微博在更改个人敏感信息时仍然使用明文传输，而twitter在早期甚至连微博内容都用https。如果使用不加密的公共Wi-Fi的话，那么在同一个Wi-Fi热点下有一个黑客，黑客便可以非常轻松的窃取到你的个人信息。</p>
+<p>　　P.S.：现在12306在付款的过程中使用了VeriSign签发的合格的证书，但是这样并不代表着上面所说的可能造成的严重影响不会发生。</p>
+<p>　　EV SSL介绍：<a target="_blank" rel="noopener" href="http://www.wosign.com/EVSSL/index.htm">http://www.wosign.com/EVSSL/index.htm</a></p>
+<p>　　这个地址打开后便可以看到EV SSL的效果：<a target="_blank" rel="noopener" href="https://www.evssl.cn/en/">https://www.evssl.cn/en/</a></p>
+<p>　　HTTPS - 维基百科：<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Https">https://zh.wikipedia.org/wiki/Https</a></p>
+<p>　　来源：techyan投稿，<a target="_blank" rel="noopener" href="http://techyan.weebly.com/2/post/2013/05/12306.html">原文链接</a>。</p>
+<p>　　更新：2017年12月12日更新，12306网站终于支持SSL证书了，之前多年该网站都使用自己签发的证书。新证书于2017年11月29日生效，由DigiCert签发。 </p>
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"></div><div style="display:inline-block"></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>澈崽子</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://zeozzz.github.com/2019/04/18/5/" title="为什么在12306买火车票要装根证书？">https://zeozzz.github.com/2019/04/18/5/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2019/04/18/4/" rel="prev" title="细说VLAN与Trunk"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">细说VLAN与Trunk</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2019/04/18/7/" rel="next" title="IPsec VPN 分公司到总部"><span class="post-nav-text">IPsec VPN 分公司到总部</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="http://www.beian.miit.gov.cn" target="_blank"></a></div><div class="copyright"><span>&copy; 2015 – 2020 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 澈崽子</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.0.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v0.9.5</span></div><div class="live_time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  window.setTimeout(blog_live_time, 1000);
+  const start = new Date('2015-09-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div></div><script defer src="/js/utils.js"></script><script defer src="/js/hexo-theme-yun.js"></script></body></html>
