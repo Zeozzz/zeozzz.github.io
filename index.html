@@ -1,0 +1,374 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="澈崽子"><meta name="copyright" content="澈崽子"><meta name="generator" content="Hexo 5.0.0"><meta name="theme" content="hexo-theme-yun"><title>澈崽子 | 家有网工初长成</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="none" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.19/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_stqaphw3j4.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true}
+    ]
+  });
+});</script><link class="aplayer-style-marker" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script class="aplayer-script-marker" src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" defer></script><script class="meting-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js" defer></script><link rel="shortcut icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/js/ui/banner.js" as="script"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/css/hexo-theme-yun.css"><link rel="alternate" href="/atom.xml" title="澈崽子 | 家有网工初长成" type="application/atom+xml"><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"root":"/","title":"澈崽子的小窝","version":"0.9.5","anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><meta name="description" content="念念不忘 必有回响">
+<meta property="og:type" content="website">
+<meta property="og:title" content="澈崽子 | 家有网工初长成">
+<meta property="og:url" content="https://zeozzz.github.com/index.html">
+<meta property="og:site_name" content="澈崽子 | 家有网工初长成">
+<meta property="og:description" content="念念不忘 必有回响">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="澈崽子">
+<meta name="twitter:card" content="summary"><script src="/js/ui/mode.js"></script></head><body class="is-home"><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script defer src="/js/sidebar.js"></script><div class="sidebar-panel sidebar-panel-active" id="site-overview-wrap"><div class="site-info"><a class="site-author-avatar" href="/about/" title="澈崽子"><img width="96" loading="lazy" src="/avatar.jfif" alt="澈崽子"></a><div class="site-author-name"><a href="/about/">澈崽子</a></div><a class="site-name" href="/about/site.html">澈崽子 | 家有网工初长成</a><sub class="site-subtitle"></sub><div class="site-desciption">念念不忘 必有回响</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">75</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">29</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">36</span></a></div><a class="site-state-item hty-icon-button" href="/links/" title="常用链接"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 群" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/Zeozzz" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/linche521chn" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/zeozzz/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=46666755" title="网易云音乐" target="_blank" style="color:#C20C0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/janz1995chn/activities" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/15054940" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/zeozzzzzz" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/zeozzzzz" title="Telegram Channel" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:zhangzhe@live.in" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.now.sh/" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-send-plane-2-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://ispip.clang.cn/" title="IP归属查询" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-information-line"></use></svg></a><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="http://ping.pe" title="ping工具" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-questionnaire-line"></use></svg></a><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://photos.oneplus.com/cn" title="每日一图" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-gallery-line"></use></svg></a><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://smallpdf.com/cn" title="PDF工具" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></a><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://www.runoob.com/" title="菜鸟教程" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-pushpin-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="tag-cloud"><div class="tag-cloud-tags"><a href="/tags/802-1x/" style="font-size: 12px; color: #999">802.1x</a> <a href="/tags/ARP/" style="font-size: 12px; color: #999">ARP</a> <a href="/tags/CASE/" style="font-size: 12px; color: #999">CASE</a> <a href="/tags/Cisco/" style="font-size: 12px; color: #999">Cisco</a> <a href="/tags/H3C/" style="font-size: 30px; color: #0078e7">H3C</a> <a href="/tags/IDC/" style="font-size: 12px; color: #999">IDC</a> <a href="/tags/IPv6/" style="font-size: 24px; color: #3383cd">IPv6</a> <a href="/tags/LINUX/" style="font-size: 18px; color: #668eb3">LINUX</a> <a href="/tags/Linux/" style="font-size: 12px; color: #999">Linux</a> <a href="/tags/NAT/" style="font-size: 24px; color: #3383cd">NAT</a> <a href="/tags/OSPF/" style="font-size: 12px; color: #999">OSPF</a> <a href="/tags/RAID/" style="font-size: 12px; color: #999">RAID</a> <a href="/tags/SDN/" style="font-size: 24px; color: #3383cd">SDN</a> <a href="/tags/SSL/" style="font-size: 12px; color: #999">SSL</a> <a href="/tags/TCP/" style="font-size: 18px; color: #668eb3">TCP</a> <a href="/tags/TCP-IP/" style="font-size: 12px; color: #999">TCP/IP</a> <a href="/tags/VLAN/" style="font-size: 18px; color: #668eb3">VLAN</a> <a href="/tags/VPN/" style="font-size: 12px; color: #999">VPN</a> <a href="/tags/VXLAN/" style="font-size: 12px; color: #999">VXLAN</a> <a href="/tags/git/" style="font-size: 12px; color: #999">git</a></div></div></aside><main class="sidebar-translate" id="content"><div id="banner"><div class="banner-line vertical-line-top"></div><div class="banner-line vertical-line-bottom"></div><div class="cloud"><svg class="waves" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" fill="white"></path></defs><g class="parallax"><use xlink:href="#gentle-wave" x="48" y="0" opacity="0.7"></use><use xlink:href="#gentle-wave" x="48" y="3" opacity="0.5"></use><use xlink:href="#gentle-wave" x="48" y="5" opacity="0.3"></use><use xlink:href="#gentle-wave" x="48" y="7"></use></g></svg></div><a id="goDown" aria-label="go-down" href="javascript:window.scrollTo(0, banner.clientHeight);"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-down-s-line"></use></svg></a></div><script src="/js/ui/banner.js"></script><div id="say"><span id="say-content"></span><small id="say-author"></small><small id="say-from"></small></div><script async src="/js/say.js"></script><section class="hty-layout-grid" id="recent-posts"><div class="hty-layout-grid__cell hty-layout-grid__cell--span-12"><article class="hty-card post-card" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2020/08/07/77/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><div class="post-card-header"><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" itemprop="url" href="/2020/08/07/77/">新征程</a></h2><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2020-08-07 21:27:19" itemprop="dateCreated datePublished" datetime="2020-08-07T21:27:19+08:00">2020-08-07</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">7</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">1m</span></span></span></div></header></div><div class="post-card-content text-center"><div class="post-card-excerpt markdown-body"></div></div><div class="hty-card__actions post-card__actions"><div class="post-card-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> </div><div class="post-card-tag"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span></div></div></article></div><div class="hty-layout-grid__cell hty-layout-grid__cell--span-12"><article class="hty-card post-card" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/09/09/76/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><div class="post-card-header"><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" itemprop="url" href="/2019/09/09/76/">TCP的几个状态 (SYN, FIN, ACK, PSH, RST, URG)</a></h2><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-09-09 15:46:18" itemprop="dateCreated datePublished" datetime="2019-09-09T15:46:18+08:00">2019-09-09</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2020-01-21 10:11:42" itemprop="dateModified" datetime="2020-01-21T10:11:42+08:00">2020-01-21</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">814</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">3m</span></span></span></div></header></div><div class="post-card-content text-center"><div class="post-card-excerpt markdown-body"><p>在TCP层，有个FLAGS字段，这个字段有以下几个标识：SYN, FIN, ACK, PSH, RST, URG.</p>
+<p>其中，对于我们日常的分析有用的就是前面的五个字段。</p>
+<p>它们的含义是：</p>
+<p>SYN表示建立连接，</p>
+<p>FIN表示关闭连接，</p>
+<p>ACK表示响应，</p>
+<p>PSH表示有 DATA数据传输，</p>
+<p>RST表示连接重置。</p>
+<p>其中，ACK是可能与SYN，FIN等同时使用的，比如SYN和ACK可能同时为1，它表示的就是建立连接之后的响应，</p>
+<p>如果只是单个的一个SYN，它表示的只是建立连接。</p>
+<p>TCP的几次握手就是通过这样的ACK表现出来的。</p>
+<p>但SYN与FIN是不会同时为1的，因为前者表示的是建立连接，而后者表示的是断开连接。</p>
+<p>RST一般是在FIN之后才会出现为1的情况，表示的是连接重置。</p></div></div><div class="hty-card__actions post-card__actions"><div class="post-card-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <a class="category" href="/categories/wireshark/" style="--text-color:var(--hty-text-color)"><span itemprop="text">wireshark</span></a></div><div class="post-card-tag"><a class="tag" href="/tags/wireshark/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">wireshark</span></a></div></div></article></div><div class="hty-layout-grid__cell hty-layout-grid__cell--span-12"><article class="hty-card post-card" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/08/28/75/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><div class="post-card-header"><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" itemprop="url" href="/2019/08/28/75/">wireshark分析网站打开过程</a></h2><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-08-28 15:22:53" itemprop="dateCreated datePublished" datetime="2019-08-28T15:22:53+08:00">2019-08-28</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2020-01-21 17:30:14" itemprop="dateModified" datetime="2020-01-21T17:30:14+08:00">2020-01-21</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">727</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">2m</span></span></span></div></header></div><div class="post-card-content text-center"><div class="post-card-excerpt markdown-body"><p>最近在看数字证书，https相关的知识，发现之前也是模棱两可的了解，一点都不深入，这篇文章从DNS解析开始，分析打开https的网站从开始到结束的过程。</p>
+<p><img src="https://image01.zhang-zhe.cn/20190904105254.png"></p>
+<p>在从地址栏敲入域名之后，首先进行DNS的域名解析，抓包如下：</p>
+<p><img src="https://image01.zhang-zhe.cn/20190904105458.png"></p>
+<p>1、DNS请求&amp;DNS解析阶段</p>
+<p>​    1.1、本机向DNS服务器发起DNS解析请求，使用UDP协议，报文结构如下：</p>
+<p>​    <img src="https://image01.zhang-zhe.cn/20190904105608.png"></p>
+<p>​    1.2、服务器向客户端发送请求的结果，同样使用UDP协议，报文结构如下：</p>
+<p><img src="https://image01.zhang-zhe.cn/20190904105909.png"></p>
+<p>​</div></div><div class="hty-card__actions post-card__actions"><div class="post-card-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <a class="category" href="/categories/wireshark/" style="--text-color:var(--hty-text-color)"><span itemprop="text">wireshark</span></a></div><div class="post-card-tag"><a class="tag" href="/tags/wireshark/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">wireshark</span></a></div></div></article></div><div class="hty-layout-grid__cell hty-layout-grid__cell--span-12"><article class="hty-card post-card" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/08/27/74/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><div class="post-card-header"><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" itemprop="url" href="/2019/08/27/74/">无线AP上线中需要的option</a></h2><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-08-27 16:50:15" itemprop="dateCreated datePublished" datetime="2019-08-27T16:50:15+08:00">2019-08-27</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2020-01-21 17:30:44" itemprop="dateModified" datetime="2020-01-21T17:30:44+08:00">2020-01-21</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">818</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">3m</span></span></span></div></header></div><div class="post-card-content text-center"><div class="post-card-excerpt markdown-body"><p> 　　华三AP支持的Option 43属性：</p>
+<p>　　在L3 Switch上启用DHCP Server，正确配置Option43，例如AP属于VLAN100，是192.168.100.0/24网段，AC的IP地址为192.168.10.100/24，只支持16进制，DHCP Server配置如下：</p>
+<p>　　[AC] dhcp server ip-pool vlan100</p>
+<p>　　[AC-dhcp-pool-vlan100] network 192.168.100.0 mask 255.255.255.0</p>
+<p>　　[AC-dhcp-pool-vlan100] gateway-list 192.168.100.254</p>
+<p>　　[AC-dhcp-pool-vlan100] option 43 hex 80070000 01 C0A80A64</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">　　#80：选项类型，固定为80，1个字节。</span><br><span class="line"></span><br><span class="line">　　#07：选项长度，表示其后内容的长度(十六进制数的个数，这里表示后面有7个十六进制数，0B表示后面有11个十六进制数)，一个字节。</span><br><span class="line"></span><br><span class="line">　　#0000：Server type，固定配为0000两个字节。</span><br><span class="line"></span><br><span class="line">　　#01：后面IP地址的个数，一个字节。</span><br><span class="line"></span><br><span class="line">　　# C0A80A64： AC的IP地址192.168.10.100的十六进制表示。</span><br><span class="line"></span><br><span class="line">　　注意：dhcp server option 43的选项中最多支持下发14个ip地址，且为了满足这个最大的规格，option43的选项配置参照以下方式(每段最大4个字节，最小1个字节，大小写都可以)：</span><br><span class="line"></span><br><span class="line">　　option 43 hex 803f0000 0e c0a80a60 c0a80a61 c0a80a62 c0a80a63 c0a80a64 c0a80a65 c0a80a66 c0a80a67 c0a80a68 c0a80a69 c0a80a70 c0a80a71 c0a80a72 c0a80a73</span><br></pre></td></tr></table></figure>
+
+<p>　　华为AP支持的Option 43属性：</p>
+<p>　　AC的IP地址为192.168.10.100/24,既支持16进制又支持10进制</p>
+<p>　　[Dhcp-hw] ip pool ap</p>
+<p>　　[Dhcp-hw-ip-pool-huawei]network 192.168.100.0 255.255.255.0</p>
+<p>　　[Dhcp-hw-ip-pool-huawei]gateaway-list 192.168.100.254</p>
+<p>　　[Dhcp-hw-ip-pool-huawei]option 43 sub-option 3 hex 3139322e3136382e31302e313030 or option 43 sub-option 3 ascii 192.168.10.100</p>
+<p>　　Sub-option 3为option 43的子类型，后面跟的16进制包含小数点一起，16进制数31对应字符“1”的ASCII值，32对应“2”的ASCII值，以此类推，2e代表“.”的值，2c代表“,”的值。</p>
+<p>　　如果有两个AC地址的话，中间要用逗号隔开(asicc码：2c)，比如AC的IP地址为192.168.10.100和192.168.1.100.option 43属性如下：</p>
+<p>　　[Dhcp-hw-ip-pool-huawei]option 43 sub-option 3 hex 3139322e3136382e31302e3130302c</p>
+<p>　　3139322e3136382e312e313030 or option 43 sub-option 3 ascii 192.168.10.100，192.168.1.100</p>
+<p>​</div></div><div class="hty-card__actions post-card__actions"><div class="post-card-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <a class="category" href="/categories/%E6%97%A0%E7%BA%BF/" style="--text-color:var(--hty-text-color)"><span itemprop="text">无线</span></a></div><div class="post-card-tag"><a class="tag" href="/tags/%E6%97%A0%E7%BA%BF/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">无线</span></a></div></div></article></div><div class="hty-layout-grid__cell hty-layout-grid__cell--span-12"><article class="hty-card post-card" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/08/22/73/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><div class="post-card-header"><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" itemprop="url" href="/2019/08/22/73/">理解wireshark中的length字段含义</a></h2><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-08-22 10:25:04" itemprop="dateCreated datePublished" datetime="2019-08-22T10:25:04+08:00">2019-08-22</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2020-01-21 17:34:19" itemprop="dateModified" datetime="2020-01-21T17:34:19+08:00">2020-01-21</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">616</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">2m</span></span></span></div></header></div><div class="post-card-content text-center"><div class="post-card-excerpt markdown-body"><p>原文链接：<a target="_blank" rel="noopener" href="https://www.louxiaohui.com/2018/06/29/understanding-the-length-field-in-wireshark/">https://www.louxiaohui.com/2018/06/29/understanding-the-length-field-in-wireshark/</a></p>
+<p>主要介绍wireshark中的length计算方法，主要涉及MTU、MSS、常见协议头大小。</p>
+<h2 id="length含义"><a href="#length含义" class="headerlink" title="length含义"></a>length含义</h2><p>Wireshark is showing you the length of the Ethernet frame that is handed to it, which may or may not include the FCS.</p>
+<p>wireshark显示的长度为以太网帧的长度，不包括FCS(Frame check sequence)[帧校验序列]</p>
+<h2 id="常见协议头大小"><a href="#常见协议头大小" class="headerlink" title="常见协议头大小"></a>常见协议头大小</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Ethernet header: 14 bytes # 数据链路层帧头大小，一般为14bytes,其为源MAC(6bytes&#x2F;48bits)+目的MAC(6bytes&#x2F;48bits)+类型&#x2F;长度(2bytes)</span><br><span class="line">IP header (standard): 20 bytes # IP头部大小</span><br><span class="line">ICMP header: 8 bytes     # ICMP头部大小</span><br><span class="line">ICMP payload: 32 bytes   # ICMP缓冲区大小，可以通过ping的-l选项指定大小，默认为32。</span><br><span class="line">FCS 4 bytes of Ethernet checksum # 帧尾CRC校验</span><br></pre></td></tr></table></figure>
+
+<h2 id="length计算"><a href="#length计算" class="headerlink" title="length计算"></a>length计算</h2><p>MTU=MSS+IP header(20 bytes)+tcp header(20 bytes)</p>
+<p>length=MTU+Ethernet header(14bytes)</p>
+<p>其中MSS为Maximum Segment Size，即最大报文段长度，其受MTU大小影响，这里的MTU指的是三层的，二层的MTU固定为1500，不能修改。</p>
+<p>MTU为Maximum Transmission Unit,即最大传输单元，需要注意MTU如果太小会影响收到数据包的速度，表现为下载过慢。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">三层收到大数据包时，要将数据包分片后再往下层传输，这就是IP分片原理。既然IP分片可以改变一个IP数据包的大小 ，那么IP分片怎么设置呢？</span><br><span class="line">这也是网上人们所谓的修改MTU值达到最佳网速的方法，而这里所说的修改“MTU”大小其实是IP分片的大小。</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2018/06/29/5b351f365f656.png" alt="2.png"><img src="https://i.loli.net/2018/06/29/5b351195a1754.png" alt="1.png"></p>
+<p>从截图中可以看到MSS为1460，MTU计算后为1500，1460 + 20(IP header) + 20(tcp header) = 1500</p>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><ul>
+<li>问题</li>
+</ul>
+<p>同一局域网中，同样的操作系统，同样的URL链接，同样的端口，使用ESXI虚拟出来的两台虚机，分别绑定host，使用wget测试下载速度，一个下载200K/s，一个10M/s。</p>
+<table>
+<thead>
+<tr>
+<th align="center">url</th>
+<th align="center">IP</th>
+<th align="center">下载速度</th>
+<th align="center">截图</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><a target="_blank" rel="noopener" href="http://192.168.28.210:8989/mac_3.4.196_1530084415522.zip">http://192.168.28.210:8989/mac_3.4.196_1530084415522.zip</a></td>
+<td align="center">192.168.28.210</td>
+<td align="center">10M/s</td>
+<td align="center"><img src="https://i.loli.net/2018/06/29/5b352a1874907.png" alt="1.png"></td>
+</tr>
+<tr>
+<td align="center"><a target="_blank" rel="noopener" href="http://192.168.28.41:8989/mac_3.4.196_1530084415522.zip">http://192.168.28.41:8989/mac_3.4.196_1530084415522.zip</a></td>
+<td align="center">192.168.28.41</td>
+<td align="center">200K/s</td>
+<td align="center"><img src="https://i.loli.net/2018/06/29/5b352a188d348.png" alt="2.png"></td>
+</tr>
+</tbody></table>
+<ul>
+<li>解决</li>
+</ul></div></div><div class="hty-card__actions post-card__actions"><div class="post-card-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <a class="category" href="/categories/wireshark/" style="--text-color:var(--hty-text-color)"><span itemprop="text">wireshark</span></a></div><div class="post-card-tag"><a class="tag" href="/tags/wireshark/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">wireshark</span></a></div></div></article></div><div class="hty-layout-grid__cell hty-layout-grid__cell--span-12"><article class="hty-card post-card" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/08/14/72/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><div class="post-card-header"><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" itemprop="url" href="/2019/08/14/72/">路由协议的优先级，以及管理距离AD和metric的区别</a></h2><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-08-14 19:29:23" itemprop="dateCreated datePublished" datetime="2019-08-14T19:29:23+08:00">2019-08-14</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2020-01-21 17:34:35" itemprop="dateModified" datetime="2020-01-21T17:34:35+08:00">2020-01-21</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">1.8k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">6m</span></span></span></div></header></div><div class="post-card-content text-center"><div class="post-card-excerpt markdown-body"><p>路由协议的优先级（Preference，即<strong>管理距离**</strong>Administrative Distance**）一般为一个0到255之间的数字，数字越大则优先级越低。表一是通常情况下各路由协议的优先级规定：</p>
+<p>表一：一般路由协议优先级</p>
+<table>
+<thead>
+<tr>
+<th>路由协议</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DIRECT</td>
+<td>0</td>
+</tr>
+<tr>
+<td>OSPF</td>
+<td>10</td>
+</tr>
+<tr>
+<td>IS-IS Level 1</td>
+<td>15</td>
+</tr>
+<tr>
+<td>IS-IS Level 2</td>
+<td>18</td>
+</tr>
+<tr>
+<td>NSFnet主干的SPF</td>
+<td>19</td>
+</tr>
+<tr>
+<td>缺省网关和EGP缺省</td>
+<td>20</td>
+</tr>
+<tr>
+<td>重定向路由</td>
+<td>30</td>
+</tr>
+<tr>
+<td>由route socket得到的路由</td>
+<td>40</td>
+</tr>
+<tr>
+<td>由网关加入的路由</td>
+<td>50</td>
+</tr>
+<tr>
+<td>路由器发现的路由</td>
+<td>55</td>
+</tr>
+<tr>
+<td>静态路由</td>
+<td>60</td>
+</tr>
+<tr>
+<td>CISCO IGRP</td>
+<td>80</td>
+</tr>
+<tr>
+<td>DCN HELLO</td>
+<td>90</td>
+</tr>
+<tr>
+<td>Berkeley RIP</td>
+<td>100</td>
+</tr>
+<tr>
+<td>点对点接口聚集的路由</td>
+<td>110</td>
+</tr>
+<tr>
+<td>Down状态的接口路由</td>
+<td>120</td>
+</tr>
+<tr>
+<td>聚集的缺省路由</td>
+<td>130</td>
+</tr>
+<tr>
+<td>OSPF的扩展路由</td>
+<td>140</td>
+</tr>
+<tr>
+<td>BGP</td>
+<td>170</td>
+</tr>
+<tr>
+<td>EGP</td>
+<td>200</td>
+</tr>
+</tbody></table>
+<p>各产品厂商可能对路由协议的优先级有不同的规定，表二、表三分别列出了华为、思科路由器路由优先级列表：</p>
+<p>表二：华为路由器路由优先级</p>
+<table>
+<thead>
+<tr>
+<th>路由协议</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DIRECT</td>
+<td>0</td>
+</tr>
+<tr>
+<td>OSPF</td>
+<td>10</td>
+</tr>
+<tr>
+<td>STATIC</td>
+<td>60</td>
+</tr>
+<tr>
+<td>IGRP</td>
+<td>80</td>
+</tr>
+<tr>
+<td>RIP</td>
+<td>110</td>
+</tr>
+<tr>
+<td>OSPFASE</td>
+<td>150</td>
+</tr>
+<tr>
+<td>BGP</td>
+<td>170</td>
+</tr>
+</tbody></table>
+<p>表三：思科路由器路由协议优先级</p>
+<table>
+<thead>
+<tr>
+<th>路由协议</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DIRECT</td>
+<td>0</td>
+</tr>
+<tr>
+<td>STATIC</td>
+<td>1</td>
+</tr>
+<tr>
+<td>EIGRP Summary</td>
+<td>5</td>
+</tr>
+<tr>
+<td>EBGP</td>
+<td>20</td>
+</tr>
+<tr>
+<td>内部EIGRP</td>
+<td>90</td>
+</tr>
+<tr>
+<td>IGRP</td>
+<td>100</td>
+</tr>
+<tr>
+<td>OSPF</td>
+<td>110</td>
+</tr>
+<tr>
+<td>IS-IS</td>
+<td>115</td>
+</tr>
+<tr>
+<td>RIP</td>
+<td>120</td>
+</tr>
+<tr>
+<td>EGP</td>
+<td>140</td>
+</tr>
+<tr>
+<td>外部EIGRP</td>
+<td>170</td>
+</tr>
+<tr>
+<td>IBGP</td>
+<td>200</td>
+</tr>
+<tr>
+<td>未知</td>
+<td>255</td>
+</tr>
+</tbody></table>
+<p>路由的优先级的概念是优先级高的新路由协议可替代优先级低的同信宿路由，反之，则不然。</p></div></div><div class="hty-card__actions post-card__actions"><div class="post-card-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <a class="category" href="/categories/%E8%B7%AF%E7%94%B1/" style="--text-color:var(--hty-text-color)"><span itemprop="text">路由</span></a></div><div class="post-card-tag"><a class="tag" href="/tags/%E8%B7%AF%E7%94%B1/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">路由</span></a></div></div></article></div><div class="hty-layout-grid__cell hty-layout-grid__cell--span-12"><article class="hty-card post-card" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/08/09/71/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><div class="post-card-header"><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" itemprop="url" href="/2019/08/09/71/">无题</a></h2><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-08-09 17:00:03" itemprop="dateCreated datePublished" datetime="2019-08-09T17:00:03+08:00">2019-08-09</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">33</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">1m</span></span></span></div></header></div><div class="post-card-content text-center"><div class="post-card-excerpt markdown-body"></div></div><div class="hty-card__actions post-card__actions"><div class="post-card-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <a class="category" href="/categories/%E8%87%AA%E5%98%B2/" style="--text-color:var(--hty-text-color)"><span itemprop="text">自嘲</span></a></div><div class="post-card-tag"><a class="tag" href="/tags/%E8%87%AA%E5%98%B2/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">自嘲</span></a></div></div></article></div><div class="hty-layout-grid__cell hty-layout-grid__cell--span-12"><article class="hty-card post-card" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/07/18/70/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><div class="post-card-header"><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" itemprop="url" href="/2019/07/18/70/">再谈双向NAT</a></h2><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-07-18 10:48:11" itemprop="dateCreated datePublished" datetime="2019-07-18T10:48:11+08:00">2019-07-18</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2020-01-21 17:34:49" itemprop="dateModified" datetime="2020-01-21T17:34:49+08:00">2020-01-21</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">657</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">2m</span></span></span></div></header></div><div class="post-card-content text-center"><div class="post-card-excerpt markdown-body"><h3 id="出现背景"><a href="#出现背景" class="headerlink" title="出现背景:"></a>出现背景:</h3><p><a target="_blank" rel="noopener" href="https://www.tuchuang001.com/image/K83AW"><img src="https://www.tuchuang001.com/images/2017/06/09/0a5b4b39c301b479.png" alt="0a5b4b39c301b479.png"></a><br>在防火墙上部署了NATserver后，外网用户可以访问内部服务器。一般内部服务器都会通过一个域名进行解析。但如果内网用户也想通过此域名访问服务器就会出现问题。</p>
+<h3 id="原因分析："><a href="#原因分析：" class="headerlink" title="原因分析："></a>原因分析：</h3><ol>
+<li>内网用户要想访问internet,需要在防火墙上做个源NAT，将内网用户的网段转换为公网ip</li>
+<li>假设pc通过公网ip 200.1.1.100 访问服务器，在出防火墙时防火墙做可源NAT会将PC的原地址转换为200.1.1.100将数据包交出去。</li>
+<li>防火墙上配置了NATserver，将公网ip 200.1.1.100映射为服务器的私网地址192.168.1.100。数据包会交给服务器。</li>
+<li>去时的数据包走向没有问题，分析回来的，回来时就会出现问题。</li>
+<li>由于服务器和PC处于同一网段（防火墙以放行PC所在区域和服务器所在区域的数据），回包时服务器发送ARP报文找到了PC的MAC地址，三层封装时源IP地址为：192.168.1.100，目的IP地址为192.168.1.1。源目MAC地址分别为服务器的MAC地址和PC的MAC地址。数据包直接走二层过去。</li>
+<li>PC和服务进行通信需要建立TCP的三次握手,第一次握手时的目的IP地址为200.1.1.100，但此时却收到了192.168.1.100的回包。怎么办，凌乱了，握手不成功。TCP连接无法建立。</li>
+</ol></div></div><div class="hty-card__actions post-card__actions"><div class="post-card-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <a class="category" href="/categories/%E5%8D%8E%E4%B8%BA/" style="--text-color:var(--hty-text-color)"><span itemprop="text">华为</span></a></div><div class="post-card-tag"><a class="tag" href="/tags/NAT/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">NAT</span></a></div></div></article></div><div class="hty-layout-grid__cell hty-layout-grid__cell--span-12"><article class="hty-card post-card" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/07/17/68/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><div class="post-card-header"><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" itemprop="url" href="/2019/07/17/68/">IPv6 auto config 原理详解之-----前缀公告</a></h2><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-07-17 20:03:22" itemprop="dateCreated datePublished" datetime="2019-07-17T20:03:22+08:00">2019-07-17</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2020-01-21 17:35:00" itemprop="dateModified" datetime="2020-01-21T17:35:00+08:00">2020-01-21</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">1.3k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">4m</span></span></span></div></header></div><div class="post-card-content text-center"><div class="post-card-excerpt markdown-body"><p>人们常说，IPv6的一大特性就是移动性。</p>
+<p>那么对于IP终端来说，如何去理解他的移动性呢？</p>
+<p>其实就是IPv6的无状态自动配置。</p>
+<p>前段时间有幸一个同事给我演示了一下这个功能，但是更多的疑问产生了。</p>
+<p>IPv4中，比如说电脑，在网卡中设置自动获取IP地址和DNS.那么就可以自动从DHCP服务器上面获得IP地址和DNS还有网关了。</p>
+<p>下面是IPv4的设置界面：</p>
+<p><strong><img src="https://s1.51cto.com/attachment/201108/12/351531_1313151463aDzX.jpg" alt="clip_p_w_picpath002"></strong></p>
+<p>那么按照这个逻辑，IPv6就应该是没有这些选项，最终达到即插即用的目的嘛？答案是否，下面的截图IPv6也有：</p>
+<p><strong><img src="https://s1.51cto.com/attachment/201108/12/351531_1313151470ZoVk.jpg" alt="clip_p_w_picpath004"></strong></p>
+<p>那么为什么还需要自动配置？</p>
+<p>意义在哪里？</p>
+<p>如何实现呢？</p>
+<p>带着这些问题，我们慢慢来看看IPv6这个自动配置auto config到底是个什么原理。</p></div></div><div class="hty-card__actions post-card__actions"><div class="post-card-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <a class="category" href="/categories/IPv6/" style="--text-color:var(--hty-text-color)"><span itemprop="text">IPv6</span></a></div><div class="post-card-tag"><a class="tag" href="/tags/IPv6/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">IPv6</span></a></div></div></article></div><div class="hty-layout-grid__cell hty-layout-grid__cell--span-12"><article class="hty-card post-card" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://zeozzz.github.com/2019/07/16/67/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="澈崽子"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="澈崽子 | 家有网工初长成"></span><div class="post-card-header"><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" itemprop="url" href="/2019/07/16/67/">企业园区网络建设技术方案（华为）</a></h2><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2019-07-16 09:35:08" itemprop="dateCreated datePublished" datetime="2019-07-16T09:35:08+08:00">2019-07-16</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2020-01-21 17:35:10" itemprop="dateModified" datetime="2020-01-21T17:35:10+08:00">2020-01-21</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">18.3k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">63m</span></span></span></div></header></div><div class="post-card-content text-center"><div class="post-card-excerpt markdown-body"><p>原文链接：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/53512258">https://zhuanlan.zhihu.com/p/53512258</a></p>
+<h2 id="1-项目概述"><a href="#1-项目概述" class="headerlink" title="1 项目概述"></a>1 项目概述</h2><p>根据实际情况增加项目介绍</p>
+<h2 id="1-1-项目背景"><a href="#1-1-项目背景" class="headerlink" title="1.1 项目背景"></a>1.1 项目背景</h2><h2 id="1-2-项目目标"><a href="#1-2-项目目标" class="headerlink" title="1.2 项目目标"></a>1.2 项目目标</h2><h2 id="2-园区总体系统规划设计"><a href="#2-园区总体系统规划设计" class="headerlink" title="2 园区总体系统规划设计"></a>2 园区总体系统规划设计</h2><h2 id="2-1-需求分析"><a href="#2-1-需求分析" class="headerlink" title="2.1 需求分析"></a>2.1 需求分析</h2><p>随着企业信息化建设不断深入，企业的生产业务系统、经营管理系统、办公自动化系统均得到大力发展，对于企业园区网的建设要求越来越高。传统园区网建设初期往往面临如下问题：</p>
+<p><strong>(一)</strong> <strong>网络架构较为混乱，不便于扩容和维护管理：</strong>园区网在建设初期，设备和光纤/电缆随意布放，缺乏统一的网络分层规划管理，网络拓扑相对混乱，不便于对网络性能瓶颈进行正确评估和有效扩容，给日常网络管理也带来很大难度。</p>
+<p><strong>(二)</strong> <strong>网络可靠性规划不合理，影响企业生产和经营管理、造成投资浪费：</strong>由于缺乏有效的园区网规划，对于网络可靠性考虑不够，网络中既存在单点故障导致网络可靠性低、影响企业生产和经营管理行为，同时也存在网络过度冗余、造成投资浪费的现象。</p>
+<p><strong>(三)</strong> <strong>网络信息安全存在隐患：</strong>网络安全性是园区网建设的重中之重，传统园区网安全漏洞较多，无法应对内外部用户日益猖獗的网络攻击行为（例如：对园区网设备进行攻击、消耗网络带宽、窃取企业核心电子资产信息），对于内部和外部用户缺乏有效的身份认证手段、用户可随意接入网络，网络层面的安全保证和防御措施也不到位，造成园区网的脆弱和易攻击。</p>
+<p><strong>(四)</strong> <strong>无法满足日益增长的网络业务需求：</strong>随着企业的业务发展，出现了基于园区网基础设施的丰富增值业务需求，例如：网络接入形式要求多样化，支持WLAN无线接入，满足移动办公、大区域无线缆覆盖等特殊要求；对于企业用户访问外网进行计费，计费策略可灵活设置（时长计费、流量计费、按目的地址计费）；企业多出口链路场景下的负载均衡、灵活选路需求。传统园区网建设缺乏有效满足这些增值业务需求的统一解决方案考虑，支持这些业务存在园区网络分散建设、重复投资的问题。</p>
+<p><strong>(五)</strong> <strong>缺乏简单有效的网络管理系统，企业IT网络运维部门面临很大压力：</strong>当前，企业网IT运维部门面临很大的网络运维压力，来自于园区网内外部的安全事件频发、网络可靠性低引起的网络业务中断现象，网络故障诊断、分析定位过程对于IT运维人员的技术能力和经验水平要求较高，缺乏简单有效/低成本的图形化网管工具、进行实时网络拓扑显示、状态监控和各种故障事件预警/告警展示。另外，IT运维部门也需要实施统计园区网各路径的流量信息，便于对网络带宽进行管理和规划，给后续网络扩容提供参考。</p>
+<h2 id="2-2-设计原则"><a href="#2-2-设计原则" class="headerlink" title="2.2 设计原则"></a>2.2 设计原则</h2><p><strong>(一)</strong> <strong>安全性：</strong>安全性是企业园区网建设中的关键，它包括物理空间的安全控制及网络的安全控制。需要有完整的安全策略控制体系来实现企业园区网的安全控制。</p>
+<p><strong>(二)</strong> <strong>可靠性、可用性：</strong>高可靠性是园区网提供使用的关键，其可靠性设计包括：关键设备冗余、链路/网络冗余和重要业务模块冗余。</p>
+<p>关键设备均采用电信级全冗余设计，可实现单板热拔插、冗余的控制模块设计、冗余电源设计。采用冗余网络设计，每个层次均采用双机方式，层次与层次之间采用全冗余连接。提供多种冗余技术，采用高效、负载均衡的双机备份。</p>
+<p>可采用交换机的集群或者堆叠技术，在不降低网络可靠性的前提下，减化网络架构。</p>
+<p><strong>(三)</strong> <strong>可扩展性：</strong>园区网方案设计中，采用分层的网络设计；每个层次的设计所采用的设备本身都应具足够高的端口密度，为后续园区网扩展奠定基础。</p>
+<p>在园区出口层、核心层、汇聚层的设备都采用模块化设计，可根据园区网的发展进行灵活扩展。</p>
+<p>功能的可扩展性是园区网随着发展提供增值业务的基础。实现防火墙、负载均衡、WLAN接入、认证计费等功能，为园区网增值业务的扩展提供基础。</p>
+<p><strong>(四)</strong> <strong>可维护、可管理性：</strong>网络可管理性是园区网成功运维的基础。应提供低成本、简单有效的园区网统一网管系统，对园区网所有网络设备进行管理，包括网络拓扑显示、网络状态监控、故障事件实时预警和告警、网络流量统计。</p></div></div><div class="hty-card__actions post-card__actions"><div class="post-card-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <a class="category" href="/categories/%E5%8D%8E%E4%B8%BA/" style="--text-color:var(--hty-text-color)"><span itemprop="text">华为</span></a></div><div class="post-card-tag"><a class="tag" href="/tags/%E5%8D%8E%E4%B8%BA/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">华为</span></a></div></div></article></div></section><nav class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><svg class="icon"><use xlink:href="#icon-arrow-right-s-line" aria-label="Next"></use></svg></a></nav></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="http://www.beian.miit.gov.cn" target="_blank">冀ICP备15029595号-1</a></div><div class="copyright"><span>&copy; 2015 – 2020 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 澈崽子</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.0.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v0.9.5</span></div><div class="live_time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  window.setTimeout(blog_live_time, 1000);
+  const start = new Date('2015-09-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div><script>let date = new Date();
+let today = (date.getMonth() + 1) + "-" + date.getDate()
+if ("4-4,9-18".indexOf(today) !== -1) {
+  document.documentElement.style.filter = "grayscale(1)";
+}</script></div><script defer src="/js/utils.js"></script><script defer src="/js/hexo-theme-yun.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-hijiki"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false,"tagMode":false});</script></body></html>
